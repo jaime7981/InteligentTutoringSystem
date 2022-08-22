@@ -1,8 +1,7 @@
-from django.views.generic import RedirectView
 from django.urls import path
-from . import views
+from . import views as dcl
 
 urlpatterns = [
     #path('', RedirectView.as_view(url='/accounts/login/')),
-    path('', views.home, name = 'home'),
+    path('', dcl.home, name = 'home'),
 ]
