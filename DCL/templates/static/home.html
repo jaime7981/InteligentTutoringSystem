@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es-CL">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{% static 'css/header_template.css' %}" rel="stylesheet" type="text/css"/>
+        <link rel="shortcut icon" href="{% static 'img/logo.ico' %}"/>
+        <title>
+            {{title}}
+        </title>
+    </head>
+
+    <body>
+        <header title="headbar">
+            <div class="top-tontainer">
+                
+                <div class="logo">
+                    <a href="{% url 'home' %}">
+                    <img src="{% static 'img/logo.svg' %}" alt="Logo" style="width: 75px; height: 50px"/>
+                    </a>
+                </div>
+            
+                <nav class="navbar">
+                    <ul class="pages-nav">
+                        <li><a href="{% url 'home' %}">Inicio</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'finanzas' %}">Finanzas</a></li>
+                            <li><a href="{% url 'propiedades' %}">Propiedades</a></li>
+                        {% endif %}
+                    </ul>
+
+                    <ul class="login-nav">
+                        {% if user.is_authenticated %}
+                            <li>User: {{ user.get_username }}</li>
+                            <li><a href="{% url 'logout'%}">Logout</a></li>
+                        {% else %}
+                            <li><a href="#login">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+
+            </div>
+        </header>
+
+        <div class="content">
+            {% if user.is_authenticated %}
+                    {% block content %}
+                    {% endblock %}
+            {% endif %}
+        </body>
+
+    </body>
+</html>
