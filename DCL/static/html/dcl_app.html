@@ -3,10 +3,11 @@
 {% block content %}
 
 <div id='dcl-app-content'>
-    <script src="{% static 'js/dcl_test.js' %}"></script>
     <div id='dcl-app'>
-
+        <canvas id="canvas" style="background-color:blue;"></canvas>
     </div>
 </div>
 
+<script src="{% static 'js/dcl_test.js' %}"></script>
+<script src="{% static 'js/drag_mouse.js' %}"></script>
 {% endblock %}
