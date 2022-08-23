@@ -1,4 +1,4 @@
 
 console.log('hello world');
 
-var content_block = document.getElementByClass('main-content');
+var content_block = document.getElementsByClassName('main-content');
