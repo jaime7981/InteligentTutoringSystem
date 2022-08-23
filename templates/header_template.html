@@ -4,50 +4,29 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="{% static 'css/header_template.css' %}" rel="stylesheet" type="text/css"/>
-        <link rel="shortcut icon" href="{% static 'img/logo.ico' %}"/>
-        <title>
-            {{title}}
-        </title>
+        <link href="{% static 'css/base_css.css' %}" rel="stylesheet" type="text/css"/>
+        <link rel="shortcut icon" href="{% static 'img/logo.png' %}"/>
+        <title>ITS WebPage</title>
     </head>
 
     <body>
-        <header title="headbar">
-            <div class="top-tontainer">
-                
+        <header title="top-headbar">
+            <div class="header-container">
                 <div class="logo">
                     <a href="{% url 'home' %}">
-                    <img src="{% static 'img/logo.svg' %}" alt="Logo" style="width: 75px; height: 50px"/>
+                    <img src="{% static 'img/logo.png' %}" alt="Logo"/>
                     </a>
                 </div>
             
-                <nav class="navbar">
-                    <ul class="pages-nav">
-                        <li><a href="{% url 'home' %}">Inicio</a></li>
-                        {% if user.is_authenticated %}
-                            <li><a href="{% url 'finanzas' %}">Finanzas</a></li>
-                            <li><a href="{% url 'propiedades' %}">Propiedades</a></li>
-                        {% endif %}
-                    </ul>
+                <nav class="top-navbar">
 
-                    <ul class="login-nav">
-                        {% if user.is_authenticated %}
-                            <li>User: {{ user.get_username }}</li>
-                            <li><a href="{% url 'logout'%}">Logout</a></li>
-                        {% else %}
-                            <li><a href="#login">Login</a></li>
-                        {% endif %}
-                    </ul>
                 </nav>
-
             </div>
         </header>
 
-        <div class="content">
-            {% if user.is_authenticated %}
-                    {% block content %}
-                    {% endblock %}
-            {% endif %}
-        </body>
+        <div class="main-content">
+            {% block content %}
+            {% endblock %}
+        </div>
     </body>
 </html>
