@@ -14,13 +14,18 @@
         <header title="top-headbar">
             <div class="header-container">
                 <div class="logo">
-                    <a href="{% url 'home' %}">
-                    <img src="{% static 'img/logo.png' %}" alt="Logo"/>
-                    </a>
+                    <a href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="Logo"/></a>
                 </div>
             
                 <nav class="top-navbar">
-
+                    <ul class="pages-nav">
+                        <li><a href="{% url 'app' %}">DCL APP</a></li>
+                        <li><a href="{% url 'student' %}">Student Index</a></li>
+                        <li><a href="{% url 'teacher' %}">Teacher Index</a></li>
+                    </ul>
+                    <ul class="login-nav">
+                        <li><a href="#login">LOGIN</a></li>
+                    </ul>
                 </nav>
             </div>
         </header>
