@@ -23,14 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 f = open(f'{BASE_DIR}/../env_vars.json')
 data = json.load(f)
-print(f'{data["SECRET_KEY"]}')
 SECRET_KEY = data["SECRET_KEY"]
 f.close()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['200.73.69.220']
+ALLOWED_HOSTS = ['200.73.69.220', '*']
 
 
 # Application definition
@@ -60,7 +59,7 @@ ROOT_URLCONF = 'ITS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates', 'DCL/static'],
+        'DIRS': [f'{BASE_DIR}/templates', f'{BASE_DIR}/DCL/static'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,11 +120,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = f'{BASE_DIR}/static/'
 
 STATICFILES_DIRS = [
-    "DCL/static/",
-    "static/",
+    f'{BASE_DIR}/DCL/static/',
+    f'{BASE_DIR}/static/',
 ]
 
 # Default primary key field type
