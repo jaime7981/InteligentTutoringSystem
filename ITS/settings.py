@@ -80,15 +80,16 @@ WSGI_APPLICATION = 'ITS.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 #Local DB
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}'''
+}
 
 # Production DB
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -99,6 +100,7 @@ DATABASES = {
         'PORT': '',
     }
 }
+'''
 
 
 # Password validation
@@ -140,7 +142,6 @@ STATIC_URL = f'{BASE_DIR}/static/'
 STATIC_ROOT = f'{BASE_DIR}/static/'
 
 STATICFILES_DIRS = [
-    f'{BASE_DIR}/DCL/static/',
     f'{BASE_DIR}/templates/static/',
 ]
 

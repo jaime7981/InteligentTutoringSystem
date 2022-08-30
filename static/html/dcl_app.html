@@ -1,0 +1,13 @@
+{% extends "header_template.html" %}
+{% load static %}
+{% block content %}
+
+<div id='dcl-app-content'>
+    <div id='dcl-app'>
+        <canvas id="canvas"></canvas>
+    </div>
+</div>
+
+<script src="{% static 'js/dcl_test.js' %}"></script>
+<script src="{% static 'js/drag_mouse.js' %}"></script>
+{% endblock %}

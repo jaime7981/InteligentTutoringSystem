@@ -1,0 +1,99 @@
+html {
+    background-color: #ff4848a2;
+    height: 100%;
+    width: 100%;
+}
+
+img {
+    width: 50px;
+    height: 100%;
+}
+
+body{
+    margin: 0;
+    font-weight: 400;
+    font-family: 'Work Sans', sans-serif;
+}
+
+header{
+    background: #ff4848;
+}
+
+header::after{
+    content: '';
+    display: table;
+    clear: both;
+}
+
+nav a{
+    color: #444;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.header-container{
+    width: 90%;
+    margin: 0 auto;
+}
+
+.logo{
+    width: auto;
+    float: left;
+}
+
+.top-navbar{
+    overflow:hidden;
+}
+
+.pages-nav{
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 85%;
+    list-style: none;
+}
+
+.pages-nav li{
+    display: inline-block;
+    padding-top: 19px;
+    margin-left: 2%;
+    position: relative;
+}
+
+.login-nav{
+    float: right;
+    margin: 0;
+    padding: 0;
+    width: 15%;
+    list-style: none;
+}
+
+.login-nav li{
+    margin-top: 6px;
+}
+
+.pages-nav a:hover{
+    color: #000;
+}
+
+.pages-nav a::before{
+    content: '';
+    display: block;
+    height: 5px;
+    background-color: #444;
+
+    position: absolute;
+    top: 0;
+    width: 0%;
+
+    transition: all ease-in-out 250ms;
+}
+
+.pages-nav a:hover::before{
+    width: 100%;
+}
+
+.content{
+    margin-left: 5%;
+    margin-right: 5%;
+}
