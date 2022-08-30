@@ -15,7 +15,7 @@ import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+print(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -23,13 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 f = open(f'{BASE_DIR}/../env_vars.json')
 data = json.load(f)
-SECRET_KEY = data["SECRET_KEY"]
 f.close()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = data["SECRET_KEY"]
 
-ALLOWED_HOSTS = ['200.73.69.220', '*']
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+ALLOWED_HOSTS = ['200.73.69.220', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -78,10 +79,24 @@ WSGI_APPLICATION = 'ITS.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+#Local DB
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}'''
+
+# Production DB
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'equipo6',
+        'USER': 'ITS',
+        'PASSWORD': f'{data["DB_PASSWD"]}',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -121,6 +136,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = f'{BASE_DIR}/static/'
+
+STATIC_ROOT = f'{BASE_DIR}/static/'
 
 STATICFILES_DIRS = [
     f'{BASE_DIR}/DCL/static/',
