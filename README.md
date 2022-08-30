@@ -25,3 +25,7 @@
 - [ ] Creacion de DCL
 - [ ] Guardar tarea (modelo de datos)
 - [ ] Disponible online para interactuar
+
+## Deployment
+- Launch Python Venv in linode -> `source its_env/bin/activate`
+- 
