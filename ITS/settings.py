@@ -30,7 +30,7 @@ SECRET_KEY = data["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['200.73.69.220', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['104.237.138.135', 'localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
