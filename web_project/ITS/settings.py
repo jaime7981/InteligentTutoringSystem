@@ -21,7 +21,7 @@ print(BASE_DIR)
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-f = open(f'{BASE_DIR}/../env_vars.json')
+f = open(f'{BASE_DIR}/env_vars.json')
 data = json.load(f)
 f.close()
 
