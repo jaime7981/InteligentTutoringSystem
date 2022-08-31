@@ -3,7 +3,7 @@ version: "3.9"
 
 services:
   webapp:
-    build: .
+    build: ./web_project
     volumes:
      - ./web_project:/django_app
     image: webapp:django_app
@@ -12,7 +12,9 @@ services:
       - db
     ports: 
      - 8000:8000
-    command: python3 manage.py runserver 0.0.0.0:8000
+    #command: python3 manage.py runserver 0.0.0.0:8000
+    #command: ./start_project.sh
+    command: gunicorn ITS.wsgi:application --bind 0.0.0.0:8000
   db:
     image: postgres
     container_name: postgres_db
@@ -22,3 +24,13 @@ services:
       - POSTGRES_DB=its
       - POSTGRES_USER=equipo6
       - POSTGRES_PASSWORD=Equipo@6
+  nginx:
+    build: ./nginx
+    image: nginx:nginx_app
+    container_name: nginx_web_app
+    volumes: 
+     - ./web_project:/django_app
+    depends_on:
+      - webapp
+    ports:
+     - 80:80
