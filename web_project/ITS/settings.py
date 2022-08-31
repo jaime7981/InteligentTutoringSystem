@@ -27,7 +27,7 @@ f.close()
 SECRET_KEY = data["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
@@ -79,27 +79,26 @@ WSGI_APPLICATION = 'ITS.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 #Local DB
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
+}'''
 
-# Production DB
-'''
+# Production D
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'its',
-        'USER': 'equipo6',
+        'NAME': f'{data["DB_NAME"]}',
+        'USER': f'{data["DB_USER"]}',
         'PASSWORD': f'{data["DB_PASSWD"]}',
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
-'''
+
 
 
 # Password validation
