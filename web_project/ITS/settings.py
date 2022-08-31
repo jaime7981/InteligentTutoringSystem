@@ -11,11 +11,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-import json
+import json, os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -28,9 +27,9 @@ f.close()
 SECRET_KEY = data["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['104.237.138.135', 'localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
@@ -60,7 +59,7 @@ ROOT_URLCONF = 'ITS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [f'{BASE_DIR}/templates', f'{BASE_DIR}/DCL/static'],
+        'DIRS': ['templates', 'DCL/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,12 +136,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = f'{BASE_DIR}/static/'
+STATIC_URL = 'static/'
 
-STATIC_ROOT = f'{BASE_DIR}/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_collect')
 
 STATICFILES_DIRS = [
-    f'{BASE_DIR}/templates/static/',
+    os.path.join(BASE_DIR,'static'),
+    os.path.join(BASE_DIR,'DCL/static'),
+
 ]
 
 # Default primary key field type
