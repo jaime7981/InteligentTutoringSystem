@@ -3,4 +3,16 @@
 
 <h1>Login</h1>
 
+<form method="POST" action="">
+    {% csrf_token %}
+    <ul>
+        {% for fields in login_form %}
+            <li> {{ fields.name }}: {{ fields }}</li>
+        {% endfor %}
+    </ul>
+    <input type="submit" name="Register">
+</form>
+
+<a href="{% url 'registration' %}">REGISTRATION</a>
+
 {% endblock %}

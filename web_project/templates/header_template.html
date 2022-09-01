@@ -24,12 +24,27 @@
                         <li><a href="{% url 'teacher' %}">Teacher Index</a></li>
                     </ul>
                     <ul class="login-nav">
-                        <li><a href="{% url 'login' %}">LOGIN</a></li>
-                        <li><a href="{% url 'registration' %}">REGISTRATION</a></li>
+                        
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'logout' %}">LOGOUT</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">LOGIN</a></li>
+                            <li><a href="{% url 'registration' %}">REGISTRATION</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>
         </header>
+
+        <div id="django-message">
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
 
         <div class="main-content">
             {% block content %}
