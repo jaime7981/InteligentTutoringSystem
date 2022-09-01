@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'DCL.apps.DclConfig'
+    'DCL.apps.DclConfig',
+    'usercontrol.apps.UsercontrolConfig',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,7 @@ ROOT_URLCONF = 'ITS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates', 'DCL/templates'],
+        'DIRS': ['templates', 'DCL/templates', 'usercontrol/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -142,7 +143,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_collect')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static'),
     os.path.join(BASE_DIR,'DCL/static'),
-
+    os.path.join(BASE_DIR,'usercontrol/static'),
 ]
 
 # Default primary key field type

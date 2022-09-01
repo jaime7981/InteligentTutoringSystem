@@ -28,4 +28,4 @@
 
 ## Deployment
 - Launch Python Venv in linode -> `source its_env/bin/activate` or `source /srv/webapp_pyenv/its_env/bin/activate`
-- 
+- Launch docker container -> `docker-compose up --build`

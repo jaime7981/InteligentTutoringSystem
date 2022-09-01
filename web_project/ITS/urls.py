@@ -20,5 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('dcl/', include('DCL.urls')),
+    path('usercontrol/', include('usercontrol.urls')),
     path('', RedirectView.as_view(url='dcl/', permanent=True)),
 ]
