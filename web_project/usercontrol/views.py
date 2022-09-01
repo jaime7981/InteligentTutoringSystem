@@ -1,14 +1,14 @@
 from multiprocessing import context
 from django.shortcuts import render, redirect
+
+from .decorator import unauthenticated_user, is_authenticated_user, allowed_users
 from .forms import CreateUserForm, LoginUserForm
 from django.contrib import messages
 
 from django.contrib.auth import authenticate, login, logout
 
+@unauthenticated_user
 def loginMeth(request):
-    if request.user.is_authenticated:
-        return(redirect('home'))
-
     login_form = LoginUserForm()
     if request.method == "POST":
         login_form = LoginUserForm(request.POST)
@@ -23,14 +23,11 @@ def loginMeth(request):
         messages.error(request, 'Failed Login')
         return(redirect('login'))
 
-    
     context = { "login_form" : login_form}
     return(render(request, 'login.html', context=context))
 
+@unauthenticated_user
 def registration(request):
-    if request.user.is_authenticated:
-        return(redirect('home'))
-
     user_form = CreateUserForm()
     if request.method == "POST":
         user_form = CreateUserForm(request.POST)
@@ -46,6 +43,7 @@ def registration(request):
     context = { "user_form" : user_form }
     return(render(request, 'registration.html', context=context))
 
+@is_authenticated_user
 def logoutMeth(request):
     logout(request)
     messages.success(request, 'Succesfully loged out')
