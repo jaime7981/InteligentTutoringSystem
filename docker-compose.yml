@@ -23,6 +23,8 @@ services:
       - POSTGRES_DB=its
       - POSTGRES_USER=equipo6
       - POSTGRES_PASSWORD=Equipo@6
+    ports:
+      - 5432:5432
   nginx:
     build: ./nginx
     volumes: 
