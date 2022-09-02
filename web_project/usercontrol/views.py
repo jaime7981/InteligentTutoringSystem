@@ -1,7 +1,7 @@
 from multiprocessing import context
 from django.shortcuts import render, redirect
 
-from .decorator import unauthenticated_user, is_authenticated_user, allowed_users
+from .decorator import unauthenticated_user, is_authenticated_user
 from .forms import CreateUserForm, LoginUserForm
 from .models import Student, Teacher
 from django.contrib import messages
@@ -21,7 +21,7 @@ def loginMeth(request):
                                 password=login_form.cleaned_data.get('password'))
             if user is not None:
                 login(request, user)
-                messages.success(request, f'Succesfuly loged')
+                messages.success(request, 'Succesfuly loged')
                 return(redirect('home'))
         messages.error(request, 'Failed Login')
         return(redirect('login'))
