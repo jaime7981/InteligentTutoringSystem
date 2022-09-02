@@ -1,18 +1,42 @@
 {% extends "header_template.html" %}
 {% block content %}
 
-<h1>Login</h1>
 
-<form method="POST" action="">
-    {% csrf_token %}
-    <ul>
-        {% for fields in login_form %}
-            <li> {{ fields.name }}: {{ fields }}</li>
-        {% endfor %}
-    </ul>
-    <input type="submit" name="Register">
-</form>
+<div class="container d-flex p-2 flex-direction: column">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="col-m-12 text-center p-3">
+            <div class="panel-heading">
+                <h2>
+                    Login
+                </h2>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    {% for fields in login_form %}
+                        <div class="row p-1">
+                            <a> {{ fields.name }}: {{ fields }}</a>
+                        </div>
 
-<a href="{% url 'registration' %}">GO TO REGISTRATION</a>
+                    {% endfor %}
+                </ul>
+                <div class="">
+
+                </div>
+                <div class="container">
+                    <div class="row-sm flex align-center">
+                        <button class="btn btn-primary btn-sm m-4" type="submit"> Submit</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-light" href="{% url 'registration' %}"> Registration </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
 
 {% endblock %}
