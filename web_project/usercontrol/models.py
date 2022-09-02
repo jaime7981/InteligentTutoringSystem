@@ -26,22 +26,3 @@ class Assignment(models.Model):
 
     def __str__(self):
         return str("Assignment model")
-
-def create_student(sender, instance, created, **kargs):
-    if created:
-        Student.objects.create(user=instance)
-        print('Student Created')
-
-def create_teacher(sender, instance, created, **kargs):
-    if created:
-        Teacher.objects.create(user=instance)
-        print('Teacher Created')
-
-def update_student(sender, instance, created, **kargs):
-    if created == False:
-        instance.student.save()
-
-def update_teacher(sender, instance, created, **kargs):
-    if created == False:
-        instance.student.save()
-

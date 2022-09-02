@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 
 from .decorator import unauthenticated_user, is_authenticated_user, allowed_users
 from .forms import CreateUserForm, LoginUserForm
-from .models import create_student, create_teacher
+from .models import Student, Teacher
 from django.contrib import messages
 
 from django.contrib.auth import authenticate, login, logout
@@ -42,16 +42,21 @@ def registration(request):
                 group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
             except:
                 if user_form.cleaned_data.get('user_role') != 'student' or user_form.cleaned_data.get('user_role') != 'teacher':
+                    new_group, created = Group.objects.get_or_create(name=user_form.cleaned_data.get('user_role'))
+                    group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
+                else:
                     return(redirect('registration'))
-                new_group, created = Group.objects.get_or_create(name=user_form.cleaned_data.get('user_role'))
-                group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
 
             user.groups.add(group)
 
-            if user_form.cleaned_data.get('user_role') != 'student':
-                post_save.connect(create_student, sender=User)
+            if user_form.cleaned_data.get('user_role') == 'student':
+                Student.objects.create(user=user, 
+                               first_name='def_first', 
+                               last_name='def_last')
             else:
-                post_save.connect(create_teacher, sender=User)
+                Teacher.objects.create(user=user, 
+                               first_name='def_first', 
+                               last_name='def_last')
 
             messages.success(request, f'Account succesfuly created for {username}')
             return(redirect('login'))
