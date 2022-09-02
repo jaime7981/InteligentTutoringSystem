@@ -1,0 +1,28 @@
+{% extends "header_template.html" %}
+{% load static %}
+{% block content %}
+
+<h1>Test</h1>
+
+<div>
+    <p>Test value</p>
+    <p>{{ test_value }}</p>
+
+    <ul>
+        {% with 'jaime diego juan' as name_list %}
+            {% for names in name_list.split %}
+                <li>{{ names }}</li>
+            {% endfor %}
+        {% endwith %}
+    </ul>
+</div>
+
+<div id="automated-form">
+    <button id="form-button">Create Form</button>
+    <div id="js-test-container">
+    </div>
+</div>
+
+
+<script src="{% static 'js/dcl_test.js' %}"></script>
+{% endblock %}

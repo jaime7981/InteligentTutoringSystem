@@ -22,3 +22,7 @@ def teacher(request):
     context = {}
     return(render(request, 'teacher.html', context=context))
 
+def test(request):
+    context = { "test_value" : "controller passed value"}
+    return(render(request, 'test.html', context=context))
+
