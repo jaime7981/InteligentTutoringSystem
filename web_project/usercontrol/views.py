@@ -36,7 +36,12 @@ def registration(request):
             user = user_form.save()
             username = user_form.cleaned_data.get('username')
 
-            group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
+            try:
+                group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
+            except:
+                new_group, created = Group.objects.get_or_create(name=user_form.cleaned_data.get('user_role'))
+                group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
+
             user.groups.add(group)
 
             messages.success(request, f'Account succesfuly created for {username}')
