@@ -3,10 +3,12 @@ from django.shortcuts import render, redirect
 
 from .decorator import unauthenticated_user, is_authenticated_user, allowed_users
 from .forms import CreateUserForm, LoginUserForm
+from .models import create_student, create_teacher
 from django.contrib import messages
 
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
+from django.db.models.signals import post_save
 
 @unauthenticated_user
 def loginMeth(request):
@@ -39,10 +41,17 @@ def registration(request):
             try:
                 group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
             except:
+                if user_form.cleaned_data.get('user_role') != 'student' or user_form.cleaned_data.get('user_role') != 'teacher':
+                    return(redirect('registration'))
                 new_group, created = Group.objects.get_or_create(name=user_form.cleaned_data.get('user_role'))
                 group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
 
             user.groups.add(group)
+
+            if user_form.cleaned_data.get('user_role') != 'student':
+                post_save.connect(create_student, sender=User)
+            else:
+                post_save.connect(create_teacher, sender=User)
 
             messages.success(request, f'Account succesfuly created for {username}')
             return(redirect('login'))
