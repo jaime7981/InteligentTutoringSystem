@@ -6,6 +6,7 @@ from .forms import CreateUserForm, LoginUserForm
 from django.contrib import messages
 
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
 
 @unauthenticated_user
 def loginMeth(request):
@@ -32,10 +33,14 @@ def registration(request):
     if request.method == "POST":
         user_form = CreateUserForm(request.POST)
         if user_form.is_valid():
-            user_form.save()
-            user = user_form.cleaned_data.get('username')
-            messages.success(request, f'Account succesfuly created for {user}')
-            return(redirect('home'))
+            user = user_form.save()
+            username = user_form.cleaned_data.get('username')
+
+            group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
+            user.groups.add(group)
+
+            messages.success(request, f'Account succesfuly created for {username}')
+            return(redirect('login'))
         else:
             messages.error(request, 'Confirm that the fields are correct')
             redirect('registration')

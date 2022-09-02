@@ -6,13 +6,20 @@
 <form method="POST" action="">
     {% csrf_token %}
     <ul>
-        {% for fields in user_form %}
-            <li> {{ fields.name }}: {{ fields }}</li>
-        {% endfor %}
+        <li>Username: {{ user_form.username }}</li>
+        <li>Email: {{ user_form.email }}</li>
+        <li>Password: {{ user_form.password1 }}</li>
+        <li>Password Confirmation: {{ user_form.password2 }}</li>
+        <li>
+            <select id="user_role" name="user_role">
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+        </li>
     </ul>
-    <input type="submit" name="Register">
+    
+    <input type="submit" name="Register" value="Register">
 </form>
 
-<a href="{% url 'login' %}">LOGIN</a>
+<a href="{% url 'login' %}">GO TO LOGIN</a>
 
 {% endblock %}
