@@ -1,12 +1,12 @@
-console.log('dcl test')
+const currentDiv = document.getElementById("js-test-container");
+const formButton = document.getElementById("form-button");
+console.log('dcl test');
 
 var createNewDiv = function() {
-    var currentDiv = document.getElementById("js-test-container");
     var newDiv = document.createElement("div");
-
-    newDiv.innerHTML = `
-    <form>
-    <!-- 2 column grid layout with text inputs for the first and last names -->
+    var secondDiv = document.createElement("div");
+    newDiv.insertAdjacentHTML('afterbegin',
+    `<form>
     <div class="row mb-4">
         <div class="col">
         <div class="form-outline">
@@ -22,19 +22,16 @@ var createNewDiv = function() {
         </div>
     </div>
 
-    <!-- Email input -->
     <div class="form-outline mb-4">
         <input type="email" id="form3Example3" class="form-control" />
         <label class="form-label" for="form3Example3">Email address</label>
     </div>
 
-    <!-- Password input -->
     <div class="form-outline mb-4">
         <input type="password" id="form3Example4" class="form-control" />
         <label class="form-label" for="form3Example4">Password</label>
     </div>
 
-    <!-- Checkbox -->
     <div class="form-check d-flex justify-content-center mb-4">
         <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
         <label class="form-check-label" for="form2Example33">
@@ -42,10 +39,8 @@ var createNewDiv = function() {
         </label>
     </div>
 
-    <!-- Submit button -->
     <button type="submit" class="btn btn-primary btn-block mb-4">Sign up</button>
 
-    <!-- Register buttons -->
     <div class="text-center">
         <p>or sign up with:</p>
         <button type="button" class="btn btn-primary btn-floating mx-1">
@@ -64,11 +59,12 @@ var createNewDiv = function() {
         <i class="fab fa-github"></i>
         </button>
     </div>
-    </form>`;
+    </form>`);
+    secondDiv.innerHTML = `<h2>New Form</h2>`;
+    currentDiv.appendChild(secondDiv);
     currentDiv.appendChild(newDiv);
 }
 
-var formButton = document.getElementById("form-button");
 formButton.addEventListener("click", function() {
     console.log("div creation");
     createNewDiv();
