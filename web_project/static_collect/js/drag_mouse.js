@@ -3,6 +3,7 @@ var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 var barButton = document.getElementById("select-bar-button");
 var circleButton = document.getElementById("select-circle-button");
+var saveAssignmentButton = document.getElementById("save-assignment-button");
 const WIDTH = 1900;
 const HEIGHT = 800;
 const STEP = 50;
@@ -26,6 +27,8 @@ function Bar(init_coordinates, end_coordinates) {
     this.init_y = init_coordinates[1];
     this.end_x = end_coordinates[0];
     this.end_y = end_coordinates[1];
+    this.object_type = selected_shape;
+    this.name = 'bar_' + (bar_list.length + 1);
 
     this.draw = function() {
         context.beginPath();
@@ -41,6 +44,8 @@ function Bar(init_coordinates, end_coordinates) {
 function Circle(init_coordinates) {
     this.init_x = init_coordinates[0];
     this.init_y = init_coordinates[1];
+    this.object_type = selected_shape;
+    this.name = 'circle_' + (circle_list.length + 1);
 
     this.draw = function() {
         context.beginPath();
@@ -125,6 +130,23 @@ var drawAllObjects = function(objects_list) {
 // Event Listeners
 barButton.addEventListener('click', function() {selected_shape = 'bar';}, false);
 circleButton.addEventListener('click', function() {selected_shape = 'circle';}, false);
+saveAssignmentButton.addEventListener('click', function() {
+    var json_output_list = ['{"assignment_data" : ['];
+    var json_parsed_object = '';
+    for (list_element in  bar_list) {
+        json_parsed_object = '{ "object" : "bar", "data" : ' + JSON.stringify(bar_list[list_element]) + '},';
+        json_output_list.push(json_parsed_object);
+    }
+    for (list_element in  circle_list) {
+        json_parsed_object = ['{ "object" : "circle", "data" : ', 
+                                    JSON.stringify(circle_list[list_element]),
+                                    '},'].join('');
+        json_output_list.push(json_parsed_object);
+    }
+    json_output_list.push('{"object" : null, "data" : null}]}')
+    json_parsed_object = json_output_list.join('');
+    console.log(json_parsed_object);
+}, false);
 
 drawGrid(context, STEP);
 drawLine(canvas, context);

@@ -1,27 +1,4 @@
-{
-    "comp1" : {
-        "type" : "bar",
-        "init_pos" : {
-            "x" : 1,
-            "y" : 1
-        },
-        "end_pos" : {
-            "x" : 2,
-            "y" : 2
-        },
-        "mod" : 1
-    },
-    "comp2" : {
-        "type" : "force",
-        "init_pos" : {
-            "x" : 1,
-            "y" : 1
-        },
-        "end_pos" : {
-            "x" : 2,
-            "y" : 2
-        },
-        "magnitude" : 10,
-        "dir" : -1
-    }
+{"assignment_data" : [{ "object" : "bar", "data" : {"init_x":89,"init_y":125,"end_x":21,"end_y":400,"object_type":"bar","name":"bar_1"}},
+                      { "object" : "circle", "data" : {"init_x":188,"init_y":98,"object_type":"circle","name":"circle_1"}},
+                      {"object" : null, "data" : null}]
 }
