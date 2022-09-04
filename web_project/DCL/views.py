@@ -48,6 +48,13 @@ def teacher(request):
     context = { "teacher_assignments" : assignments}
     return(render(request, 'teacher.html', context=context))
 
+@allowed_users(allowed_roles=['teacher'])
+def teacherAssignments(request, assignment_id):
+
+    assignment = Assignment.objects.get(pk = assignment_id)
+    context = { "selected_assignment" : assignment}
+    return(render(request, 'assignment.html', context=context))
+
 def test(request):
     context = { "test_value" : "controller passed value"}
     return(render(request, 'test.html', context=context))

@@ -9,4 +9,4 @@ class Assignment(models.Model):
     dcl_json = models.JSONField()
 
     def __str__(self):
-        return str("Assignment model")
+        return str(self.dcl_json)
