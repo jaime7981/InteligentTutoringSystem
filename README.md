@@ -27,5 +27,7 @@
 - [ ] Disponible online para interactuar
 
 ## Deployment
-- Launch Python Venv in linode -> `source its_env/bin/activate` or `source /srv/webapp_pyenv/its_env/bin/activate`
 - Launch docker container -> `docker-compose up --build`
+- Return to shell -> `COMMAND &>/dev/null &`
+- Launch docker container shell -> `docker exec -it [container-id] bash`
+- watch user running jobs -> `jobs`
