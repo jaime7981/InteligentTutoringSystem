@@ -49,12 +49,14 @@ function Circle(init_coordinates) {
     this.init_y = init_coordinates.y;
     this.object_type = selected_shape;
     this.name = 'circle_' + (circle_list.length + 1);
+    this.color = 'red';
+    this.rad = 5;
 
     this.draw = function() {
         context.beginPath();
-        context.arc(this.init_x, this.init_y, 5, 0, 2 * Math.PI); //(center_x, center_y, start_angle, end_angle)
+        context.arc(this.init_x, this.init_y, this.rad, 0, 2 * Math.PI); //(center_x, center_y, start_angle, end_angle)
         context.closePath();
-        context.strokeStyle = 'red';
+        context.strokeStyle = this.color;
         context.stroke();
     }
 }
@@ -72,13 +74,28 @@ var drawLine = function(canvas, context) {
             drawAllObjects(bar_list);
             drawAllObjects(circle_list);
             if (selected_shape == 'bar'){
-                drawed_bar = new Bar(new Point(startX, startY), snapMouseToNode(event.offsetX, event.offsetY));
+                drawed_bar = new Bar(getPoint(startX, startY), snapMouseToNode(event.offsetX, event.offsetY));
                 drawed_bar.draw();
             }
             else if (selected_shape == 'circle'){
-                drawed_bar = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
-                drawed_bar.draw();
+                drawed_circle = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+                drawed_circle.draw();
             }
+        }
+        else {
+            context.clearRect(0,0,canvas.width, canvas.height)
+            drawGrid(context);
+            drawAllObjects(bar_list);
+            drawAllObjects(circle_list);
+            drawed_circle = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+            if (selected_shape == 'bar'){
+                drawed_circle.color = 'blue';
+            }
+            else if (selected_shape == 'circle'){
+                drawed_circle.color = 'red';
+            }
+            drawed_circle.rad = 4;
+            drawed_circle.draw();
         }
     }
 
@@ -96,7 +113,7 @@ var drawLine = function(canvas, context) {
     function disengage(event){
         dragging = false;
         if (selected_shape == "bar"){
-            bar_list.push(new Bar(new Point(startX, startY), snapMouseToNode(event.offsetX, event.offsetY)));
+            bar_list.push(new Bar(getPoint(startX, startY), snapMouseToNode(event.offsetX, event.offsetY)));
         }
         else if (selected_shape == "circle"){
             circle_list.push(new Circle(snapMouseToNode(event.offsetX, event.offsetY)));
@@ -123,6 +140,8 @@ var drawGrid = function(context) {
         context.lineTo(WIDTH, y);
     }
     context.stroke();
+    context.strokeStyle = 'blue';
+    context.lineWidth = LINE_WIDTH;
 }
 
 var lineListInit = function() {
@@ -139,18 +158,22 @@ var snapMouseToNode = function(mouse_x, mouse_y) {
     var set_y = 0;
 
     for (x_line in vertical_points) {
-        if (vertical_points[x_line] > mouse_x) {
+        if (vertical_points[x_line] > mouse_x - STEP/2) {
             set_x = vertical_points[x_line];
             break;
         }
     }
     for (y_line in horizontal_points) {
-        if (horizontal_points[y_line] > mouse_y) {
+        if (horizontal_points[y_line] > mouse_y - STEP/2) {
             set_y = horizontal_points[y_line];
             break;
         }
     }
     return (new Point(set_x, set_y));
+}
+
+function getPoint(x, y){
+    return (new Point(x, y));
 }
 
 var drawAllObjects = function(objects_list) {
