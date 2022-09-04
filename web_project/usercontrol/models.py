@@ -27,4 +27,4 @@ class Classroom(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
-    date_joined = models.DateField()
+    date_joined = models.DateField(null=True, blank=True)

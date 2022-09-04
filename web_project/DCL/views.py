@@ -1,6 +1,10 @@
 from multiprocessing import context
+from unicodedata import name
 from django.shortcuts import render, redirect
 from usercontrol.decorator import allowed_users
+from .models import Assignment
+from usercontrol.models import Teacher
+from django.contrib import messages
 
 # Create your views here.
 def home(request):
@@ -10,10 +14,16 @@ def home(request):
 @allowed_users(allowed_roles=['teacher'])
 def dcl_app(request):
     if request.method == "POST" and is_ajax(request):
-        assaignment_data = request.POST.get('assignment_data')
-        #Create assignment and link it to teacher
-        print(assaignment_data)
-
+        if not request.user.is_superuser:
+            assignment_data = request.POST.get('assignment_data')
+            current_teacher = Teacher.objects.get(user = request.user)
+            Assignment.objects.create(name = 'default assignment name',
+                                    level = 1,
+                                    teacher = current_teacher,
+                                    dcl_json = assignment_data)
+            messages.success(request, 'Assignment succesfully saved')
+        else:
+            messages.error(request, 'Superusers cant save assignments, only teachers')
         return redirect('home')
 
     context = {}
@@ -26,7 +36,16 @@ def student(request):
 
 @allowed_users(allowed_roles=['teacher'])
 def teacher(request):
-    context = {}
+    assignments = []
+
+    if not request.user.is_superuser:
+        current_teacher = Teacher.objects.get(user = request.user)
+        assignments = Assignment.objects.filter(teacher = current_teacher).values()
+    else:
+        messages.error(request, 'Superusers cant save assignments, only teachers')
+        return (redirect('home'))
+
+    context = { "teacher_assignments" : assignments}
     return(render(request, 'teacher.html', context=context))
 
 def test(request):

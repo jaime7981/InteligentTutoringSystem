@@ -42,7 +42,7 @@ def registration(request):
                 group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
             except:
                 if user_form.cleaned_data.get('user_role') != 'student' or user_form.cleaned_data.get('user_role') != 'teacher':
-                    new_group, created = Group.objects.get_or_create(name=user_form.cleaned_data.get('user_role'))
+                    #new_group, created = Group.objects.get_or_create(name=user_form.cleaned_data.get('user_role'))
                     group = Group.objects.get(name=user_form.cleaned_data.get('user_role'))
                 else:
                     return(redirect('registration'))

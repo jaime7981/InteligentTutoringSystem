@@ -4,4 +4,9 @@
 
 <h1>Teacher Page</h1>
 
+<div id="teacher-assignments">
+    {% for assignment in teacher_assignments %}
+        <p>Assignment data: {{ assignment }}</p>
+    {% endfor %}
+</div>
 {% endblock %}
