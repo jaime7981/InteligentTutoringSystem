@@ -200,7 +200,47 @@ saveAssignmentButton.addEventListener('click', function() {
     }
     json_output_list.push('{"object" : null, "data" : null}]}')
     json_parsed_object = json_output_list.join('');
+    console.log(json_parsed_object);
+    ajaxSaveAssignment(json_parsed_object);
 }, false);
+
+// Ajax response
+var ajaxSaveAssignment = function(parsed_json) {
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken" : getCookie('csrftoken')
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        url: "/dcl/app",
+        data: {
+            "assignment_data" : parsed_json
+        },
+        success: function (response) {
+            console.log('ajax success');
+        },
+        error: function (response) {
+            alert(response["responseJSON"]["error"]);
+        }
+    })
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
 lineListInit();
 drawGrid(context);
