@@ -1,9 +1,15 @@
 // Init
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
+//Buttons
 var barButton = document.getElementById("select-bar-button");
 var circleButton = document.getElementById("select-circle-button");
+var supportButton = document.getElementById("select-support-button");
+var slidingSupportButton = document.getElementById("select-sliding-support-button");
+var forceButton = document.getElementById("select-force-button")
 var saveAssignmentButton = document.getElementById("save-assignment-button");
+
+
 const WIDTH = 1900;
 const HEIGHT = 800;
 const STEP = 50;
@@ -12,8 +18,19 @@ context.canvas.width  = WIDTH;
 context.canvas.height = HEIGHT;
 canvas.style.backgroundColor = 'white';
 
+const COLOR_BAR = 'blue';
+const COLOR_CIRCLE = 'red';
+const COLOR_SUPPORT = 'lime';
+const COLOR_SLIDING = 'purple';
+const COLOR_FORCE = 'cyan';
+
+
 var bar_list = [];
 var circle_list = [];
+var support_list = [];
+var sliding_support_list = [];
+var force_list = [];
+
 var selected_shape = 'bar';
 
 var horizontal_points = [];
@@ -38,7 +55,7 @@ function Bar(init_coordinates, end_coordinates) {
         context.moveTo(this.init_x, this.init_y);
         context.lineTo(this.end_x, this.end_y);
         context.closePath();
-        context.strokeStyle = 'blue';
+        context.strokeStyle = COLOR_BAR;
         context.lineWidth = LINE_WIDTH;
         context.stroke();
     }
@@ -49,7 +66,7 @@ function Circle(init_coordinates) {
     this.init_y = init_coordinates.y;
     this.object_type = selected_shape;
     this.name = 'circle_' + (circle_list.length + 1);
-    this.color = 'red';
+    this.color = COLOR_CIRCLE;
     this.rad = 5;
 
     this.draw = function() {
@@ -73,27 +90,61 @@ var drawLine = function(canvas, context) {
             drawGrid(context);
             drawAllObjects(bar_list);
             drawAllObjects(circle_list);
+            drawAllObjects(support_list);
+            drawAllObjects(sliding_support_list);
+            drawAllObjects(force_list);
+
             if (selected_shape == 'bar'){
                 drawed_bar = new Bar(getPoint(startX, startY), snapMouseToNode(event.offsetX, event.offsetY));
                 drawed_bar.draw();
             }
             else if (selected_shape == 'circle'){
                 drawed_circle = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+                drawed_circle.color = COLOR_CIRCLE;
                 drawed_circle.draw();
             }
+            else if (selected_shape == 'support'){
+                drawed_circle = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+                drawed_circle.color = COLOR_SUPPORT;
+                drawed_circle.draw();
+            }
+            else if (selected_shape == 'sliding'){
+                drawed_circle = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+                drawed_circle.color = COLOR_SLIDING;
+                drawed_circle.draw();
+            }
+            else if (selected_shape == 'force'){
+                drawed_circle = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+                drawed_circle.color = COLOR_FORCE;
+                drawed_circle.draw();
+            }
+
         }
         else {
             context.clearRect(0,0,canvas.width, canvas.height)
             drawGrid(context);
             drawAllObjects(bar_list);
             drawAllObjects(circle_list);
+            drawAllObjects(support_list);
+            drawAllObjects(sliding_support_list);
+            drawAllObjects(force_list);
             drawed_circle = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
             if (selected_shape == 'bar'){
-                drawed_circle.color = 'blue';
+                drawed_circle.color = COLOR_BAR;
             }
             else if (selected_shape == 'circle'){
-                drawed_circle.color = 'red';
+                drawed_circle.color = COLOR_CIRCLE;
             }
+            else if (selected_shape == 'support'){
+                drawed_circle.color = COLOR_SUPPORT;
+            }
+            else if (selected_shape == 'sliding'){
+                drawed_circle.color = COLOR_SLIDING;
+            }
+            else if (selected_shape == 'force'){
+                drawed_circle.color = COLOR_FORCE;
+            }
+
             drawed_circle.rad = 4;
             drawed_circle.draw();
         }
@@ -106,6 +157,22 @@ var drawLine = function(canvas, context) {
         startY = snap_mouse.y;
         if (selected_shape == "circle"){
             drawed_bar = new Circle(snapMouseToNode(startX, startY));
+            drawed_bar.color = COLOR_CIRCLE;
+            drawed_bar.draw();
+        }
+        else if(selected_shape == "support"){
+            drawed_bar = new Circle(snapMouseToNode(startX, startY));
+            drawed_bar.color = COLOR_SUPPORT;
+            drawed_bar.draw();
+        }
+        else if(selected_shape == "sliding"){
+            drawed_bar = new Circle(snapMouseToNode(startX, startY));
+            drawed_bar.color = COLOR_SLIDING;
+            drawed_bar.draw();
+        }
+        else if(selected_shape == "force"){
+            drawed_bar = new Circle(snapMouseToNode(startX, startY));
+            drawed_bar.color = COLOR_FORCE;
             drawed_bar.draw();
         }
     }
@@ -113,10 +180,29 @@ var drawLine = function(canvas, context) {
     function disengage(event){
         dragging = false;
         if (selected_shape == "bar"){
-            bar_list.push(new Bar(getPoint(startX, startY), snapMouseToNode(event.offsetX, event.offsetY)));
+            new_item = new Bar(getPoint(startX, startY), snapMouseToNode(event.offsetX, event.offsetY));
+            new_item.color = COLOR_BAR;
+            bar_list.push(new_item);
         }
         else if (selected_shape == "circle"){
-            circle_list.push(new Circle(snapMouseToNode(event.offsetX, event.offsetY)));
+            new_item = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+            new_item.color = COLOR_CIRCLE;
+            circle_list.push(new_item);
+        }
+        else if (selected_shape == 'support'){
+            new_item = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+            new_item.color = COLOR_SUPPORT;
+            support_list.push(new_item);
+        }
+        else if (selected_shape == 'sliding'){
+            new_item = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+            new_item.color = COLOR_SLIDING;
+            sliding_support_list.push(new_item);
+        }
+        else if (selected_shape == 'force'){
+            new_item = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
+            new_item.color = COLOR_FORCE;
+            force_list.push(new_item);
         }
     }
 
@@ -126,7 +212,7 @@ var drawLine = function(canvas, context) {
 }
 
 var drawGrid = function(context) {
-    context.beginPath(); 
+    context.beginPath();
     for (var x = 0; x <= WIDTH; x += STEP) {
         context.moveTo(x, 0);
         context.lineTo(x, HEIGHT);
@@ -134,13 +220,13 @@ var drawGrid = function(context) {
     context.strokeStyle = 'black';
     context.lineWidth = 1;
     context.stroke();
-    context.beginPath(); 
+    context.beginPath();
     for (var y = 0; y <= HEIGHT; y += STEP) {
         context.moveTo(0, y);
         context.lineTo(WIDTH, y);
     }
     context.stroke();
-    context.strokeStyle = 'blue';
+    context.strokeStyle = COLOR_BAR;
     context.lineWidth = LINE_WIDTH;
 }
 
@@ -185,6 +271,10 @@ var drawAllObjects = function(objects_list) {
 // Event Listeners
 barButton.addEventListener('click', function() {selected_shape = 'bar';}, false);
 circleButton.addEventListener('click', function() {selected_shape = 'circle';}, false);
+supportButton.addEventListener('click', function() {selected_shape = 'support';}, false);
+slidingSupportButton.addEventListener('click', function() {selected_shape = 'sliding';}, false);
+forceButton.addEventListener('click', function() {selected_shape = 'force';}, false);
+
 saveAssignmentButton.addEventListener('click', function() {
     var json_output_list = ['{"assignment_data" : ['];
     var json_parsed_object = '';
@@ -198,6 +288,25 @@ saveAssignmentButton.addEventListener('click', function() {
                                     '},'].join('');
         json_output_list.push(json_parsed_object);
     }
+    for (list_element in  support_list) {
+        json_parsed_object = ['{ "object" : "support", "data" : ',
+                                    JSON.stringify(support_list[list_element]),
+                                    '},'].join('');
+        json_output_list.push(json_parsed_object);
+    }
+    for (list_element in  sliding_support_list) {
+        json_parsed_object = ['{ "object" : "sliding", "data" : ',
+                                    JSON.stringify(sliding_support_list[list_element]),
+                                    '},'].join('');
+        json_output_list.push(json_parsed_object);
+    }
+    for (list_element in  force_list) {
+        json_parsed_object = ['{ "object" : "force", "data" : ',
+                                    JSON.stringify(force_list[list_element]),
+                                    '},'].join('');
+        json_output_list.push(json_parsed_object);
+    }
+
     json_output_list.push('{"object" : null, "data" : null}]}')
     json_parsed_object = json_output_list.join('');
     console.log(json_parsed_object);

@@ -2,32 +2,20 @@
 {% load static %}
 {% block content %}
 
-<h1>Test</h1>
+<div id='dcl-app-content'>
+    <div>
+        <button id="select-bar-button">Select Bar</button>
+        <button id="select-circle-button">Select Circle</button>
+        <button id="select-support-button">Support</button>
+        <button id="select-sliding-support-button">Sliding Support</button>
+        <button id="select-force-button">Force</button>
+        <button id="save-assignment-button">Save Assignment</button>
 
-<div>
-    <p>Test value</p>
-    <p>{{ test_value }}</p>
-
-    <ul>
-        {% with 'jaime diego juan' as name_list %}
-            {% for names in name_list.split %}
-                <li>{{ names }}</li>
-            {% endfor %}
-        {% endwith %}
-    </ul>
-</div>
-
-<div id='dcl-app-content' style="width: 800px; height: 800px;">
-    <canvas id="canvas"></canvas>
-</div>
-
-<div id="automated-form">
-    <button id="form-button">Create Form</button>
-    <div id="js-test-container">
+    </div>
+    <div id='dcl-app'>
+        <canvas id="canvas"></canvas>
     </div>
 </div>
 
-
-<script src="{% static 'js/dcl_test.js' %}"></script>
-<script src="{% static 'js/draw_shapes.js' %}"></script>
+<script src="{% static 'js/drag_mouse.js' %}"></script>
 {% endblock %}
