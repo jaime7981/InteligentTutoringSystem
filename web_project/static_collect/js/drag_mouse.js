@@ -221,12 +221,12 @@ var ajaxSaveAssignment = function(parsed_json) {
             console.log('ajax success');
         },
         error: function (response) {
-            alert(response["responseJSON"]["error"]);
+            console.log(response["responseJSON"]["error"]);
         }
     })
 }
 
-function getCookie(name) {
+var getCookie = function(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
         var cookies = document.cookie.split(';');
