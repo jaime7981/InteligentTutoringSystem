@@ -7,6 +7,7 @@ urlpatterns = [
     path('app', dcl.dcl_app, name = 'app'),
     path('student', dcl.student, name = 'student'),
     path('teacher', dcl.teacher, name = 'teacher'),
-    path('teacher/<int:assignment_id>/', dcl.teacherAssignments, name = 'teacher'),
+    path('teacher/<int:assignment_id>/', dcl.teacherAssignment, name = 'teacher_assignment'),
+    path('teacher/create_assignment', dcl.createAssignment, name = 'create_assignment'),
     path('test', dcl.test, name = 'test'),
 ]
