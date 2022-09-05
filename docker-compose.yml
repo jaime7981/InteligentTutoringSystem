@@ -25,9 +25,9 @@ services:
     image: postgres
     container_name: postgres_db
     environment:
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWD=${DB_PASSWD}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWD}
     ports:
       - 5432:5432
   nginx:
