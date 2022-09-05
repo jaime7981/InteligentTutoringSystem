@@ -31,7 +31,10 @@ def dcl_app(request):
 
 @allowed_users(allowed_roles=['student'])
 def student(request):
-    context = {}
+    assignment_query = []
+    assignment_query = Teacher.students.through.objects.all()
+
+    context = { "assignment_list" : assignment_query}
     return(render(request, 'student.html', context=context))
 
 @allowed_users(allowed_roles=['teacher'])

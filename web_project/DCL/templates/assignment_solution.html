@@ -1,0 +1,41 @@
+{% extends "header_template.html" %}
+{% load static %}
+{% block content %}
+
+<h1>Assignment Info</h1>
+
+<div id="teacher-assignments">
+    <p>DCL Data: {{ selected_assignment }} </p>
+    {% if selected_assignment.photo %}
+        <div id="upload-picture-content" >
+            <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
+        </div>
+    {% endif %}
+</div>
+
+<div id='dcl-app-content'>
+    <div>
+        <button id="select-bar-button">Select Bar</button>
+        <button id="select-circle-button">Select Circle</button>
+        <button id="select-support-button">Support</button>
+        <button id="select-sliding-support-button">Sliding Support</button>
+        <button id="select-force-button">Force</button>
+        <button id="save-assignment-button">Save Assignment</button>
+    </div>
+    <div id='dcl-app'>
+        <canvas id="canvas"></canvas>
+    </div>
+</div>
+
+<h1>Student DCL</h1>
+
+<iframe id="encoder_iframe" height=75% width="50%" src="{% url 'app' %}"></iframe>
+
+<script type="text/javascript">
+    var assignment_js = "{{selected_assignment}}";
+    var teacher_redirect = "{% url 'teacher' %}";
+</script>
+<script src="{% static 'js/drag_mouse.js' %}"></script>
+
+
+{% endblock %}

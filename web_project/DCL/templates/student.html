@@ -67,6 +67,36 @@
                 </div>
             </div>
         </div>
+        <div class="row d-flex justify-content-center my-2">
+            <div class="row border border-danger rounded  my-2" id="user-profile-container">
+                Classrooms
+                <div class="row">
+                    <div class="col">
+                        Name
+                    </div>
+                    <div class="col">
+                        Teacher
+                    </div>
+                    <div class="col">
+                        Assginment Link
+                    </div>
+                </div>
+                
+                {% for assignment in assignment_list %}
+                    <div class="row my-2">
+                        <div class="col">
+                            {{ assignment.name }}
+                        </div>
+                        <div class="col">
+                            {{ assignment.teacher }}
+                        </div>
+                        <div class="col">
+                            <a href='teacher/{{ assignment.id }}/'>Watch Assignment</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
 
