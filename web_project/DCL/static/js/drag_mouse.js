@@ -90,8 +90,7 @@ var drawLine = function(canvas, context) {
         if(dragging){
             context.clearRect(0,0,canvas.width, canvas.height)
             drawGrid(context);
-            drawAllObjects(bar_list);
-            drawAllObjects(circle_list);
+            drawAllObjects();
 
             if (selected_shape == 'bar'){
                 drawed_bar = new Bar(getPoint(startX, startY), snapMouseToNode(event.offsetX, event.offsetY));
@@ -105,8 +104,7 @@ var drawLine = function(canvas, context) {
         else {
             context.clearRect(0,0,canvas.width, canvas.height)
             drawGrid(context);
-            drawAllObjects(bar_list);
-            drawAllObjects(circle_list);
+            drawAllObjects();
             drawed_circle = new Circle(snapMouseToNode(event.offsetX, event.offsetY));
             drawed_circle.rad = 4;
             drawed_circle.draw();
@@ -192,9 +190,12 @@ function getPoint(x, y){
     return (new Point(x, y));
 }
 
-var drawAllObjects = function(objects_list) {
-    for (object_item in objects_list) {
-        objects_list[object_item].draw();
+var drawAllObjects = function() {
+    for (object_item in bar_list) {
+        bar_list[object_item].draw();
+    }
+    for (object_item in circle_list) {
+        circle_list[object_item].draw();
     }
 }
 
@@ -284,21 +285,48 @@ var getCookie = function(name) {
 }
 
 var loadAssigmentData = function() {
-    if (assignment_js != ''){
+    if (assignment_js != ''){ 
         assignment_js = assignment_js.replace(new RegExp("&"+"#"+"x27;", "g"), '"');
+        assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
         assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
+        console.log(assignment_js);
         var parsedJson = JSON.parse(assignment_js);
         for (object in parsedJson['assignment_data']){
             if (parsedJson['assignment_data'][object]['data'] != null){
-                var data = parsedJson['assignment_data'][object]['data'];
-                var draw_type = parsedJson['assignment_data'][object]['object'];
-                console.log(data, draw_type);
+                var object_data = parsedJson['assignment_data'][object]['data'];
+                
+                if (object_data["draw_type"] == 'bar') {
+                    bar_list.push(dataToBar(object_data));
+                }
+                else if (object_data["draw_type"] == 'circle') {
+                    circle_list.push(dataToCircle(object_data));
+                }
             }
         }
+        drawAllObjects();
     }
 }
 
-loadAssigmentData();
+var dataToBar = function(data) {
+    var new_bar = new Bar(new Point(data['init_x'], data['init_y']),
+                          new Point(data['end_x'], data['end_y']));
+    new_bar.draw_type = data['draw_type'];
+    new_bar.object_type = data['object_type'];
+    new_bar.color = data['color'];
+    new_bar.name = data['name'];
+    return new_bar;
+}
+
+var dataToCircle = function(data) {
+    var new_circle = new Circle(new Point(data['init_x'], data['init_y']));
+    new_circle.draw_type = data['draw_type'];
+    new_circle.object_type = data['object_type'];
+    new_circle.color = data['color'];
+    new_circle.name = data['name'];
+    return new_circle;
+}
+
 lineListInit();
 drawGrid(context);
 drawLine(canvas, context);
+loadAssigmentData();
