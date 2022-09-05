@@ -4,6 +4,8 @@ from usercontrol.models import Teacher, Student
 # Create your models here.
 class Assignment(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
+    description = models.CharField(max_length=500, null=True, blank=True)
+
     level = models.IntegerField(blank=True, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     dcl_json = models.JSONField()

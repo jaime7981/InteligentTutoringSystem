@@ -242,7 +242,6 @@ saveAssignmentButton.addEventListener('click', function() {
 
     json_output_list.push('{"level" : null, "name" : null}]}')
     json_parsed_object = json_output_list.join('');
-    console.log(json_parsed_object);
     ajaxSaveAssignment(json_parsed_object);
 }, false);
 
@@ -260,7 +259,7 @@ var ajaxSaveAssignment = function(parsed_json) {
             "assignment_data" : parsed_json
         },
         success: function (response) {
-            console.log('ajax success');
+            window.location.href = teacher_redirect;
         },
         error: function (response) {
             console.log(response["responseJSON"]["error"]);
