@@ -2,10 +2,15 @@
 {% load static %}
 {% block content %}
 
-<h1>Nombre Assignment</h1>
+<h1>Assignment Name: {{ selected_assignment.name }} </h1>
 
 <div id="teacher-assignments">
-    {{ selected_assignment }}
+    <p>DCL Data: {{ selected_assignment }} </p>
+    {% if selected_assignment.photo %}
+        <div id="upload-picture-content" >
+            <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
+        </div>
+    {% endif %}
 </div>
 
 <div id='dcl-app-content'>
