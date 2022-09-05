@@ -1,4 +1,1 @@
-{"assignment_data" : [{ "object" : "bar", "data" : {"init_x":89,"init_y":125,"end_x":21,"end_y":400,"object_type":"bar","name":"bar_1"}},
-                      { "object" : "circle", "data" : {"init_x":188,"init_y":98,"object_type":"circle","name":"circle_1"}},
-                      {"object" : null, "data" : null}]
-}
+{"assignment_data" : [{ "data" : {"init_x":650,"init_y":150,"draw_type":"force","object_type":"force","name":"force_4","color":"cyan","rad":5}},{ "data" : {"init_x":250,"init_y":150,"draw_type":"circle","object_type":"circle","name":"circle_1","color":"red","rad":5}},{ "data" : {"init_x":350,"init_y":150,"draw_type":"circle","object_type":"support","name":"support_2","color":"lime","rad":5}},{ "data" : {"init_x":450,"init_y":150,"draw_type":"circle","object_type":"sliding","name":"sliding_3","color":"purple","rad":5}},{"object" : null, "data" : null}]}
