@@ -4,11 +4,69 @@
 
 <h1>Student Page</h1>
 
-<div class="container text-center">
-    <div class="row">
-        <div class="col"> Column </div>
-        <div class="col"> Column </div>
-        <div class="col"> Column </div>
+<div class="containter d-flex justify-content-center my-3 mx-4">
+    <div class="col">
+        <div class="row d-flex justify-content-center my-2">
+            <div class="row border border-danger rounded  my-2" id="user-profile-container">
+                Student Profile
+                <div class="row">
+                    <div class="col">
+                        First Name
+                    </div>
+                    <div class="col">
+                        Last Name
+                    </div>
+                    <div class="col">
+                        Overall Progress
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        {{user.first_name}}
+                        John
+                    </div>
+                    <div class="col">
+                        {{user.last_name}}
+                        Doe
+                    </div>
+                    <div class="col p-2">
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                {{user.overall_progress}}
+                                25%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row row d-flex justify-content-center my-2">
+            <div class="row border border-danger rounded my-3" id="user-progress-container">
+                <div class="row">
+                    User Progress
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Component
+                    </div>
+                    <div class="col">
+                        Progress
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Bar
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
