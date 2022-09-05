@@ -1,42 +1,33 @@
 {% extends "header_template.html" %}
+{% load static %}
 {% block content %}
 
-
-<div class="container d-flex p-2 flex-direction: column">
-    <form method="POST" action="">
-        {% csrf_token %}
-        <div class="col-m-12 text-center p-3">
-            <div class="panel-heading">
-                <h2>
-                    Login
-                </h2>
-            </div>
-            <div class="panel-body">
-                <ul>
-                    {% for fields in login_form %}
-                        <div class="row p-1">
-                            <a> {{ fields.name }}: {{ fields }}</a>
-                        </div>
-
-                    {% endfor %}
-                </ul>
-                <div class="">
-
-                </div>
-                <div class="container">
-                    <div class="row-sm flex align-center">
-                        <button class="btn btn-primary btn-sm m-4" type="submit"> Submit</button>
+<link rel="stylesheet" href="..\static\img\login_photo.jpg">
+<div class="container-login" > <!--"container d-flex p-2 flex-direction: column"-->
+    <div class="card">
+        <div class="inner-box">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="card-front">
+                        <h2>LOGIN</h2>
+                    <div class="panel-body">
+                        <ul>
+                            {% for fields in login_form %}
+                                <div class="input-box">
+                                    <a> {{ fields.name }}: {{ fields }}</a>
+                                </div>
+                            {% endfor %}
+                        </ul> 
+                            <button class="submit-btn" type="submit"> Submit</button>    
                     </div>
-                    <div class="row">
-                        <a class="btn btn-light" href="{% url 'registration' %}"> Registration </a>
-                    </div>
+                    <a class="registration-btn" href="{% url 'registration' %}">Sign In</a>
                 </div>
-            </div>
+            </form>
+            <div class="card-back"></div>
         </div>
-    </form>
+    </div>
 </div>
 
-
-
+<link href="{% static 'css/userControl.css' %}" rel="stylesheet" type="text/css"/>
 
 {% endblock %}
