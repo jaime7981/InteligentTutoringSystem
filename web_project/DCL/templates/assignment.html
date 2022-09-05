@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<h1>Modify Assignment</h1>
+<h1>Nombre Assignment</h1>
 
 <div id="teacher-assignments">
     {{ selected_assignment }}
@@ -12,6 +12,9 @@
     <div>
         <button id="select-bar-button">Select Bar</button>
         <button id="select-circle-button">Select Circle</button>
+        <button id="select-support-button">Support</button>
+        <button id="select-sliding-support-button">Sliding Support</button>
+        <button id="select-force-button">Force</button>
         <button id="save-assignment-button">Save Assignment</button>
     </div>
     <div id='dcl-app'>
@@ -19,6 +22,10 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    var assignment_js = "{{selected_assignment}}";
+    var teacher_redirect = "{% url 'teacher' %}";
+</script>
 <script src="{% static 'js/drag_mouse.js' %}"></script>
 
 {% endblock %}
