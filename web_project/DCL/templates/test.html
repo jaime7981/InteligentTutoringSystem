@@ -4,13 +4,12 @@
 
 <div id='dcl-app-content'>
     <div>
-        <button id="select-bar-button">Select Bar</button>
+        <button class="btnOne" id="select-bar-button"></button>
         <button id="select-circle-button">Select Circle</button>
         <button id="select-support-button">Support</button>
         <button id="select-sliding-support-button">Sliding Support</button>
         <button id="select-force-button">Force</button>
         <button id="save-assignment-button">Save Assignment</button>
-
     </div>
     <div id='dcl-app'>
         <canvas id="canvas"></canvas>
@@ -21,4 +20,5 @@
     var assignment_js = "{{selected_assignment}}";
 </script>
 <script src="{% static 'js/drag_mouse.js' %}"></script>
+
 {% endblock %}
