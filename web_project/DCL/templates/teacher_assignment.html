@@ -2,10 +2,17 @@
 {% load static %}
 {% block content %}
 
-<h1>Assignment Name: {{ selected_assignment.name }} </h1>
+{% if selected_assignment.id == 0 %}
+    <h1>Assignment Name: <input type='text' id='input-text-selected-assignment-name' value=""> </h1>
+    <h2>Assignment Level: <input type='text' id='input-text-selected-assignment-level' value="2"> </h2>
+    <p>Assignment Description: <textarea  type='text' id='input-text-selected-assignment-description' value=""> </textarea> </p>
+{% else %}
+    <h1>Assignment Name: <input type='text' id='input-text-selected-assignment-name' value="{{ selected_assignment.name }}"> </h1>
+    <h2>Assignment Level: <input type='text' id='input-text-selected-assignment-level' value="{{ selected_assignment.level }}"> </h2>
+    <p>Assignment Description: <textarea  type='text' id='input-text-selected-assignment-description'> {{ selected_assignment.description }} </textarea> </p>
+{% endif %}
 
 <div id="teacher-assignments">
-    <p>DCL Data: {{ selected_assignment }} </p>
     {% if selected_assignment.photo %}
         <div id="upload-picture-content" >
             <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
@@ -28,7 +35,8 @@
 </div>
 
 <script type="text/javascript">
-    var assignment_js = "{{selected_assignment}}";
+    var assignment_js = "{{selected_assignment.dcl_json}}";
+    var assignment_id = "{{selected_assignment.id}}";
     var teacher_redirect = "{% url 'teacher' %}";
 </script>
 <script src="{% static 'js/drag_mouse.js' %}"></script>
