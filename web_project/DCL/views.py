@@ -15,10 +15,18 @@ def home(request):
 def dcl_app(request):
     if request.method == "POST" and is_ajax(request):
         if not request.user.is_superuser:
-            if request.POST.get('assignment_id') == "":
+            if request.POST.get('assignment_id') == "0":
                 current_teacher = Teacher.objects.get(user = request.user)
-                Assignment.objects.create(name = request.POST.get('assignment_name'),
-                                        description = request.POST.get('assignment_description'),
+                if request.POST.get('assignment_name') == '':
+                    name = 'Assignment ' + str(len(Assignment.objects.all()) + 1)
+                else:
+                    name = request.POST.get('assignment_name')
+                if request.POST.get('assignment_description') == '':
+                    description = 'No description'
+                else:
+                    description = request.POST.get('assignment_description')
+                Assignment.objects.create(name = name,
+                                        description = description,
                                         level = request.POST.get('assignment_level'),
                                         teacher = current_teacher,
                                         dcl_json = request.POST.get('assignment_data'))
@@ -63,7 +71,7 @@ def teacher(request):
 @allowed_users(allowed_roles=['teacher'])
 def teacherAssignment(request, assignment_id):
     if assignment_id == 0:
-        context = { "selected_assignment" : ""}
+        context = { "selected_assignment" : 0}
     else:
         assignment = Assignment.objects.get(pk = assignment_id)
         context = { "selected_assignment" : assignment}
