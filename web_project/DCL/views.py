@@ -15,28 +15,30 @@ def home(request):
 def dcl_app(request):
     if request.method == "POST" and is_ajax(request):
         if not request.user.is_superuser:
+            if request.POST.get('assignment_name') == '':
+                    name = 'Assignment ' + str(len(Assignment.objects.all()) + 1)
+            else:
+                name = request.POST.get('assignment_name')
+            if request.POST.get('assignment_description') == '':
+                description = 'No description'
+            else:
+                description = request.POST.get('assignment_description')
             if request.POST.get('assignment_id') == "0":
                 current_teacher = Teacher.objects.get(user = request.user)
-                if request.POST.get('assignment_name') == '':
-                    name = 'Assignment ' + str(len(Assignment.objects.all()) + 1)
-                else:
-                    name = request.POST.get('assignment_name')
-                if request.POST.get('assignment_description') == '':
-                    description = 'No description'
-                else:
-                    description = request.POST.get('assignment_description')
                 Assignment.objects.create(name = name,
                                         description = description,
                                         level = request.POST.get('assignment_level'),
                                         teacher = current_teacher,
-                                        dcl_json = request.POST.get('assignment_data'))
+                                        dcl_json = request.POST.get('assignment_data'),
+                                        photo = request.FILES.get('assignment_photo', None))
                 messages.success(request, 'Assignment succesfully Created')
             else:
                 current_asignment = Assignment.objects.get(pk = request.POST.get('assignment_id'))
-                current_asignment.name = request.POST.get('assignment_name')
-                current_asignment.description = request.POST.get('assignment_description')
+                current_asignment.name = name
+                current_asignment.description = description
                 current_asignment.level = request.POST.get('assignment_level')
                 current_asignment.dcl_json = request.POST.get('assignment_data')
+                current_asignment.photo = request.FILES.get('assignment_photo', None)
                 current_asignment.save()
                 messages.success(request, 'Assignment succesfully Updated')
         else:

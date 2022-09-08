@@ -9,6 +9,11 @@ var slidingSupportButton = document.getElementById("select-sliding-support-butto
 var forceButton = document.getElementById("select-force-button")
 var saveAssignmentButton = document.getElementById("save-assignment-button");
 
+//Form Values
+var assignmentName = document.getElementById("input-text-selected-assignment-name");
+var assignmentDescription = document.getElementById("input-text-selected-assignment-description");
+var assignmentLevel = document.getElementById("input-text-selected-assignment-level");
+var assignmentPhoto = document.getElementById("input-file-selected-assignment-photo");
 
 const WIDTH = 1900;
 const HEIGHT = 800;
@@ -242,11 +247,23 @@ saveAssignmentButton.addEventListener('click', function() {
 
     json_output_list.push('{"level" : null, "name" : null}]}')
     json_parsed_object = json_output_list.join('');
-    ajaxSaveAssignment(json_parsed_object);
+    if (assignmentLevel.value == ''){
+        ajaxSaveAssignment(json_parsed_object);
+    }
+    else {
+        ajaxSaveAssignment(json_parsed_object);
+    }
 }, false);
 
 // Ajax response
-var ajaxSaveAssignment = function(parsed_json) {
+var ajaxSaveAssignment = function(json_parsed_object) {
+    var fd = new FormData();
+    fd.append("assignment_data" , json_parsed_object);
+    fd.append("assignment_id" , assignment_id);
+    fd.append("assignment_name" , assignmentName.value.toUpperCase());
+    fd.append("assignment_description" , assignmentDescription.value);
+    fd.append("assignment_level" , 1);
+    fd.append("assignment_photo", assignmentPhoto.files[0]);
     $.ajaxSetup({
         headers: {
             "X-CSRFToken" : getCookie('csrftoken')
@@ -255,9 +272,10 @@ var ajaxSaveAssignment = function(parsed_json) {
     $.ajax({
         type: 'POST',
         url: "/dcl/app",
-        data: {
-            "assignment_data" : parsed_json
-        },
+        data: fd,
+        processData: false,
+        contentType: false,
+        cache:false,
         success: function (response) {
             window.location.href = teacher_redirect;
         },

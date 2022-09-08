@@ -2,6 +2,8 @@
 data/
 data
 .data
+web_project/images/
+web_project\images\
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

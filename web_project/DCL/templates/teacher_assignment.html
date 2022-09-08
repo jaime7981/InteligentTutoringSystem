@@ -11,21 +11,16 @@
     <h2>Assignment Level: <input type='text' id='input-text-selected-assignment-level' value="{{ selected_assignment.level }}"> </h2>
     <p>Assignment Description: <textarea  type='text' id='input-text-selected-assignment-description'> {{ selected_assignment.description }} </textarea> </p>
 {% endif %}
-
-<div id="teacher-assignments">
+<div id="upload-picture-content">
     {% if selected_assignment.photo %}
-        <div id="upload-picture-content" >
-            <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
-        </div>
+        <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
     {% else %}
-        <div id="upload-picture-content" >
-            <input type="file" name="photo" accept="image/*" id="id_photo">
-        </div>
+        <input type="file" name="photo" accept="image/*" id="input-file-selected-assignment-photo">
     {% endif %}
 </div>
 
 <div id='dcl-app-content'>
-    <div>
+    <div id='dcl-app-action-buttons'>
         <button id="select-bar-button">Select Bar</button>
         <button id="select-circle-button">Select Circle</button>
         <button id="select-support-button">Support</button>
@@ -33,7 +28,7 @@
         <button id="select-force-button">Force</button>
         <button id="save-assignment-button">Save Assignment</button>
     </div>
-    <div id='dcl-app'>
+    <div id='dcl-app-draw-canvas'>
         <canvas id="canvas"></canvas>
     </div>
 </div>
@@ -41,7 +36,6 @@
 <script type="text/javascript">
     var assignment_js = "{{selected_assignment.dcl_json}}";
     var assignment_id = "{{selected_assignment.id}}";
-    console.log(assignment_id)
     if (assignment_id == "") {
         assignment_id = 0;
     }
