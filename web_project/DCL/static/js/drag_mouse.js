@@ -9,6 +9,10 @@ var slidingSupportButton = document.getElementById("select-sliding-support-butto
 var forceButton = document.getElementById("select-force-button")
 var saveAssignmentButton = document.getElementById("save-assignment-button");
 
+//Form Values
+var assignmentName = document.getElementById("input-text-selected-assignment-name");
+var assignmentDescription = document.getElementById("input-text-selected-assignment-description");
+var assignmentLevel = document.getElementById("input-text-selected-assignment-level");
 
 const WIDTH = 1900;
 const HEIGHT = 800;
@@ -242,11 +246,11 @@ saveAssignmentButton.addEventListener('click', function() {
 
     json_output_list.push('{"level" : null, "name" : null}]}')
     json_parsed_object = json_output_list.join('');
-    ajaxSaveAssignment(json_parsed_object);
+    ajaxSaveAssignment(json_parsed_object, assignment_id);
 }, false);
 
 // Ajax response
-var ajaxSaveAssignment = function(parsed_json) {
+var ajaxSaveAssignment = function(parsed_json, assign_id) {
     $.ajaxSetup({
         headers: {
             "X-CSRFToken" : getCookie('csrftoken')
@@ -256,7 +260,11 @@ var ajaxSaveAssignment = function(parsed_json) {
         type: 'POST',
         url: "/dcl/app",
         data: {
-            "assignment_data" : parsed_json
+            "assignment_data" : parsed_json,
+            "assignment_id" : assign_id,
+            "assignment_name" : assignmentName.value.toUpperCase(),
+            "assignment_description" : assignmentDescription.value,
+            "assignment_level" : assignmentLevel.value,
         },
         success: function (response) {
             window.location.href = teacher_redirect;

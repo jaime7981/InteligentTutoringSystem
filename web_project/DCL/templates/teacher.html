@@ -11,7 +11,7 @@
                 Assignments
             </div>
             <div class="col">
-                <a href="{% url 'create_assignment' %}">
+                <a href='teacher/0/'>
                     <button>Create Assignment</button>
                 </a>
             </div>
@@ -30,7 +30,7 @@
             </div>
             {% for assignment in teacher_assignments %}
             <div class="row my-2">
-               <a href='teacher/{{ assignment.id }}/'>Assignment {{ assignment.id }}</a>
+               <a href='teacher/{{ assignment.id }}/'> {{ assignment.name }}</a>
             </div>
             {% endfor %}
         </div>

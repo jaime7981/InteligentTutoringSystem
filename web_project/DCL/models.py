@@ -16,7 +16,7 @@ class Assignment(models.Model):
     photo = models.ImageField(upload_to=get_upload_path, blank=True, null=True)
 
     def __str__(self):
-        return str(self.dcl_json)
+        return str(self.name)
 
 class Solution(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
