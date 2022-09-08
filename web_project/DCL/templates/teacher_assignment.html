@@ -17,6 +17,10 @@
         <div id="upload-picture-content" >
             <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
         </div>
+    {% else %}
+        <div id="upload-picture-content" >
+            <input type="file" name="photo" accept="image/*" id="id_photo">
+        </div>
     {% endif %}
 </div>
 

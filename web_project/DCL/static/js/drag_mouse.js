@@ -246,11 +246,16 @@ saveAssignmentButton.addEventListener('click', function() {
 
     json_output_list.push('{"level" : null, "name" : null}]}')
     json_parsed_object = json_output_list.join('');
-    ajaxSaveAssignment(json_parsed_object, assignment_id);
+    if (assignmentLevel.value == ''){
+        ajaxSaveAssignment(json_parsed_object, assignment_id, 1);
+    }
+    else {
+        ajaxSaveAssignment(json_parsed_object, assignment_id, assignmentLevel.value);
+    }
 }, false);
 
 // Ajax response
-var ajaxSaveAssignment = function(parsed_json, assign_id) {
+var ajaxSaveAssignment = function(parsed_json, assign_id, level) {
     $.ajaxSetup({
         headers: {
             "X-CSRFToken" : getCookie('csrftoken')
@@ -264,7 +269,7 @@ var ajaxSaveAssignment = function(parsed_json, assign_id) {
             "assignment_id" : assign_id,
             "assignment_name" : assignmentName.value.toUpperCase(),
             "assignment_description" : assignmentDescription.value,
-            "assignment_level" : assignmentLevel.value,
+            "assignment_level" : level,
         },
         success: function (response) {
             window.location.href = teacher_redirect;
