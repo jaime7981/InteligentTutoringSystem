@@ -4,6 +4,16 @@
 
 <h1>Student Page</h1>
 
+<div id="join-teacher-classroom-container">
+    <label for="teachers-options">Join Teacher Classroom</label><br>
+    <select name="teachers-options" id="teachers-options">
+        {% for teacher in all_teachers %}
+            <option value="{{teacher.user.username}}">{{teacher.user.username}}</option>    
+        {% endfor %}
+    </select>
+    <button id="join-teacher-classroom-button">Join Teacher Classroom</button>
+</div>
+
 <div class="containter d-flex justify-content-center my-3 mx-4">
     <div class="col">
         <div class="row d-flex justify-content-center my-2">
@@ -82,16 +92,16 @@
                     </div>
                 </div>
                 
-                {% for assignment in assignment_list %}
+                {% for clasroom in clasrooms %}
                     <div class="row my-2">
                         <div class="col">
-                            {{ assignment.name }}
+                            {{ clasroom }}
                         </div>
                         <div class="col">
-                            {{ assignment.teacher }}
+                            {{ clasroom.teacher }}
                         </div>
                         <div class="col">
-                            <a href='teacher/{{ assignment.id }}/'>Watch Assignment</a>
+                            <a href='student/{{ clasroom.teacher }}/'>Go to Teacher Classroom</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -99,5 +109,10 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    var student_join_teacher_redirect = "{% url 'student' %}";
+</script>
+<script src="{% static 'js/student_buttons.js' %}"></script>
 
 {% endblock %}

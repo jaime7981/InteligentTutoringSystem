@@ -1,10 +1,10 @@
-from multiprocessing import context
-from unicodedata import name
 from django.shortcuts import render, redirect
 from usercontrol.decorator import allowed_users
 from .models import Assignment
-from usercontrol.models import Teacher
+from usercontrol.models import Teacher, Classroom, Student
 from django.contrib import messages
+from datetime import date
+from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request):
@@ -16,7 +16,7 @@ def dcl_app(request):
     if request.method == "POST" and is_ajax(request):
         if not request.user.is_superuser:
             if request.POST.get('assignment_name') == '':
-                    name = 'Assignment ' + str(len(Assignment.objects.all()) + 1)
+                name = 'Assignment ' + str(len(Assignment.objects.all()) + 1)
             else:
                 name = request.POST.get('assignment_name')
             if request.POST.get('assignment_description') == '':
@@ -50,11 +50,33 @@ def dcl_app(request):
 
 @allowed_users(allowed_roles=['student'])
 def student(request):
-    assignment_query = []
-    assignment_query = Teacher.students.through.objects.all()
+    current_student = Student.objects.get(user = request.user)
+    all_teachers = Teacher.objects.all()
+    if request.method == "POST" and is_ajax(request):
+        if not request.user.is_superuser:
+            selected_teacher = request.POST.get('selected_teacher')
+            current_teacher = Teacher.objects.get(user = User.objects.get(username = selected_teacher))
 
-    context = { "assignment_list" : assignment_query}
+            if not Classroom.objects.filter(student = current_student).filter(teacher = current_teacher).exists():
+                Classroom.objects.create(name = current_teacher.user.username + '_classroom',
+                                        student = current_student,
+                                        teacher = current_teacher,
+                                        date_joined = date.today())
+                messages.success(request, 'Joined to teacher classroom')
+            else:
+                messages.error(request, 'Already in this classroom')
+            return(render(request, 'student.html', context={}))
+
+    student_classroom = Classroom.objects.filter(student = current_student)
+    context = { "clasrooms" : student_classroom,
+                "all_teachers" : all_teachers }
     return(render(request, 'student.html', context=context))
+
+@allowed_users(allowed_roles=['student'])
+def studentAssignment(request, teacher_id):
+    assignments = Assignment.objects.filter(teacher = Teacher.objects.get(user = User.objects.get(username = teacher_id)))
+    context = { "teacher_assignments" : assignments}
+    return(render(request, 'student_assignments.html', context=context))
 
 @allowed_users(allowed_roles=['teacher'])
 def teacher(request):
