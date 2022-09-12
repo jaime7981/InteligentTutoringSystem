@@ -56,16 +56,18 @@ def student(request):
         if not request.user.is_superuser:
             selected_teacher = request.POST.get('selected_teacher')
             current_teacher = Teacher.objects.get(user = User.objects.get(username = selected_teacher))
-            Classroom.objects.create(name = 'default classroom name',
-                                     student = current_student,
-                                     teacher = current_teacher,
-                                     date_joined = date.today())
-            messages.success(request, 'Joined to teacher classroom')
+
+            if not Classroom.objects.filter(student = current_student).filter(teacher = current_teacher).exists():
+                Classroom.objects.create(name = current_teacher.user.username + '_classroom',
+                                        student = current_student,
+                                        teacher = current_teacher,
+                                        date_joined = date.today())
+                messages.success(request, 'Joined to teacher classroom')
+            else:
+                messages.error(request, 'Already in this classroom')
             return(render(request, 'student.html', context={}))
-            
-    assignment_query = []
+
     student_classroom = Classroom.objects.filter(student = current_student)
-    #assignment_query = Teacher.students.through.objects.all()
     context = { "clasrooms" : student_classroom,
                 "all_teachers" : all_teachers }
     return(render(request, 'student.html', context=context))
