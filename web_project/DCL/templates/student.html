@@ -92,16 +92,16 @@
                     </div>
                 </div>
                 
-                {% for assignment in assignment_list %}
+                {% for clasroom in clasrooms %}
                     <div class="row my-2">
                         <div class="col">
-                            {{ assignment }}
+                            {{ clasroom }}
                         </div>
                         <div class="col">
-                            {{ assignment }}
+                            {{ clasroom.teacher }}
                         </div>
                         <div class="col">
-                            <a href='teacher/{{ assignment.teacher.id }}/'>Watch Assignment</a>
+                            <a href='student/{{ clasroom.teacher }}/'>Watch Assignment</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -111,7 +111,11 @@
 </div>
 
 <div>
-    {{ assignment_list }}
+    <a href='student/1/'> teacher_id </a>
+</div>
+
+<div>
+    {{ clasrooms }}
 </div>
 
 <script type="text/javascript">

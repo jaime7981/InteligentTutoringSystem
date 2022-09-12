@@ -65,12 +65,16 @@ def student(request):
             
     assignment_query = []
     student_classroom = Classroom.objects.filter(student = current_student)
-    for classrooom in student_classroom:
-        assignment_query.append(Assignment.objects.filter(teacher = classrooom.teacher))
     #assignment_query = Teacher.students.through.objects.all()
-    context = { "assignment_list" : assignment_query,
+    context = { "clasrooms" : student_classroom,
                 "all_teachers" : all_teachers }
     return(render(request, 'student.html', context=context))
+
+@allowed_users(allowed_roles=['student'])
+def studentAssignment(request, teacher_id):
+    assignments = Assignment.objects.filter(teacher = Teacher.objects.get(user = User.objects.get(username = teacher_id)))
+    context = { "teacher_assignments" : assignments}
+    return(render(request, 'student_assignments.html', context=context))
 
 @allowed_users(allowed_roles=['teacher'])
 def teacher(request):
