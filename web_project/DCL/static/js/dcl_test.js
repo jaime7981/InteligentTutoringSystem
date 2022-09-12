@@ -13,9 +13,14 @@ var momentumButton = document.getElementById("select-momentum-button");
 var clearButton = document.getElementById("select-clear-button");
 var saveAssignmentButton = document.getElementById("save-assignment-button");
 
+var app_container = document.getElementById('konva-container');
+var WIDTH = app_container.offsetWidth;
+var HEIGHT = app_container.offsetHeight;
 
-var WIDTH = 1600;
-var HEIGHT = 800;
+console.log(WIDTH);
+
+// var WIDTH = 1600;
+// var HEIGHT = 800;
 var STEP = 40;
 
 var horizontal_points = [];

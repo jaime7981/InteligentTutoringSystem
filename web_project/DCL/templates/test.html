@@ -2,24 +2,66 @@
 {% load static %}
 {% block content %}
 
+<div id='dcl-app-content' style='
+    width: 100%;
+    height: 500px;
+    max-width: 1375px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;'>
+    <div id='dcl-app-action-buttons' style='
+        width: 10%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: stretch;'>
+        <button id="selector-button">Selector</button>
+        <button id="select-eraser-button">Eraser</button>
+        <button id="select-bar-button">Select Bar</button>
+        <button id="select-circle-button">Select Circle</button>
+        <button id="select-support-button">Support</button>
+        <button id="select-sliding-horizontal-button">Sliding Support</button>
+        <button id="select-sliding-vertical-button">Sliding Support</button>
+        <button id="select-force-button">Force</button>
+        <button id="select-momentum-button">Momentum</button>
+        <button id="select-clear-button">Clear All</button>
+        <button id="save-assignment-button">Save Assignment</button>
+    </div>
+    <div id='dcl-app-side-bar-canvas' style='
+        width: 10%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: stretch;'>
+        <label>Force</label>
+        <input type='text' id='force-value'>
+        <label>Angle X</label>
+        <input type='text' id='angle-value'>
+        <label>Torque</label>
+        <input type='text' id='torque-value'>
+        <label>Test Value 1</label>
+        <input type='text' id='test-1-value'>
+        <label>Test Value 2</label>
+        <input type='text' id='test-2-value'>
+        <label>Test Value 3</label>
+        <input type='text' id='test-3-value'>
+    </div>
+    <div id="konva-container" class="container m-2" style='
+        width:80%; 
+        height:100%;'>
+    </div>
+</div>
+
 <script src="https://unpkg.com/konva@8/konva.min.js"></script>
-
-<button id="selector-button">Selector</button>
-<button id="select-eraser-button">Eraser</button>
-<button id="select-bar-button">Select Bar</button>
-<button id="select-circle-button">Select Circle</button>
-<button id="select-support-button">Support</button>
-<button id="select-sliding-horizontal-button">Sliding Support</button>
-<button id="select-sliding-vertical-button">Sliding Support</button>
-<button id="select-force-button">Force</button>
-<button id="select-momentum-button">Momentum</button>
-<button id="select-clear-button">Clear All</button>
-<button id="save-assignment-button">Save Assignment</button>
-
-<div id="konva-container" class="container m-2"></div>
-<script>
-  
-</script>
-
 <script src="{% static 'js/dcl_test.js' %}"></script>
+
 {% endblock %}

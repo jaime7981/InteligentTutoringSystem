@@ -1,3 +1,9 @@
+var assignmentName = document.getElementById("input-text-selected-assignment-name");
+var assignmentDescription = document.getElementById("input-text-selected-assignment-description");
+var assignmentLevel = document.getElementById("input-text-selected-assignment-level");
+var assignmentPhoto = document.getElementById("input-file-selected-assignment-photo");
+
+
 // Load data
 var loadAssigmentData = function() {
     if (assignment_js != ''){ 
