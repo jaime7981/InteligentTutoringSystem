@@ -38,11 +38,16 @@
         align-content: center;
         justify-content: center;
         align-items: stretch;'>
+        <button id="selector-button">Selector</button>
+        <button id="select-eraser-button">Eraser</button>
         <button id="select-bar-button">Select Bar</button>
         <button id="select-circle-button">Select Circle</button>
         <button id="select-support-button">Support</button>
-        <button id="select-sliding-support-button">Sliding Support</button>
+        <button id="select-sliding-horizontal-button">Sliding Support</button>
+        <button id="select-sliding-vertical-button">Sliding Support</button>
         <button id="select-force-button">Force</button>
+        <button id="select-momentum-button">Momentum</button>
+        <button id="select-clear-button">Clear All</button>
         <button id="save-assignment-button">Save Assignment</button>
     </div>
     <div id='dcl-app-side-bar-canvas' style='
@@ -67,10 +72,9 @@
         <label>Test Value 3</label>
         <input type='text' id='test-3-value'>
     </div>
-    <div id='dcl-app-draw-canvas' style='
+    <div id="konva-container" class="container m-2" style='
         width:80%; 
         height:100%;'>
-        <canvas id="canvas"></canvas>
     </div>
 </div>
 
@@ -81,11 +85,12 @@
         assignment_id = 0;
     }
     var teacher_redirect = "{% url 'teacher' %}";
+    var bar_list = [];
+    var circle_list = [];
 </script>
-<script src="{% static 'js/init.js' %}"></script>
-<script src="{% static 'js/classes.js' %}"></script>
+
 <script src="{% static 'js/ajax_load_save.js' %}"></script>
-<script src="{% static 'js/drag_mouse.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<script src="{% static 'js/dcl_test.js' %}"></script>
 
 {% endblock %}
