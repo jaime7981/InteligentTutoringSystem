@@ -1,3 +1,4 @@
+//#region INIT
 var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
@@ -25,6 +26,7 @@ var component_base_value = {
     "force" : 3,
     "momentum" : 5,
 };
+//#endregion
 
 //#region spatial
 //Spacial Equations
@@ -91,17 +93,7 @@ function getProjectedIntersection(bar,point){
 }
 //#endregion
 
-//#region test
-/*
-var test_bar = new Bar(new Point(-1,0),new Point(4,3));
-console.log(test_bar.getValues());
-var test_point = new Point(1,3);
-var intersected = getProjectedIntersection(test_bar,test_point);
-console.log(intersected);
-*/
-//#endregion
-
-
+//#region grid and snap
 function snapToNode(mouse_x, mouse_y) {
     var set_x = 0;
     var set_y = 0;
@@ -173,8 +165,9 @@ function drawGrid(Stage){
     }
     gridLayer.batchDraw();
 };
+//#endregion
 
-//Get Selected Drawing
+//#region Get Selected Drawing
 function getDrawing(init_point, end_point, component){
     if(component == "bar"){
         return drawBar(init_point,end_point);
@@ -233,14 +226,14 @@ function createElementDrawing(init_point, end_point, component){
         
     }
 };
+//#endregion
 
-//Generate Components
+//#region Generate Components
 function drawCircle(pos_x,pos_y){
     var circle = new Konva.Circle({
         x: pos_x,
         y: pos_y,
         radius: 10,
-        //fill: 'black',
         stroke: 'black',
         strokeWidth: 8,
         draggable: true,
@@ -558,8 +551,9 @@ function drawNode(pos_x,pos_y){
     group.add(circle);
     return group;
 };
+//#endregion
 
-// Run App
+//#region Run App
 var stage = new Konva.Stage({
     container: 'konva-container',
     width: WIDTH,
@@ -622,4 +616,4 @@ stage.on('mouseup', function(){
         }
     }
 });
-
+//#endregion
