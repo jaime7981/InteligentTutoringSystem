@@ -20,6 +20,7 @@ var HEIGHT = app_container.offsetHeight;
 // var WIDTH = 1600;
 // var HEIGHT = 800;
 var STEP = 40;
+var SNAP_WEIGHT = 80;
 
 var component_base_value = {
     "bar" : 2,
@@ -196,7 +197,6 @@ function getBarYCut(init_coordinates, slope){
 
 
 function getProjectedIntersection(bar,point){
-    console.log("elements: ",bar, point);
     var projected_slope = null;
     if(bar.line.slope == 'vertical'){
         projected_slope = 0;
@@ -204,15 +204,13 @@ function getProjectedIntersection(bar,point){
     else{
         projected_slope = -1/bar.line.slope;
     }
-    console.log("curr values:",projected_slope);
-    var b_force = point.y - bar.line.slope*point.x;
+    var b_force = point.y - projected_slope*point.x;
     var b_bar = bar.line.b;
-
-    var x_point = (b_force - b_bar/ bar.line.slope - projected_slope);
-    var y_point = bar.line.slope*x_point + b_bar;
+    var x_point = (b_force - b_bar)/(bar.line.slope - projected_slope);
+    var y_point = bar.line.slope*x_point + bar.line.b;
     return new Point(x_point,y_point);
-    //TODO: CHECK
 }
+
 //#endregion
 
 
@@ -248,7 +246,15 @@ function snapToNode(mouse_x, mouse_y) {
 }
 
 function snapToBar(bar, curr_point){
-//TODO    
+    var snap_point = getProjectedIntersection(bar,curr_point);
+    var snap_distance = getBarSize(curr_point,snap_point);
+    if (snap_distance <= SNAP_WEIGHT){
+        return snap_point;
+    }
+    else{
+        return curr_point;
+    }
+
 };
 
 function drawGrid(Stage){
@@ -680,26 +686,13 @@ stage.on('mousemove', function(){
                 drawing_layer.add(circle);
             }
             else{
+                var snap_coords = snapToBar()
                 var component = getDrawing(snapped_position,snapped_position,current_component);
                 drawing_layer.add(component);
             }
             
         }
     }
-    else{
-        var drawn_components = drawn_layer.find('Group');
-        //var drawn_measurements = drawn_layer.find('#measurements');
-        for(var id in drawn_components){
-            console.log(drawn_components[id].attrs);
-            if (drawn_components[id].attrs.id == 'measurement'){
-                var measurement = drawn_components[id];
-                console.log("this component",measurement);
-                measurement.zIndex(0);
-            }
-        }
-        console.log(drawn_components);
-    }
-
 });
 
 stage.on('mouseup', function(){
