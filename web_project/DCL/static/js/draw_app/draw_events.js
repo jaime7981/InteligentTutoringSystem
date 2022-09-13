@@ -9,19 +9,16 @@ var forceButton = document.getElementById("select-force-button");
 var momentumButton = document.getElementById("select-momentum-button");
 var clearButton = document.getElementById("select-clear-button");
 
+var sideBar = document.getElementById("dcl-app-side-bar-canvas");
+
 var debugButton = document.getElementById('load-debug');
 var debugContainer = document.getElementById('debug-container');
 
-
-// Input Fields
-var sideBar = document.getElementById("dcl-app-side-bar-canvas");
-var forceField = document.getElementById("force-container"); // No se va a usar
-var angleField = document.getElementById("angle-container"); // No se va a usar
-
+// Some Functions
 var appendForceField = function() {
     let div = document.createElement("div");
     div.setAttribute("id", id="force-container");
-    div.innerHTML = "<label id='force-label'>Force (Newton)</label><input type='text' id='force-value'  value='1' style='width: 100%;'>";
+    div.innerHTML = "<label id='force-label'>Force (N)</label><input type='text' id='force-value'  value='1' style='width: 100%;'>";
     sideBar.appendChild(div);
 };
 
@@ -32,15 +29,25 @@ var appendAngleField = function() {
     sideBar.appendChild(div);
 };
 
+var appendTorqueField = function() {
+    let div = document.createElement("div");
+    div.setAttribute("id", id="torque-container");
+    div.innerHTML = "<label id='torque-label'>Torque (Nm)</label><input type='text' id='torque-value' value='1' style='width: 100%;'>";
+    sideBar.appendChild(div);
+};
+
 var deleteAllContent = function() {
     sideBar.innerHTML = "<h3 id='info-label'>Data</h3>";
 };
 
+// First element is force, second is angle, third is torque
 var getForceAngleValues = function() {
     var forceValue = document.getElementById("force-value");
     var angleValue = document.getElementById("angle-value");
+    var torqueValue = document.getElementById("torque-value");
     var force_value = null;
     var angle_value = null;
+    var torque_value = null;
 
     if (forceValue != null) {
         force_value = forceValue.value;
@@ -48,8 +55,20 @@ var getForceAngleValues = function() {
     if (angleValue != null) {
         angle_value = angleValue.value;
     }
-    return([force_value, angle_value]);
+    if (torqueValue != null) {
+        torque_value = torqueValue.value;
+    }
+    return([force_value, angle_value, torque_value]);
 }
+
+var functionMesasge = function(message) {
+    if (message != null) {
+        console.log(message);
+        let div = document.createElement("div");
+        div.innerHTML = "<p>" + message +"</p><br>";
+        debugContainer.appendChild(div);
+    }
+};
 
 //Buttons Event Handlers
 selectorButton.addEventListener('click',function(){
@@ -98,21 +117,15 @@ momentumButton.addEventListener('click', function() {
     current_component = 'momentum';
     adding_component = true;
     deleteAllContent();
-    appendForceField();
+    appendTorqueField();
 }, false)
 
  
 debugButton.addEventListener('click', function() {
     console.log('debug button presed');
+    debugContainer.innerHTML = "";
     functionMesasge(getForceAngleValues());
-}, false);
-
-var functionMesasge = function(message) {
-    if (message != null) {
-        console.log(message);
-        debugContainer.innerHTML = "";
-        let div = document.createElement("div");
-        div.innerHTML = "<p>" + message +"</p><br>";
-        debugContainer.appendChild(div);
+    for (component in all_components) {
+        functionMesasge(JSON.parse(JSON.stringify(all_components[component])));
     }
-};
+}, false);
