@@ -36,12 +36,11 @@
         flex-direction: column;
         flex-wrap: nowrap;
         align-content: center;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: stretch;'>
         <button id="selector-button">Selector</button>
         <button id="select-eraser-button">Eraser</button>
         <button id="select-bar-button">Select Bar</button>
-        <button id="select-circle-button">Select Circle</button>
         <button id="select-support-button">Support</button>
         <button id="select-sliding-horizontal-button">Sliding Support</button>
         <button id="select-sliding-vertical-button">Sliding Support</button>
@@ -57,25 +56,9 @@
         flex-direction: column;
         flex-wrap: nowrap;
         align-content: center;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: stretch;'>
         <h3 id='info-label'>Data</h3>
-        <div id="force-container" style="visibility: hidden;">
-            <label id='force-label'>Force Magnitude</label>
-            <input type='text' id='force-value' style="width: -webkit-fill-available;">
-        </div>
-        <div id="angle-container" style="visibility: hidden;">
-            <label id='angle-label'>Angle</label>
-            <input type='text' id='angle-value' style="width: -webkit-fill-available;">
-        </div>
-        <div id="torque-container" style="visibility: hidden;">
-            <label>Torque</label>
-            <input type='text' id='torque-value' style="width: -webkit-fill-available;">
-        </div>
-        <div id="test-1-container" style="visibility: hidden;">
-            <label>Test Value 1</label>
-            <input type='text' id='test-1-value' style="width: -webkit-fill-available;">
-        </div>
     </div>
     <div id="konva-container" class="container m-2" style='
         width:80%; 
@@ -94,8 +77,8 @@
     var circle_list = [];
 </script>
 
-<script src="{% static 'js/draw_app/ajax_load_save.js' %}"></script>
 <script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<script src="{% static 'js/draw_app/ajax_load_save.js' %}"></script>
 <script src="{% static 'js/draw_app/draw_events.js' %}"></script>
 <script src="{% static 'js/draw_app/draw_konva_app.js' %}"></script>
 
