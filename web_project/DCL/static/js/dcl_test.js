@@ -32,6 +32,93 @@ var component_base_value = {
     "momentum" : 5,
 };
 
+class Point{
+    constructor(x,y){
+        this.x = x;
+        this.y = y;  
+    };
+};
+
+//Projected Line Given 2 Points
+class Line{
+    constructor(init_coordinates, end_coordinates){
+        this.slope = getBarSlope(init_coordinates,end_coordinates);
+        //Projected cut Y cord
+        this.b = getBarYCut(init_coordinates, this.slope);
+    };
+};
+
+class Bar{
+    constructor(init_coordinates, end_coordinates){
+        this.init_x = init_coordinates.x;
+        this.init_y = init_coordinates.y;
+        this.end_x = end_coordinates.x;
+        this.end_y = end_coordinates.y;
+        this.size = getBarSize(init_coordinates, end_coordinates);
+        this.middle = getBarMiddle(init_coordinates, end_coordinates)
+        this.scaled_size = this.size/STEP
+        this.line = new Line(init_coordinates, end_coordinates);
+    };
+    getValues() {
+        console.log("Init x: ",this.init_x);
+        console.log("Init y: ",this.init_y);
+        console.log("End x: ",this.end_x);
+        console.log("End y: ",this.end_y);
+        console.log("Size: ",this.size);
+        console.log("Scaled Size: ",this.scaled_size);
+        console.log("Middle: ",this.middle);
+        console.log("Slope: ",this.line.slope);
+        console.log("Y Cut: ",this.line.b);
+    };
+};
+
+class Force{
+    constructor(init_coordinates, magnitud, angle){
+        this.init_x = init_coordinates.x;
+        this.init_y = init_coordinates.y;
+        this.magnitud = magnitud;
+        this.angle = angle;
+    };
+}
+
+class Momentum{
+    constructor(init_coordinates, magnitud){
+        this.init_x = init_coordinates.x;
+        this.init_y = init_coordinates.y;
+        this.magnitud = magnitud;
+    };
+}
+
+class Support{
+    constructor(init_coordinates, type){
+        this.init_x = init_coordinates.x;
+        this.init_y = init_coordinates.y;
+        if(type == 'support'){
+            this.reaction_x = true;
+            this.reaction_y = true;
+            this.reaction_momentum = false;
+        }
+        else if(type == 'horizontal'){
+            this.reaction_x = false;
+            this.reaction_y = true;
+            this.reaction_momentum = false;
+        }
+        else if(type == 'vertical'){
+            this.reaction_x = true;
+            this.reaction_y = false;
+            this.reaction_momentum = false;
+        }
+        else if(type == 'fixed'){
+            this.reaction_x = true;
+            this.reaction_y = true;
+            this.reaction_momentum = true;
+        }
+    }
+}
+
+
+
+
 var horizontal_points = [];
 var vertical_points = [];
 
@@ -62,29 +149,18 @@ var drawing_layer = new Konva.Layer();
 stage.add(drawn_layer);
 stage.add(drawing_layer);
 
-function Point(x,y) {
-    this.x = x;
-    this.y = y;
-}
 
-function Bar(init_coordinates, end_coordinates){
-    this.init_x = init_coordinates.x;
-    this.init_y = init_coordinates.y;
-    this.end_x = end_coordinates.x;
-    this.end_y = end_coordinates.y;
-    this.size = getBarSize(init_coordinates, end_coordinates);
-    this.slope = getBarSlope(init_coordinates,end_coordinates);
-    this.b = getBarYCut(init_coordinates, this.slope)
-}
-
-
+//#region 
 //Spacial Equations
 function getBarSize(init_coordinates, end_coordinates){
     var x_init = init_coordinates.x;
     var y_init = init_coordinates.y;
     var x_end = end_coordinates.x;
     var y_end = end_coordinates.y;
-    return ((Math.sqrt(Math.pow(Math.abs(x_init-x_end),2)+Math.pow(Math.abs(y_init-y_end),2)))/STEP).toFixed(2);
+    var size_x = Math.abs(x_init-x_end);
+    var size_y = Math.abs(y_init-y_end);
+    var pyth = (Math.sqrt(Math.pow(size_x,2)+Math.pow(size_y,2)));
+    return (pyth).toFixed(2);
 }
 
 function getBarMiddle(init_coordinates, end_coordinates){
@@ -120,21 +196,37 @@ function getBarYCut(init_coordinates, slope){
 
 
 function getProjectedIntersection(bar,point){
+    console.log("elements: ",bar, point);
     var projected_slope = null;
-    if(bar.slope == 'vertical'){
+    if(bar.line.slope == 'vertical'){
         projected_slope = 0;
     }
     else{
-        projected_slope = -1/bar.slope;
+        projected_slope = -1/bar.line.slope;
     }
-    var b_force = point.y - slope*point.x;
-    var b_bar = bar.b;
+    console.log("curr values:",projected_slope);
+    var b_force = point.y - bar.line.slope*point.x;
+    var b_bar = bar.line.b;
 
-    var x_point = (b_force - b_bar/ slope - projected_slope);
-    var y_point = slope*x_point + b_bar;
+    var x_point = (b_force - b_bar/ bar.line.slope - projected_slope);
+    var y_point = bar.line.slope*x_point + b_bar;
     return new Point(x_point,y_point);
     //TODO: CHECK
 }
+//#endregion
+
+
+//#region test
+var test_bar = new Bar(new Point(-1,0),new Point(4,3));
+console.log(test_bar.getValues());
+var test_point = new Point(1,3);
+var intersected = getProjectedIntersection(test_bar,test_point);
+console.log(intersected);
+
+
+//#endregion
+
+
 
 function snapToNode(mouse_x, mouse_y) {
     var set_x = 0;
@@ -437,7 +529,7 @@ function drawMomentum(pos_x,pos_y){
 
 function drawMeasurement(init_point, end_point){
     var barSlope = getBarSlope(init_point, end_point);
-    var barSize = getBarSize(init_point, end_point);
+    var barSize = getBarSize(init_point, end_point)/STEP;
     var barMiddle = getBarMiddle(init_point, end_point);
 
     var group = new Konva.Group();
