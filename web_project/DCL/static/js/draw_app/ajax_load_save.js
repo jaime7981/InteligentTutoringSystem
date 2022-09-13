@@ -1,3 +1,6 @@
+console.log("load and save draw");
+
+var saveAssignmentButton = document.getElementById("save-assignment-button");
 var assignmentName = document.getElementById("input-text-selected-assignment-name");
 var assignmentDescription = document.getElementById("input-text-selected-assignment-description");
 var assignmentLevel = document.getElementById("input-text-selected-assignment-level");
