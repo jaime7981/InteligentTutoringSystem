@@ -36,6 +36,13 @@ var appendTorqueField = function() {
     sideBar.appendChild(div);
 };
 
+var appendFlipButton = function() {
+    let div = document.createElement("div");
+    div.setAttribute("id", id="flip-container");
+    div.innerHTML = "<button id='flip-button' style='width: 100%;'>Flip (Not Implemented)</button>";
+    sideBar.appendChild(div);
+};
+
 var deleteAllContent = function() {
     sideBar.innerHTML = "<h3 id='info-label'>Data</h3>";
 };
@@ -92,19 +99,19 @@ supportButton.addEventListener('click', function() {
     current_component = 'support';
     adding_component = true;
     deleteAllContent();
-    appendAngleField();
+    appendFlipButton();
 }, false);
 slidingHorizontalButton.addEventListener('click', function() {
     current_component = 'sliding_horizontal';
     adding_component = true;
     deleteAllContent();
-    appendAngleField();
+    appendFlipButton();
 }, false);
 slidingVerticalButton.addEventListener('click', function() {
     current_component = 'sliding_vertical';
     adding_component = true;
     deleteAllContent();
-    appendAngleField();
+    appendFlipButton();
 }, false);
 forceButton.addEventListener('click', function() {
     current_component = 'force';
@@ -124,8 +131,7 @@ momentumButton.addEventListener('click', function() {
 debugButton.addEventListener('click', function() {
     console.log('debug button presed');
     debugContainer.innerHTML = "";
-    functionMesasge(getForceAngleValues());
-    for (component in all_components) {
-        functionMesasge(JSON.parse(JSON.stringify(all_components[component])));
+    for (component in all_object_components) {
+        functionMesasge(JSON.parse(JSON.stringify(all_object_components[component])));
     }
 }, false);

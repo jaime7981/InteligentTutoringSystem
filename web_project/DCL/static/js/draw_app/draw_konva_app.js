@@ -1,10 +1,19 @@
-console.log("New Script Test");
-
 var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
-
 var STEP = 40;
+
+var isNowDrawing = false;
+var adding_component = false;
+var current_component = "selector";
+var mouse_hold_position = new Point(0,0);
+var mouse_release_position = new Point(0,0);
+
+var horizontal_points = [];
+var vertical_points = [];
+var bar_snap_nodes = [];
+var all_konva_components = [];
+var all_object_components = [];
 
 var component_base_value = {
     "bar" : 2,
@@ -17,59 +26,17 @@ var component_base_value = {
     "momentum" : 5,
 };
 
-var horizontal_points = [];
-var vertical_points = [];
-
-var bar_snap_nodes = [];
-
-var all_components = [];
-
-var isNowDrawing = false;
-
-var mouse_hold_position = new Point(0,0);
-var mouse_release_position = new Point(0,0);
-
-var current_component = "selector";
-var adding_component = false;
-
-var stage = new Konva.Stage({
-    container: 'konva-container',
-    width: WIDTH,
-    height: HEIGHT,
-    border: '1px solid black',
-    draggable: false,
-  });
-
-var drawn_layer = new Konva.Layer();
-var drawing_layer = new Konva.Layer();
-
-
-stage.add(drawn_layer);
-stage.add(drawing_layer);
-
-function Point(x,y) {
-    this.x = x;
-    this.y = y;
-}
-
-function Bar(init_coordinates, end_coordinates){
-    this.init_x = init_coordinates.x;
-    this.init_y = init_coordinates.y;
-    this.end_x = end_coordinates.x;
-    this.end_y = end_coordinates.y;
-    this.size = getBarSize(init_coordinates, end_coordinates);
-    this.slope = getBarSlope(init_coordinates,end_coordinates);
-    this.b = getBarYCut(init_coordinates, this.slope)
-}
-
-
+//#region spatial
 //Spacial Equations
 function getBarSize(init_coordinates, end_coordinates){
     var x_init = init_coordinates.x;
     var y_init = init_coordinates.y;
     var x_end = end_coordinates.x;
     var y_end = end_coordinates.y;
-    return ((Math.sqrt(Math.pow(Math.abs(x_init-x_end),2)+Math.pow(Math.abs(y_init-y_end),2)))/STEP).toFixed(2);
+    var size_x = Math.abs(x_init-x_end);
+    var size_y = Math.abs(y_init-y_end);
+    var pyth = (Math.sqrt(Math.pow(size_x,2)+Math.pow(size_y,2)));
+    return (pyth).toFixed(2);
 }
 
 function getBarMiddle(init_coordinates, end_coordinates){
@@ -105,21 +72,35 @@ function getBarYCut(init_coordinates, slope){
 
 
 function getProjectedIntersection(bar,point){
+    //console.log("elements: ",bar, point);
     var projected_slope = null;
-    if(bar.slope == 'vertical'){
+    if(bar.line.slope == 'vertical'){
         projected_slope = 0;
     }
     else{
-        projected_slope = -1/bar.slope;
+        projected_slope = -1/bar.line.slope;
     }
-    var b_force = point.y - slope*point.x;
-    var b_bar = bar.b;
+    //console.log("curr values:",projected_slope);
+    var b_force = point.y - bar.line.slope*point.x;
+    var b_bar = bar.line.b;
 
-    var x_point = (b_force - b_bar/ slope - projected_slope);
-    var y_point = slope*x_point + b_bar;
+    var x_point = (b_force - b_bar/ bar.line.slope - projected_slope);
+    var y_point = bar.line.slope*x_point + b_bar;
     return new Point(x_point,y_point);
     //TODO: CHECK
 }
+//#endregion
+
+//#region test
+/*
+var test_bar = new Bar(new Point(-1,0),new Point(4,3));
+console.log(test_bar.getValues());
+var test_point = new Point(1,3);
+var intersected = getProjectedIntersection(test_bar,test_point);
+console.log(intersected);
+*/
+//#endregion
+
 
 function snapToNode(mouse_x, mouse_y) {
     var set_x = 0;
@@ -193,9 +174,6 @@ function drawGrid(Stage){
     gridLayer.batchDraw();
 };
 
-drawGrid(stage);
-
-
 //Get Selected Drawing
 function getDrawing(init_point, end_point, component){
     if(component == "bar"){
@@ -213,11 +191,46 @@ function getDrawing(init_point, end_point, component){
     else if(component == 'sliding_vertical'){
         return drawSlidingVertical(init_point.x,init_point.y);
     }
+    else if(component == 'fixed'){
+        //TODO
+        return(null);
+    }
     else if(component == 'force'){
         return drawForce(init_point.x,init_point.y);
     }
     else if(component == 'momentum'){
         return drawMomentum(init_point.x,init_point.y)
+    }
+};
+
+function createElementDrawing(init_point, end_point, component){
+    let new_id = all_object_components.length;
+    if(component == "bar"){
+        all_object_components.push(new Bar(init_point, end_point, new_id));
+    }
+    else if(component == 'force'){
+        let force_value = getForceAngleValues()[0];
+        let angle_value = getForceAngleValues()[1];
+        all_object_components.push(new Force(init_point, force_value, angle_value, new_id));
+    }
+    else if(component == 'momentum'){
+        let momentum_value = getForceAngleValues()[2];
+        all_object_components.push(new Momentum(init_point, momentum_value, new_id));
+    }
+    else if(component == 'support'){
+        all_object_components.push(new Support(init_point, "support", new_id));
+    }
+    else if(component == 'sliding_horizontal'){
+        all_object_components.push(new Support(init_point, "horizontal", new_id));
+    }
+    else if(component == 'sliding_vertical'){
+        all_object_components.push(new Support(init_point, "vertical", new_id));
+    }
+    else if(component == 'fixed'){
+        all_object_components.push(new Support(init_point, "fixed", new_id));
+    }
+    else if(component == 'circle'){
+        
     }
 };
 
@@ -424,7 +437,7 @@ function drawMomentum(pos_x,pos_y){
 
 function drawMeasurement(init_point, end_point){
     var barSlope = getBarSlope(init_point, end_point);
-    var barSize = getBarSize(init_point, end_point);
+    var barSize = getBarSize(init_point, end_point)/STEP;
     var barMiddle = getBarMiddle(init_point, end_point);
 
     var group = new Konva.Group();
@@ -546,15 +559,29 @@ function drawNode(pos_x,pos_y){
     return group;
 };
 
-//Mouse Event Handlers
+// Run App
+var stage = new Konva.Stage({
+    container: 'konva-container',
+    width: WIDTH,
+    height: HEIGHT,
+    border: '1px solid black',
+    draggable: false,
+});
 
+var drawn_layer = new Konva.Layer();
+var drawing_layer = new Konva.Layer();
+
+stage.add(drawn_layer);
+stage.add(drawing_layer);
+drawGrid(stage);
+
+//Mouse Event Handlers
 stage.on('mousedown', function(){
     console.log(current_component);
     isNowDrawing = true;
     mouse_hold_position = snapToNode(stage.getRelativePointerPosition().x,
                                      stage.getRelativePointerPosition().y);
 });
-
 
 stage.on('mousemove', function(){
     snapped_position = snapToNode(stage.getRelativePointerPosition().x,
@@ -576,21 +603,7 @@ stage.on('mousemove', function(){
                 var component = getDrawing(snapped_position,snapped_position,current_component);
                 drawing_layer.add(component);
             }
-            
         }
-    }
-    else{
-        var drawn_components = drawn_layer.find('Group');
-        //var drawn_measurements = drawn_layer.find('#measurements');
-        for(var id in drawn_components){
-            console.log(drawn_components[id].attrs);
-            if (drawn_components[id].attrs.id == 'measurement'){
-                var measurement = drawn_components[id];
-                console.log("this component",measurement);
-                measurement.zIndex(0);
-            }
-        }
-        console.log(drawn_components);
     }
 });
 
@@ -603,7 +616,9 @@ stage.on('mouseup', function(){
         if(mouse_hold_position != mouse_release_position){
             var component = getDrawing(mouse_hold_position,mouse_release_position,current_component);
             drawn_layer.add(component);
-            all_components.push(component);
+            //Save Data
+            createElementDrawing(mouse_hold_position,mouse_release_position,current_component);
+            all_konva_components.push(component);
         }
     }
 });
