@@ -22,6 +22,8 @@ var vertical_points = [];
 
 var bar_snap_nodes = [];
 
+var all_components = [];
+
 var isNowDrawing = false;
 
 var mouse_hold_position = new Point(0,0);
@@ -345,8 +347,10 @@ function drawForce(pos_x,pos_y){
         opacity: 1,
     });
 
+    var forceValue = getForceAngleValues()[0];
+
     var label = new Konva.Text({
-        text: (1+" N"),
+        text: (forceValue + " N"),
         fontSize: 20,
         x: pos_x,
         y: pos_y,
@@ -397,8 +401,10 @@ function drawMomentum(pos_x,pos_y){
         strokeWidth: 1,
     });
 
+    var torqueValue = getForceAngleValues()[2];
+
     var label = new Konva.Text({
-        text: (1+" Nm"),
+        text: (torqueValue + " Nm"),
         fontSize: 20,
         x: pos_x,
         y: pos_y,
@@ -413,9 +419,7 @@ function drawMomentum(pos_x,pos_y){
     group.add(label);
     group.id = 'momentum';
     group.draggable(true);
-
     return group;
-
 };
 
 function drawMeasurement(init_point, end_point){
@@ -523,10 +527,8 @@ function drawMeasurement(init_point, end_point){
         group.add(end);
         group.add(label);
     }
-
     group.id('measurement');
     return group;
-
 };
 
 function drawNode(pos_x,pos_y){
@@ -550,13 +552,13 @@ stage.on('mousedown', function(){
     console.log(current_component);
     isNowDrawing = true;
     mouse_hold_position = snapToNode(stage.getRelativePointerPosition().x,
-                                    stage.getRelativePointerPosition().y);
-    });
+                                     stage.getRelativePointerPosition().y);
+});
 
 
 stage.on('mousemove', function(){
     snapped_position = snapToNode(stage.getRelativePointerPosition().x,
-                                stage.getRelativePointerPosition().y);
+                                  stage.getRelativePointerPosition().y);
     drawing_layer.destroyChildren();
     if(adding_component){
         if(isNowDrawing){
@@ -590,21 +592,19 @@ stage.on('mousemove', function(){
         }
         console.log(drawn_components);
     }
-
 });
 
 stage.on('mouseup', function(){
     isNowDrawing = false;
     mouse_release_position = snapToNode(stage.getRelativePointerPosition().x,
-                                    stage.getRelativePointerPosition().y);
+                                        stage.getRelativePointerPosition().y);
     if(adding_component){
         //Check Bar Length > 0
         if(mouse_hold_position != mouse_release_position){
             var component = getDrawing(mouse_hold_position,mouse_release_position,current_component);
-            drawn_layer.add(component); 
-
+            drawn_layer.add(component);
+            all_components.push(component);
         }
-        
     }
 });
 
