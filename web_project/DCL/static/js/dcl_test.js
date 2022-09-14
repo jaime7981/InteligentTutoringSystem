@@ -1,26 +1,27 @@
 console.log("SCRIPT Test 1");
 
-//Buttons
-var selectorButton = document.getElementById("selector-button");
-var eraserButton = document.getElementById("select-eraser-button");
-var barButton = document.getElementById("select-bar-button");
-var circleButton = document.getElementById("select-circle-button");
-var supportButton = document.getElementById("select-support-button");
-var slidingHorizontalButton = document.getElementById("select-sliding-horizontal-button");
-var slidingVerticalButton = document.getElementById("select-sliding-vertical-button");
-var forceButton = document.getElementById("select-force-button");
-var momentumButton = document.getElementById("select-momentum-button");
-var clearButton = document.getElementById("select-clear-button");
-var saveAssignmentButton = document.getElementById("save-assignment-button");
-
+//#region INIT
 var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
-
-// var WIDTH = 1600;
-// var HEIGHT = 800;
 var STEP = 40;
 var SNAP_WEIGHT = 80;
+var ID = 0;
+
+var isNowDrawing = false;
+
+var adding_component = false;
+var current_component = "selector";
+
+var mouse_hold_position = new Point(0,0);
+var mouse_release_position = new Point(0,0);
+var eq_reference_point = null;
+
+var horizontal_points = [];
+var vertical_points = [];
+var bar_snap_nodes = [];
+var all_konva_components = [];
+var all_object_components = [];
 
 var component_base_value = {
     "bar" : 2,
@@ -32,126 +33,9 @@ var component_base_value = {
     "force" : 3,
     "momentum" : 5,
 };
+//#endregion
 
-class Point{
-    constructor(x,y){
-        this.x = x;
-        this.y = y;  
-    };
-};
-
-//Projected Line Given 2 Points
-class Line{
-    constructor(init_coordinates, end_coordinates){
-        this.slope = getBarSlope(init_coordinates,end_coordinates);
-        //Projected cut Y cord
-        this.b = getBarYCut(init_coordinates, this.slope);
-    };
-};
-
-class Bar{
-    constructor(init_coordinates, end_coordinates){
-        this.init_x = init_coordinates.x;
-        this.init_y = init_coordinates.y;
-        this.end_x = end_coordinates.x;
-        this.end_y = end_coordinates.y;
-        this.size = getBarSize(init_coordinates, end_coordinates);
-        this.middle = getBarMiddle(init_coordinates, end_coordinates)
-        this.scaled_size = this.size/STEP
-        this.line = new Line(init_coordinates, end_coordinates);
-    };
-    getValues() {
-        console.log("Init x: ",this.init_x);
-        console.log("Init y: ",this.init_y);
-        console.log("End x: ",this.end_x);
-        console.log("End y: ",this.end_y);
-        console.log("Size: ",this.size);
-        console.log("Scaled Size: ",this.scaled_size);
-        console.log("Middle: ",this.middle);
-        console.log("Slope: ",this.line.slope);
-        console.log("Y Cut: ",this.line.b);
-    };
-};
-
-class Force{
-    constructor(init_coordinates, magnitud, angle){
-        this.init_x = init_coordinates.x;
-        this.init_y = init_coordinates.y;
-        this.magnitud = magnitud;
-        this.angle = angle;
-    };
-}
-
-class Momentum{
-    constructor(init_coordinates, magnitud){
-        this.init_x = init_coordinates.x;
-        this.init_y = init_coordinates.y;
-        this.magnitud = magnitud;
-    };
-}
-
-class Support{
-    constructor(init_coordinates, type){
-        this.init_x = init_coordinates.x;
-        this.init_y = init_coordinates.y;
-        if(type == 'support'){
-            this.reaction_x = true;
-            this.reaction_y = true;
-            this.reaction_momentum = false;
-        }
-        else if(type == 'horizontal'){
-            this.reaction_x = false;
-            this.reaction_y = true;
-            this.reaction_momentum = false;
-        }
-        else if(type == 'vertical'){
-            this.reaction_x = true;
-            this.reaction_y = false;
-            this.reaction_momentum = false;
-        }
-        else if(type == 'fixed'){
-            this.reaction_x = true;
-            this.reaction_y = true;
-            this.reaction_momentum = true;
-        }
-    }
-}
-
-
-
-
-var horizontal_points = [];
-var vertical_points = [];
-
-var bar_snap_nodes = [];
-
-var isNowDrawing = false;
-
-var mouse_hold_position = new Point(0,0);
-var mouse_release_position = new Point(0,0);
-
-var current_component = "selector";
-var adding_component = false;
-
-
-
-var stage = new Konva.Stage({
-    container: 'konva-container',
-    width: WIDTH,
-    height: HEIGHT,
-    border: '1px solid black',
-    draggable: false,
-  });
-
-var drawn_layer = new Konva.Layer();
-var drawing_layer = new Konva.Layer();
-
-
-stage.add(drawn_layer);
-stage.add(drawing_layer);
-
-
-//#region 
+//#region spatial
 //Spacial Equations
 function getBarSize(init_coordinates, end_coordinates){
     var x_init = init_coordinates.x;
@@ -195,7 +79,6 @@ function getBarYCut(init_coordinates, slope){
     return y_init - slope*x_init;
 };
 
-
 function getProjectedIntersection(bar,point){
     var projected_slope = null;
     if(bar.line.slope == 'vertical'){
@@ -210,22 +93,10 @@ function getProjectedIntersection(bar,point){
     var y_point = bar.line.slope*x_point + bar.line.b;
     return new Point(x_point,y_point);
 }
-
 //#endregion
 
 
-//#region test
-var test_bar = new Bar(new Point(-1,0),new Point(4,3));
-console.log(test_bar.getValues());
-var test_point = new Point(1,3);
-var intersected = getProjectedIntersection(test_bar,test_point);
-console.log(intersected);
-
-
-//#endregion
-
-
-
+//#region grid and snap
 function snapToNode(mouse_x, mouse_y) {
     var set_x = 0;
     var set_y = 0;
@@ -245,17 +116,28 @@ function snapToNode(mouse_x, mouse_y) {
     return (new Point(set_x, set_y));
 }
 
-function snapToBar(bar, curr_point){
-    var snap_point = getProjectedIntersection(bar,curr_point);
-    var snap_distance = getBarSize(curr_point,snap_point);
-    if (snap_distance <= SNAP_WEIGHT){
-        return snap_point;
+function snapToBar(curr_point){
+    var min_distance = SNAP_WEIGHT;
+    var return_point = snapToNode(curr_point);
+    for(var bar in all_konva_components){
+        if(bar.component_type == 'bar'){
+            var snap_point = getProjectedIntersection(bar,curr_point);
+            console.log('Values',bar,curr_point,snap_point);
+            var distance = getBarSize(snap_point,curr_point);
+            if (distance < min_distance && distance < SNAP_WEIGHT){
+                min_distance = distance;
+                return_point = snap_point;
+            }
+        }
     }
-    else{
-        return curr_point;
-    }
-
+    return return_point
 };
+
+function stagePositionToPoint(){
+    var x = stage.getRelativePointerPosition().x;
+    var y = stage.getRelativePointerPosition().y;
+    return new Point(x,y);
+}
 
 function drawGrid(Stage){
     var gridLayer = new Konva.Layer({
@@ -305,88 +187,100 @@ function drawGrid(Stage){
     }
     gridLayer.batchDraw();
 };
+//#endregion
 
-drawGrid(stage);
 
+//#region Get Selected Drawing
+function drawingFactory(object){
+    var drawing = null
+    if(object.component_type=='bar'){
+        drawing = drawBar(object);
+    }
+    else if(object.component_type=='support'){
+        drawing = drawSupport(object);
+    }
+    else if(object.component_type=='sliding_horizontal'){
+        drawing = drawSlidingHorizontal(object);
+    }
+    else if(object.component_type=='sliding_vertical'){
+        drawing = drawSlidingVertical(object);
+    }
+    else if(object.component_type=='fixed'){
+        drawing = drawFixed(object);
+    }
+    else if(object.component_type=='force'){
+        drawing = drawForce(object);
+    }
+    else if(object.component_type=='momentum'){
+        drawing = drawMomentum(object);
+    }
+    else if(object.component_type=='node'){
+        drawing = drawNode(object);
+    }
+    else if(object.component_type=='circle'){
+        drawing = drawCircle(object);
+    }
+    return drawing;
+}
+//#endregion
 
-//Get Selected Drawing
-function getDrawing(init_point, end_point, component){
-    if(component == "bar"){
-        return drawBar(init_point,end_point);
-    }
-    else if(component == 'circle'){
-        return drawCircle(init_point.x,init_point.y);
-    }
-    else if(component == 'support'){
-        return drawSupport(init_point.x,init_point.y);
-    }
-    else if(component == 'sliding_horizontal'){
-        return drawSlidingHorizontal(init_point.x,init_point.y);
-    }
-    else if(component == 'sliding_vertical'){
-        return drawSlidingVertical(init_point.x,init_point.y);
-    }
-    else if(component == 'force'){
-        return drawForce(init_point.x,init_point.y);
-    }
-    else if(component == 'momentum'){
-        return drawMomentum(init_point.x,init_point.y)
-    }
-};
-
-//Generate Components
-function drawCircle(pos_x,pos_y){
+//#region Generate Components
+function drawCircle(point){
     var circle = new Konva.Circle({
-        x: pos_x,
-        y: pos_y,
+        x: point.x,
+        y: point.y,
         radius: 10,
-        //fill: 'black',
         stroke: 'black',
         strokeWidth: 8,
-        draggable: true,
     });
+    
     var group = new Konva.Group();
     group.add(circle);
+    group.id(point.id);
     return group;
 };
 
-function drawBar(init_point, end_point){
+function drawBar(bar){
     var line =  new Konva.Line({
-        points: [init_point.x, init_point.y, end_point.x, end_point.y],
+        points: [bar.init_x, bar.init_y, bar.end_x, bar.end_y],
         stroke: 'black',
         strokeWidth: 15,
         opacity: 1,
     });
     var group = new Konva.Group();
     group.add(line);
-    var measurment = drawMeasurement(init_point, end_point);
-    group.add(measurment);
-    group.id = 'bar';
+    var measurement = drawMeasurement(bar);
+    group.add(measurement);
+    group.id = bar.id;
     group.draggable(true);
     return group;
 };
 
-function drawSupport(pos_x,pos_y){
+function drawSupport(support){
     var triangle = new Konva.RegularPolygon({
-        x: pos_x,
-        y: pos_y+20,
+        x: support.x,
+        y: support.y,
         sides: 3,
         radius: 20,
         fill: 'Orange',
         stroke: 'black',
         strokeWidth: 2,
+        offsetX: 0,
+        offsetY: -20,
     });
     var group = new Konva.Group();
     group.add(triangle);
-    group.id = 'support';
+    group.id = support.id;
     group.draggable(true);
     return group;
 };
 
-function drawSlidingHorizontal(pos_x,pos_y){
+function drawSlidingHorizontal(support){
+    var X = support.x;
+    var Y = support.y;
     var triangle = new Konva.RegularPolygon({
-        x: pos_x,
-        y: pos_y,
+        x: X,
+        y: Y,
         sides: 3,
         radius: 20,
         fill: 'Purple',
@@ -397,7 +291,7 @@ function drawSlidingHorizontal(pos_x,pos_y){
     });
 
     var line = new Konva.Line({
-        points: [pos_x-20, pos_y, pos_x+20, pos_y],
+        points: [X-20, Y, X+20, Y],
         stroke: 'black',
         strokeWidth: 3,
         offsetX: 0,
@@ -408,16 +302,18 @@ function drawSlidingHorizontal(pos_x,pos_y){
     var group = new Konva.Group();
     group.add(triangle);
     group.add(line);
-    group.id = 'horizontal';
+    group.id = support.id;
     group.draggable(true);
     return group;
 
 };
 
-function drawSlidingVertical(pos_x,pos_y){
+function drawSlidingVertical(support){
+    var X = support.x;
+    var Y = support.y;
     var triangle = new Konva.RegularPolygon({
-        x: pos_x,
-        y: pos_y,
+        x: X,
+        y: Y,
         sides: 3,
         radius: 20,
         fill: 'purple',
@@ -430,7 +326,7 @@ function drawSlidingVertical(pos_x,pos_y){
     });
 
     var line = new Konva.Line({
-        points: [pos_x, pos_y-20, pos_x, pos_y+20],
+        points: [X, Y-20, X, Y+20],
         stroke: 'black',
         rotation: 0, 
         strokeWidth: 3,
@@ -441,30 +337,37 @@ function drawSlidingVertical(pos_x,pos_y){
     var group = new Konva.Group();
     group.add(triangle);
     group.add(line);
-    group.id = 'vertical';
+    group.id = support.id;
     group.draggable(true);
     return group;
 };
 
-function drawForce(pos_x,pos_y){
+function drawFixed(support){
+    //TODO
+};
+
+function drawForce(force){
+    var color = 'purple'
+    var X = force.x;
+    var Y = force.y;
     var line =  new Konva.Line({
-        points: [pos_x, pos_y, pos_x, pos_y-80],
-        stroke: 'purple',
+        points: [X, Y, X, Y-80],
+        stroke: color,
         strokeWidth: 10,
         opacity: 1,
     });
     var arrow = new Konva.Line({
-        points: [pos_x-20,pos_y-20,pos_x, pos_y, pos_x+20, pos_y-20],
-        stroke: 'purple',
+        points: [X-20,Y-20,X, Y, X+20, Y-20],
+        stroke: color,
         strokeWidth: 10,
         opacity: 1,
     });
 
     var label = new Konva.Text({
-        text: (1+" N"),
+        text: (force.magnitud + " N"),
         fontSize: 20,
-        x: pos_x,
-        y: pos_y,
+        x: X,
+        y: Y,
         offsetX: -20,
         offsetY: 40,
     });
@@ -473,15 +376,17 @@ function drawForce(pos_x,pos_y){
     group.add(line);
     group.add(arrow);
     group.add(label);
-    group.id = 'force';
+    group.id = force.id;
     group.draggable(true);
     return group;
 };
 
-function drawMomentum(pos_x,pos_y){
+function drawMomentum(momentum){
+    var X = momentum.x;
+    var Y = momentum.y;
     var arc = new Konva.Arc({
-        x: pos_x,
-        y: pos_y,
+        x: X,
+        y: Y,
         innerRadius: 20,
         outerRadius: 30,
         angle: 260,
@@ -493,8 +398,8 @@ function drawMomentum(pos_x,pos_y){
     })
 
     var arrow = new Konva.RegularPolygon({
-        x: pos_x-15,
-        y: pos_y+20,
+        x: X-15,
+        y: Y+20,
         sides: 3,
         radius: 15,
         rotation: 20,
@@ -504,8 +409,8 @@ function drawMomentum(pos_x,pos_y){
     });
 
     var circle = new Konva.Circle({
-        x: pos_x,
-        y: pos_y,
+        x: X,
+        y: Y,
         radius: 5,
         fill: 'blue',
         stroke: 'blue',
@@ -513,10 +418,10 @@ function drawMomentum(pos_x,pos_y){
     });
 
     var label = new Konva.Text({
-        text: (1+" Nm"),
+        text: (momentum.magnitud + " Nm"),
         fontSize: 20,
-        x: pos_x,
-        y: pos_y,
+        x: X,
+        y: Y,
         offsetX: -20,
         offsetY: 40,
     });
@@ -526,24 +431,22 @@ function drawMomentum(pos_x,pos_y){
     group.add(arrow);
     group.add(circle);
     group.add(label);
-    group.id = 'momentum';
+    group.id = momentum.id;
     group.draggable(true);
-
     return group;
-
 };
 
-function drawMeasurement(init_point, end_point){
-    var barSlope = getBarSlope(init_point, end_point);
-    var barSize = getBarSize(init_point, end_point)/STEP;
-    var barMiddle = getBarMiddle(init_point, end_point);
+function drawMeasurement(bar){
+    var barSlope = bar.line.slope;
+    var barSize = bar.scaled_size;
+    var barMiddle =bar.middle;
 
     var group = new Konva.Group();
 
     if (barSlope != "vertical"){
         if (barSlope == 0){
             var line =  new Konva.Line({
-                points: [init_point.x, init_point.y, end_point.x, end_point.y],
+                points: [bar.init_x, bar.init_y, bar.end_x, bar.end_y],
                 stroke: 'black',
                 strokeWidth: 2,
                 offsetY: -20,
@@ -551,7 +454,7 @@ function drawMeasurement(init_point, end_point){
             });
         
             var start = new Konva.Line({
-                points: [init_point.x, init_point.y+10, init_point.x, end_point.y-10],
+                points: [bar.init_x, bar.init_y+10, bar.init_x.x, bar.init_y-10],
                 stroke: 'black',
                 strokeWidth: 2,
                 offsetY: -20,
@@ -559,7 +462,7 @@ function drawMeasurement(init_point, end_point){
             });
     
             var end = new Konva.Line({
-                points: [end_point.x, init_point.y+10, end_point.x, end_point.y-10],
+                points: [bar.end_x, bar.end_y+10, bar.end_x, bar.end_y-10],
                 stroke: 'black',
                 strokeWidth: 2,
                 offsetY: -20,
@@ -580,7 +483,7 @@ function drawMeasurement(init_point, end_point){
         }
         else{
             var line =  new Konva.Line({
-                points: [init_point.x, init_point.y, end_point.x, end_point.y],
+                points: [bar.init_x, bar.init_y, bar.end_x, bar.end_y],
                 stroke: 'black',
                 strokeWidth: 2,
                 offsetX: -10,
@@ -589,7 +492,7 @@ function drawMeasurement(init_point, end_point){
             });
             
             var label = new Konva.Text({
-                text: (barSize + " mts"),
+                text: (barSize.toFixed(2) + " mts"),
                 fontSize: 20,
                 x: barMiddle.x,
                 y: barMiddle.y,
@@ -602,7 +505,7 @@ function drawMeasurement(init_point, end_point){
     }
     else{
         var line =  new Konva.Line({
-            points: [init_point.x, init_point.y, end_point.x, end_point.y],
+            points: [bar.init_x, bar.init_y, bar.end_x, bar.end_y],
             stroke: 'black',
             strokeWidth: 2,
             offsetX: -20,
@@ -610,7 +513,7 @@ function drawMeasurement(init_point, end_point){
         });
     
         var start = new Konva.Line({
-            points: [init_point.x+10, init_point.y, init_point.x-10, init_point.y],
+            points: [bar.init_x+10, bar.init_y, bar.init_x-10, bar.init_y],
             stroke: 'black',
             strokeWidth: 2,
             offsetX: -20,
@@ -619,7 +522,7 @@ function drawMeasurement(init_point, end_point){
         });
 
         var end = new Konva.Line({
-            points: [init_point.x+10, end_point.y, init_point.x-10, end_point.y],
+            points: [bar.end_x+10, bar.end_y, bar.end_x-10, bar.end_y],
             stroke: 'black',
             strokeWidth: 2,
             offsetX: -20,
@@ -638,59 +541,114 @@ function drawMeasurement(init_point, end_point){
         group.add(end);
         group.add(label);
     }
-
-    group.id('measurement');
+    group.id = 'measurement';
     return group;
-
 };
-
-function drawNode(pos_x,pos_y){
+function drawNode(node){
     var circle = new Konva.Circle({
-        x: pos_x,
-        y: pos_y,
+        x: node.x,
+        y: node.y,
         radius: 10,
-        //fill: 'black',
-        stroke: 'black',
-        strokeWidth: 8,
+        fill: 'white',
+        stroke: 'red',
+        strokeWidth: 2,
         draggable: true,
+    });
+    var label = new Konva.Text({
+        text: (node.label),
+        fontSize: 20,
+        fill: 'red',
+        fonrStyle: 'bold',
+        x: node.x,
+        y: node.y,
+        //align: 'center',
+        offsetX: 20,
+        offsetY: -10,
     });
     var group = new Konva.Group();
     group.add(circle);
+    group.add(label);
+    group.id = node.id;
     return group;
 };
 
-//Mouse Event Handlers
+//#endregion
 
+//#region load and draw data
+var loadAssigmentData = function() {
+    if (assignment_js != ''){ 
+        assignment_js = assignment_js.replace(new RegExp("&"+"#"+"x27;", "g"), '"');
+        assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
+        assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
+        var parsedJson = JSON.parse(assignment_js);
+        for (object in parsedJson['assignment_data']){
+            if (parsedJson['assignment_data'][object]['object_data'] != null){
+                var object_data = parsedJson['assignment_data'][object]['object_data'];
+                all_object_components.push(object_data);
+            }
+            else {
+                var reference_point = parsedJson['assignment_data'][object]['reference_point'];
+                eq_reference_point = new Point(reference_point.x, reference_point.y);
+            }
+        }
+    }
+}
+
+var drawLoadedData = function() {
+    for (object_element in all_object_components) {
+        let component = getDrawingFromObjectClass(all_object_components[object_element]);
+        all_konva_components.push(component);
+        drawn_layer.add(component);
+    }
+}
+//#endregion
+
+//#region Run App
+var stage = new Konva.Stage({
+    container: 'konva-container',
+    width: WIDTH,
+    height: HEIGHT,
+    border: '1px solid black',
+    draggable: false,
+});
+
+var drawn_layer = new Konva.Layer();
+var drawing_layer = new Konva.Layer();
+
+stage.add(drawn_layer);
+stage.add(drawing_layer);
+drawGrid(stage);
+loadAssigmentData();
+drawLoadedData();
+
+//Mouse Event Handlers
 stage.on('mousedown', function(){
-    console.log(current_component);
     isNowDrawing = true;
     mouse_hold_position = snapToNode(stage.getRelativePointerPosition().x,
-                                    stage.getRelativePointerPosition().y);
-    });
-
+                                     stage.getRelativePointerPosition().y);
+});
 
 stage.on('mousemove', function(){
     snapped_position = snapToNode(stage.getRelativePointerPosition().x,
-                                stage.getRelativePointerPosition().y);
+                                  stage.getRelativePointerPosition().y);
     drawing_layer.destroyChildren();
     if(adding_component){
         if(isNowDrawing){
-            if (current_component=='bar'){
-                var bar = getDrawing(mouse_hold_position, snapped_position, current_component);
-                drawing_layer.add(bar);
-            }
+            var component = componentFactory(mouse_hold_position,snapped_position,ID,current_component);
+            var drawing_now = drawingFactory(component);
+            drawing_layer.add(drawing_now);
         }
         else{
-            if(current_component=='bar'){
-                var circle = getDrawing(snapped_position,snapped_position,'circle');
-                drawing_layer.add(circle);
+            if (current_component == 'bar'){
+                var component = new Circle(snapped_position)
+                var drawing_now = drawingFactory(component);
+                drawing_layer.add(drawing_now);
             }
             else{
-                var snap_coords = snapToBar()
-                var component = getDrawing(snapped_position,snapped_position,current_component);
-                drawing_layer.add(component);
+                var component = new componentFactory(snapped_position,snapped_position,ID,current_component)
+                var drawing_now = drawingFactory(component);
+                drawing_layer.add(drawing_now);
             }
-            
         }
     }
 });
@@ -698,17 +656,47 @@ stage.on('mousemove', function(){
 stage.on('mouseup', function(){
     isNowDrawing = false;
     mouse_release_position = snapToNode(stage.getRelativePointerPosition().x,
-                                    stage.getRelativePointerPosition().y);
+                                        stage.getRelativePointerPosition().y);
     if(adding_component){
-        //Check Bar Length > 0
-        if(mouse_hold_position != mouse_release_position){
-            var component = getDrawing(mouse_hold_position,mouse_release_position,current_component);
-            drawn_layer.add(component); 
-
-        }
-        
+        var component = new componentFactory(mouse_hold_position,mouse_release_position,ID,current_component)
+        var drawing_now = drawingFactory(component);
+        all_konva_components.push(component);
+        drawn_layer.add(drawing_now);
+        if(current_component == 'bar'){
+            var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
+            var konva_node_start = drawingFactory(start_node)
+            var end_node = componentFactory(mouse_release_position,mouse_release_position,ID+2,'node');
+            var konva_node_end = drawingFactory(end_node)
+            drawn_layer.add(konva_node_start);
+            drawn_layer.add(konva_node_end);
+            ID = ID +2;
+        };
+        ID ++;
+        console.log(all_konva_components);
     }
 });
+//#endregion
+
+//#region Debug
+var debugButton = document.getElementById('load-debug');
+var debugContainer = document.getElementById('debug-container');
+
+var functionMesasge = function(message) {
+    if (message != null) {
+        console.log(message);
+        let div = document.createElement("div");
+        div.innerHTML = "<p>" + message +"</p><br>";
+        debugContainer.appendChild(div);
+    }
+};
+
+debugButton.addEventListener('click', function() {
+    debugContainer.innerHTML = "";
+    functionMesasge('debug button presed');
+    functionMesasge('debug button presed');
+}, false);
+//#endregion
+
 
 
 
@@ -727,10 +715,6 @@ barButton.addEventListener('click', function() {
     current_component = 'bar';
     adding_component = true;
 }, false);
-//circleButton.addEventListener('click', function() {
-//    current_component = 'circle';
-//    adding_component = true;
-//}, false);
 
 supportButton.addEventListener('click', function() {
     current_component = 'support';
