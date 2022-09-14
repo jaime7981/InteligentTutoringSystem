@@ -3,6 +3,10 @@ var assignmentName = document.getElementById("input-text-selected-assignment-nam
 var assignmentDescription = document.getElementById("input-text-selected-assignment-description");
 var assignmentLevel = document.getElementById("input-text-selected-assignment-level");
 var assignmentPhoto = document.getElementById("input-file-selected-assignment-photo");
+var stepOneCheckbox = document.getElementById("step-1");
+var stepTwoCheckbox = document.getElementById("step-2");
+var stepThreeCheckbox = document.getElementById("step-3");
+var stepFourCheckbox = document.getElementById("step-4");
 
 //Save Data
 var prepareJsonData = function() {
@@ -25,9 +29,13 @@ var prepareJsonData = function() {
         var reference_y = null;
     }
     
-    json_output_list.push('{"reference_point" : {"x":' + reference_x + ',"y":' + reference_y + '}}]}')
+    json_output_list.push('{"reference_point" : {"x":' + reference_x + ',"y":' + reference_y + '}},{"assignment_steps" : ' + JSON.stringify(getAssignmentSteps()) + '}]}')
     json_parsed_object = json_output_list.join('');
     return json_parsed_object;
+}
+
+var getAssignmentSteps = function(){
+    return [stepOneCheckbox.checked, stepTwoCheckbox.checked, stepThreeCheckbox.checked, stepFourCheckbox.checked];
 }
 
 var ajaxSaveAssignment = function(json_data) {
