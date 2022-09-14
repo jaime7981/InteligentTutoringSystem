@@ -16,6 +16,7 @@ var vertical_points = [];
 var bar_snap_nodes = [];
 var all_konva_components = [];
 var all_object_components = [];
+var assignment_steps = [];
 
 var component_base_value = {
     "bar" : 2,
@@ -591,14 +592,21 @@ var loadAssigmentData = function() {
         assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
         assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
         var parsedJson = JSON.parse(assignment_js);
+        console.log(parsedJson);
         for (object in parsedJson['assignment_data']){
             if (parsedJson['assignment_data'][object]['object_data'] != null){
                 var object_data = parsedJson['assignment_data'][object]['object_data'];
                 all_object_components.push(object_data);
             }
-            else {
-                var reference_point = parsedJson['assignment_data'][object]['reference_point'];
+            else if (parsedJson['assignment_data'][object]['reference_point'] != null) {
+                reference_point = parsedJson['assignment_data'][object]['reference_point'];
                 eq_reference_point = new Point(reference_point.x, reference_point.y);
+                console.log(eq_reference_point);
+            }
+            else if (parsedJson['assignment_data'][object]['assignment_steps'] != null) {
+                assignment_steps = parsedJson['assignment_data'][object]['assignment_steps'];
+                checkStepCheckboxes();
+                console.log(assignment_steps);
             }
         }
     }
@@ -609,6 +617,15 @@ var drawLoadedData = function() {
         let component = getDrawingFromObjectClass(all_object_components[object_element]);
         all_konva_components.push(component);
         drawn_layer.add(component);
+    }
+}
+
+var checkStepCheckboxes = function() {
+    if (assignment_steps.length > 0) {
+        stepOneCheckbox.checked = assignment_steps[0];
+        stepTwoCheckbox.checked = assignment_steps[1];
+        stepThreeCheckbox.checked = assignment_steps[2];
+        stepFourCheckbox.checked = assignment_steps[3];
     }
 }
 //#endregion
