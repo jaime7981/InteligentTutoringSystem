@@ -190,10 +190,10 @@ function getDrawing(init_point, end_point, component){
         return(null);
     }
     else if(component == 'force'){
-        return drawForce(init_point.x,init_point.y, id);
+        return drawForce(init_point.x,init_point.y, getForceAngleValues()[0], id);
     }
     else if(component == 'momentum'){
-        return drawMomentum(init_point.x,init_point.y, id)
+        return drawMomentum(init_point.x,init_point.y, getForceAngleValues()[2], id)
     }
 };
 
@@ -253,10 +253,10 @@ function getDrawingFromObjectClass(component){
         return(null);
     }
     else if(component.component_type == 'force'){
-        return drawForce(init_point.x,init_point.y, id);
+        return drawForce(init_point.x,init_point.y, component.magnitud, id);
     }
     else if(component.component_type == 'momentum'){
-        return drawMomentum(init_point.x,init_point.y, id)
+        return drawMomentum(init_point.x,init_point.y, component.magnitud, id)
     }
 };
 //#endregion
@@ -373,7 +373,7 @@ function drawSlidingVertical(pos_x,pos_y, id){
     return group;
 };
 
-function drawForce(pos_x,pos_y, id){
+function drawForce(pos_x,pos_y, force, id){
     var line =  new Konva.Line({
         points: [pos_x, pos_y, pos_x, pos_y-80],
         stroke: 'purple',
@@ -387,10 +387,8 @@ function drawForce(pos_x,pos_y, id){
         opacity: 1,
     });
 
-    var forceValue = getForceAngleValues()[0];
-
     var label = new Konva.Text({
-        text: (forceValue + " N"),
+        text: (force + " N"),
         fontSize: 20,
         x: pos_x,
         y: pos_y,
@@ -407,7 +405,7 @@ function drawForce(pos_x,pos_y, id){
     return group;
 };
 
-function drawMomentum(pos_x,pos_y, id){
+function drawMomentum(pos_x,pos_y, force, id){
     var arc = new Konva.Arc({
         x: pos_x,
         y: pos_y,
@@ -441,10 +439,8 @@ function drawMomentum(pos_x,pos_y, id){
         strokeWidth: 1,
     });
 
-    var torqueValue = getForceAngleValues()[2];
-
     var label = new Konva.Text({
-        text: (torqueValue + " Nm"),
+        text: (force + " Nm"),
         fontSize: 20,
         x: pos_x,
         y: pos_y,
