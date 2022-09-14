@@ -131,7 +131,4 @@ momentumButton.addEventListener('click', function() {
 debugButton.addEventListener('click', function() {
     console.log('debug button presed');
     debugContainer.innerHTML = "";
-    for (component in all_object_components) {
-        functionMesasge(JSON.parse(JSON.stringify(all_object_components[component])));
-    }
 }, false);

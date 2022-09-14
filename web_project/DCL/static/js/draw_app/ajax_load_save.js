@@ -1,11 +1,8 @@
-console.log("load and save draw");
-
 var saveAssignmentButton = document.getElementById("save-assignment-button");
 var assignmentName = document.getElementById("input-text-selected-assignment-name");
 var assignmentDescription = document.getElementById("input-text-selected-assignment-description");
 var assignmentLevel = document.getElementById("input-text-selected-assignment-level");
 var assignmentPhoto = document.getElementById("input-file-selected-assignment-photo");
-
 
 // Load data
 var loadAssigmentData = function() {
@@ -13,58 +10,42 @@ var loadAssigmentData = function() {
         assignment_js = assignment_js.replace(new RegExp("&"+"#"+"x27;", "g"), '"');
         assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
         assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
-        console.log(assignment_js);
         var parsedJson = JSON.parse(assignment_js);
         for (object in parsedJson['assignment_data']){
-            if (parsedJson['assignment_data'][object]['data'] != null){
-                var object_data = parsedJson['assignment_data'][object]['data'];
-                
-                if (object_data["draw_type"] == 'bar') {
-                    bar_list.push(dataToBar(object_data));
-                }
-                else if (object_data["draw_type"] == 'circle') {
-                    circle_list.push(dataToCircle(object_data));
-                }
+            if (parsedJson['assignment_data'][object]['object_data'] != null){
+                var object_data = parsedJson['assignment_data'][object]['object_data'];
+                all_object_components.push(object_data);
+            }
+            else {
+                var reference_point = parsedJson['assignment_data'][object]['reference_point'];
+                eq_reference_point = new Point(reference_point.x, reference_point.y);
             }
         }
     }
-}
-
-var dataToBar = function(data) {
-    var new_bar = new Bar(new Point(data['init_x'], data['init_y']),
-                          new Point(data['end_x'], data['end_y']));
-    new_bar.draw_type = data['draw_type'];
-    new_bar.object_type = data['object_type'];
-    new_bar.color = data['color'];
-    new_bar.name = data['name'];
-    return new_bar;
-}
-
-var dataToCircle = function(data) {
-    var new_circle = new Circle(new Point(data['init_x'], data['init_y']));
-    new_circle.draw_type = data['draw_type'];
-    new_circle.object_type = data['object_type'];
-    new_circle.color = data['color'];
-    new_circle.name = data['name'];
-    return new_circle;
 }
 
 //Save Data
 var prepareJsonData = function() {
     var json_output_list = ['{"assignment_data" : ['];
     var json_parsed_object = '';
-    for (list_element in  bar_list) {
-        json_parsed_object = '{ "data" : ' + JSON.stringify(bar_list[list_element]) + '},';
-        json_output_list.push(json_parsed_object);
-    }
-    for (list_element in  circle_list) {
-        json_parsed_object = ['{ "data" : ', 
-                                    JSON.stringify(circle_list[list_element]),
+    for (list_element in  all_object_components) {
+        json_parsed_object = ['{ "object_data" : ', 
+                                    JSON.stringify(all_object_components[list_element]),
                                     '},'].join('');
         json_output_list.push(json_parsed_object);
     }
-
-    json_output_list.push('{"level" : null, "name" : null}]}')
+    if (all_object_components.length > 0) {
+        if (all_object_components[0].component_type == 'bar') {
+            var reference_x = all_object_components[0].init_x;
+            var reference_y = all_object_components[0].init_y;
+        }
+    }
+    else {
+        var reference_x = null;
+        var reference_y = null;
+    }
+    
+    json_output_list.push('{"reference_point" : {"x":' + reference_x + ',"y":' + reference_y + '}}]}')
     json_parsed_object = json_output_list.join('');
     return json_parsed_object;
 }
@@ -116,7 +97,5 @@ var getCookie = function(name) {
 
 // Event Listeners
 saveAssignmentButton.addEventListener('click', function() {
-    var json_data = prepareJsonData();
-    console.log(json_data);
-    ajaxSaveAssignment(json_data);
+    ajaxSaveAssignment(prepareJsonData());
 }, false);

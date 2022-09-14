@@ -1,0 +1,23 @@
+{"assignment_data" : [
+    { "data" : 
+        {"id":0,
+         "component_type":"bar",
+         "init_x":160,
+         "init_y":200,
+         "end_x":520,
+         "end_y":200,
+         "size":"360.00",
+         "middle":{"x":340,"y":200},
+         "scaled_size":9,
+         "line":{"slope":0,"b":200}}},
+    { "data" : 
+        {"id":1,
+         "component_type":"force",
+         "init_x":160,
+         "init_y":200,
+         "magnitud":"1",
+         "angle":"90"}},
+    {"reference_point" : 
+        {"x":160,
+         "y":200}}]
+}

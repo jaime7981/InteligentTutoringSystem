@@ -9,6 +9,7 @@ var adding_component = false;
 var current_component = "selector";
 var mouse_hold_position = new Point(0,0);
 var mouse_release_position = new Point(0,0);
+var eq_reference_point = null;
 
 var horizontal_points = [];
 var vertical_points = [];
@@ -71,7 +72,6 @@ function getBarYCut(init_coordinates, slope){
     var y_init = init_coordinates.y;
     return y_init - slope*x_init;
 };
-
 
 function getProjectedIntersection(bar,point){
     //console.log("elements: ",bar, point);
@@ -568,6 +568,7 @@ var drawing_layer = new Konva.Layer();
 stage.add(drawn_layer);
 stage.add(drawing_layer);
 drawGrid(stage);
+loadAssigmentData();
 
 //Mouse Event Handlers
 stage.on('mousedown', function(){
@@ -612,7 +613,7 @@ stage.on('mouseup', function(){
             drawn_layer.add(component);
             //Save Data
             createElementDrawing(mouse_hold_position,mouse_release_position,current_component);
-            all_konva_components.push(component);
+            //all_konva_components.push(component);
         }
     }
 });
