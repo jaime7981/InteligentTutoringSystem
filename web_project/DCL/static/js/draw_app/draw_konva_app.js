@@ -584,6 +584,35 @@ function drawNode(pos_x,pos_y, id){
 };
 //#endregion
 
+//#region load and draw data
+var loadAssigmentData = function() {
+    if (assignment_js != ''){ 
+        assignment_js = assignment_js.replace(new RegExp("&"+"#"+"x27;", "g"), '"');
+        assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
+        assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
+        var parsedJson = JSON.parse(assignment_js);
+        for (object in parsedJson['assignment_data']){
+            if (parsedJson['assignment_data'][object]['object_data'] != null){
+                var object_data = parsedJson['assignment_data'][object]['object_data'];
+                all_object_components.push(object_data);
+            }
+            else {
+                var reference_point = parsedJson['assignment_data'][object]['reference_point'];
+                eq_reference_point = new Point(reference_point.x, reference_point.y);
+            }
+        }
+    }
+}
+
+var drawLoadedData = function() {
+    for (object_element in all_object_components) {
+        let component = getDrawingFromObjectClass(all_object_components[object_element]);
+        all_konva_components.push(component);
+        drawn_layer.add(component);
+    }
+}
+//#endregion
+
 //#region Run App
 var stage = new Konva.Stage({
     container: 'konva-container',
@@ -600,12 +629,7 @@ stage.add(drawn_layer);
 stage.add(drawing_layer);
 drawGrid(stage);
 loadAssigmentData();
-
-// Initial Drawing
-for (object_element in all_object_components) {
-    let component = getDrawingFromObjectClass(all_object_components[object_element]);
-    drawn_layer.add(component);
-}
+drawLoadedData();
 
 //Mouse Event Handlers
 stage.on('mousedown', function(){
@@ -648,8 +672,29 @@ stage.on('mouseup', function(){
         if(mouse_hold_position != mouse_release_position){
             let created_object = createElementDrawing(mouse_hold_position,mouse_release_position,current_component);
             let component = getDrawingFromObjectClass(created_object);
+            all_konva_components.push(component);
             drawn_layer.add(component);
         }
     }
 });
+//#endregion
+
+var debugButton = document.getElementById('load-debug');
+var debugContainer = document.getElementById('debug-container');
+
+//#region Debug
+var functionMesasge = function(message) {
+    if (message != null) {
+        console.log(message);
+        let div = document.createElement("div");
+        div.innerHTML = "<p>" + message +"</p><br>";
+        debugContainer.appendChild(div);
+    }
+};
+
+debugButton.addEventListener('click', function() {
+    debugContainer.innerHTML = "";
+    functionMesasge('debug button presed');
+    functionMesasge('debug button presed');
+}, false);
 //#endregion

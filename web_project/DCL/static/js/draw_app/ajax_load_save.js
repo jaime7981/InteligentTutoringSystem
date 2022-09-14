@@ -4,26 +4,6 @@ var assignmentDescription = document.getElementById("input-text-selected-assignm
 var assignmentLevel = document.getElementById("input-text-selected-assignment-level");
 var assignmentPhoto = document.getElementById("input-file-selected-assignment-photo");
 
-// Load data
-var loadAssigmentData = function() {
-    if (assignment_js != ''){ 
-        assignment_js = assignment_js.replace(new RegExp("&"+"#"+"x27;", "g"), '"');
-        assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
-        assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
-        var parsedJson = JSON.parse(assignment_js);
-        for (object in parsedJson['assignment_data']){
-            if (parsedJson['assignment_data'][object]['object_data'] != null){
-                var object_data = parsedJson['assignment_data'][object]['object_data'];
-                all_object_components.push(object_data);
-            }
-            else {
-                var reference_point = parsedJson['assignment_data'][object]['reference_point'];
-                eq_reference_point = new Point(reference_point.x, reference_point.y);
-            }
-        }
-    }
-}
-
 //Save Data
 var prepareJsonData = function() {
     var json_output_list = ['{"assignment_data" : ['];

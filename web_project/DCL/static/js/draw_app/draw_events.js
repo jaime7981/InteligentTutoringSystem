@@ -1,4 +1,4 @@
-//Buttons
+//#region Buttons
 var selectorButton = document.getElementById("selector-button");
 var eraserButton = document.getElementById("select-eraser-button");
 var barButton = document.getElementById("select-bar-button");
@@ -8,13 +8,10 @@ var slidingVerticalButton = document.getElementById("select-sliding-vertical-but
 var forceButton = document.getElementById("select-force-button");
 var momentumButton = document.getElementById("select-momentum-button");
 var clearButton = document.getElementById("select-clear-button");
-
 var sideBar = document.getElementById("dcl-app-side-bar-canvas");
+//#endregion
 
-var debugButton = document.getElementById('load-debug');
-var debugContainer = document.getElementById('debug-container');
-
-// Some Functions
+//#region Side Bar
 var appendForceField = function() {
     let div = document.createElement("div");
     div.setAttribute("id", id="force-container");
@@ -67,17 +64,9 @@ var getForceAngleValues = function() {
     }
     return([force_value, angle_value, torque_value]);
 }
+//#endregion
 
-var functionMesasge = function(message) {
-    if (message != null) {
-        console.log(message);
-        let div = document.createElement("div");
-        div.innerHTML = "<p>" + message +"</p><br>";
-        debugContainer.appendChild(div);
-    }
-};
-
-//Buttons Event Handlers
+//#region Buttons Event Handlers
 selectorButton.addEventListener('click',function(){
     current_component = 'selector'; 
     adding_component = false;
@@ -126,9 +115,4 @@ momentumButton.addEventListener('click', function() {
     deleteAllContent();
     appendTorqueField();
 }, false)
-
- 
-debugButton.addEventListener('click', function() {
-    console.log('debug button presed');
-    debugContainer.innerHTML = "";
-}, false);
+//#endregion
