@@ -1,1 +1,35 @@
-{"assignment_data" : [{ "data" : {"init_x":200,"init_y":200,"end_x":750,"end_y":300,"draw_type":"bar","object_type":"bar","color":"blue","name":"bar_1"}},{ "data" : {"init_x":900,"init_y":150,"end_x":200,"end_y":350,"draw_type":"bar","object_type":"force","color":"cyan","name":"force_2"}},{ "data" : {"init_x":300,"init_y":100,"draw_type":"circle","object_type":"circle","name":"circle_1","color":"red","rad":5}},{ "data" : {"init_x":450,"init_y":100,"draw_type":"circle","object_type":"sliding","name":"sliding_2","color":"purple","rad":5}},{ "data" : {"init_x":550,"init_y":100,"draw_type":"circle","object_type":"support","name":"support_3","color":"lime","rad":5}},{"level" : null, "name" : null}]}
+{"attrs": {"width":1046,"height":470,"border":"1px solid black"},
+"className":"Stage",
+"children":[
+    {"attrs":{},
+    "className":"Layer",
+    "children":[
+        {"attrs":{"draggable":true},
+        "className":"Group",
+        "children":[
+            {"attrs":{"points":[200,200,600,200],
+            "stroke":"black","strokeWidth":15},
+            "className":"Line"},
+            {"attrs":{"id":"measurement"},
+            "className":"Group",
+            "children":[
+                {"attrs":{"points":[200,200,600,200],
+                "stroke":"black",
+                "offsetY":-20},
+                "className":"Line"},
+                {"attrs":{"points":[200,210,200,190],
+                "stroke":"black",
+                "offsetY":-20},
+                "className":"Line"},
+                {"attrs":{"points":[600,210,600,190],
+                "stroke":"black",
+                "offsetY":-20},
+                "className":"Line"},
+                {"attrs":{"text":"10 mts",
+                "fontSize":20,"x":400,"y":200,"offsetY":-20,"fill":"black"},
+                "className":"Text"}]
+                }
+            ]},
+        {"attrs":{"draggable":true},"className":"Group","children":[{"attrs":{"x":200,"y":200,"sides":3,"radius":20,"fill":"purple","stroke":"black","rotation":90,"offsetY":-20},"className":"RegularPolygon"},{"attrs":{"points":[200,180,200,220],"stroke":"black","strokeWidth":3,"offsetX":35},"className":"Line"}]},{"attrs":{"draggable":true},"className":"Group","children":[{"attrs":{"x":600,"y":200,"sides":3,"radius":20,"fill":"Purple","stroke":"black","offsetY":-20},"className":"RegularPolygon"},{"attrs":{"points":[580,200,620,200],"stroke":"black","strokeWidth":3,"offsetY":-35,"fill":"black"},"className":"Line"}]}]},
+    {"attrs":{},"className":"Layer","children":[{"attrs":{"draggable":true},"className":"Group","children":[{"attrs":{"x":600,"y":200,"sides":3,"radius":20,"fill":"Purple","stroke":"black","offsetY":-20},"className":"RegularPolygon"},{"attrs":{"points":[580,200,620,200],"stroke":"black","strokeWidth":3,"offsetY":-35,"fill":"black"},"className":"Line"}]}]},
+    {"attrs":{},"className":"Layer","children":[{"attrs":{"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":40,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":80,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":120,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":160,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":200,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":240,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":280,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":320,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":360,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":400,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":440,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":480,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":520,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":560,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":600,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":640,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":680,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":720,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":760,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":800,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":840,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":880,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":920,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":960,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":1000,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"x":1040,"points":[0,0,0,470],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":40,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":80,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":120,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":160,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":200,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":240,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":280,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":320,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":360,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":400,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":440,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"},{"attrs":{"y":480,"points":[0,0,1046,0],"stroke":"rgba(0, 0, 0, 0.4)"},"className":"Line"}]}]}

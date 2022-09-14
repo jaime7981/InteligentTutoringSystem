@@ -1,0 +1,41 @@
+{% extends "header_template.html" %}
+{% load static %}
+{% block content %}
+
+<h1>Your Unlocked Assignments From This Teacher</h1>
+
+<div class="container d-flex justify-content-center my-3">
+    <div class="row border border-danger rounded p-2" id="assignment-container">
+        <div class="d-flex justify-content-between">
+            <div class="col">
+                Assignments
+            </div>
+            <div class="col">
+                Assignments
+            </div>
+        </div>
+        <div id="teacher-assignments" class="row">
+            <div class="row d-flex justify-content-between">
+               <div class="col">
+                   <p class="font-weight-bold">Assignment ID</p>
+                </div>
+                <div class="col font-weight-bold">
+                    Assignment Difficulty
+                </div>
+                <div class="col font-weight-bold">
+                    Assignment Components
+                </div>
+            </div>
+            {% for assignment in teacher_assignments %}
+            <div class="row my-2">
+               <a href='teacher/{{ assignment.id }}/'> {{ assignment.name }}</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div>
+
+</div>
+{% endblock %}
