@@ -32,16 +32,16 @@
     <div id='assignment-steps' style="margin: 10px;
                                       padding: 10px;">
         <h2>Select User Assignments Steps:</h2>
-        <input type="checkbox" id="step-1" name="step-1" value="1">
+        <input type="checkbox" id="step-1" name="step-1">
         <label for="step-1">Step One:</label><br>
         <p>Dibujar el cuerpo rigido como representacion de barras, vinculos externos e internos y con lasfuerzas y momentos de carga.</p>
-        <input type="checkbox" id="step-2" name="step-2" value="2">
+        <input type="checkbox" id="step-2" name="step-2">
         <label for="step-2">Step Two:</label><br>
         <p>Determinar los cuerpos sobre los que se haran los DCL segun los vinculos internos.</p>
-        <input type="checkbox" id="step-3" name="step-3" value="3">
+        <input type="checkbox" id="step-3" name="step-3">
         <label for="step-3">Step Three:</label><br>
         <p>Diagramar cada DCL reemplazando los vinculos externos por la fuerzas y momentos de reaccion correspondientes (dando nombre a cada una de ellas), e incorporando las fuerzas producto de los vinculos internos usados para la division. Ademas, dividir las fuerzas de carga segun los ejes.</p>
-        <input type="checkbox" id="step-4" name="step-4" value="4">
+        <input type="checkbox" id="step-4" name="step-4">
         <label for="step-4">Step Four:</label>
         <p>Plantear las ecuaciones de equilibrio de fuerza por cada eje y de momento en base a el o los puntos que se defina.</p>
     </div>
@@ -82,8 +82,8 @@
         <button id="select-eraser-button">Eraser</button>
         <button id="select-bar-button">Select Bar</button>
         <button id="select-support-button">Support</button>
-        <button id="select-sliding-horizontal-button">Sliding Support</button>
-        <button id="select-sliding-vertical-button">Sliding Support</button>
+        <button id="select-sliding-horizontal-button">Sliding Support Hor</button>
+        <button id="select-sliding-vertical-button">Sliding Support Vert</button>
         <button id="select-force-button">Force</button>
         <button id="select-momentum-button">Momentum</button>
         <button id="select-clear-button">Clear All</button>
@@ -127,11 +127,10 @@
         assignment_id = 0;
     }
     var teacher_redirect = "{% url 'teacher' %}";
-    var bar_list = [];
-    var circle_list = [];
 </script>
 
 <script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<script src="{% static 'js/draw_app/draw_classes.js' %}"></script>
 <script src="{% static 'js/draw_app/ajax_load_save.js' %}"></script>
 <script src="{% static 'js/draw_app/draw_events.js' %}"></script>
 <script src="{% static 'js/draw_app/draw_konva_app.js' %}"></script>
