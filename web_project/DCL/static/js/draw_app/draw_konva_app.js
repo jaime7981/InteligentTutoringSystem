@@ -679,10 +679,10 @@ stage.on('mouseup', function(){
 });
 //#endregion
 
+//#region Debug
 var debugButton = document.getElementById('load-debug');
 var debugContainer = document.getElementById('debug-container');
 
-//#region Debug
 var functionMesasge = function(message) {
     if (message != null) {
         console.log(message);
