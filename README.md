@@ -29,7 +29,7 @@
 ## Entrega 3
 - [x] Elementos✅
 - El DCL se puede crear incluyendo todos los elementos
-- [ ] Fuerzas y momentos☑️
+- [x] Fuerzas y momentos✅
 - Los ángulos y las magnitudes de las fuerzas son fundamentales, deben estar presentes. Y no son "textos", son valores específicos asociados al componente.
 - [x] Dimensiones✅
 - Las dimensiones deben estar siempre presentes, se debe poder ver el tamaño de una barra, saber en que punto se pone un apoyo o una fuerza, etc. Todo eso debe estar presente.
