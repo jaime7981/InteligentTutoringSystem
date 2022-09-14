@@ -1,4 +1,4 @@
-// Math Components
+//#region Math Components
 class Point{
     constructor(x,y){
         this.x = x;
@@ -12,8 +12,9 @@ class Line{
         this.b = getBarYCut(init_coordinates, this.slope);
     };
 };
+//#endregion
 
-// Draw Components
+//#region Draw Components
 class Bar{
     constructor(init_coordinates, end_coordinates, id){
         this.id = id;
@@ -91,3 +92,4 @@ class Support{
         }
     }
 }
+//#endregion
