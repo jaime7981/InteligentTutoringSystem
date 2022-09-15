@@ -131,10 +131,10 @@ function componentFactory(init_coordinates, end_coordinates, id, component){
         var object = new Support(init_coordinates,component,id);
     }
     else if(component == 'force'){
-        var object = new Force(init_coordinates, getForceAngleValues()[0],getForceAngleValues()[1], id);
+        var object = new Force(init_coordinates, parseInt(getForceAngleValues()[0]),parseInt(getForceAngleValues()[1]), id);
     }
     else if(component == 'momentum'){
-        var object = new Momentum(init_coordinates, getForceAngleValues()[2],id);
+        var object = new Momentum(init_coordinates, parseInt(getForceAngleValues()[2]),id);
     }
     else if(component == 'circle'){
         var object = new Circle(init_coordinates)

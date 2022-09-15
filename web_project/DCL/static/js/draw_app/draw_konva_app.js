@@ -752,6 +752,35 @@ stage.on('mouseup', function(){
 //#region eq X,Y and M
 var loadXeq = function(data) {
     eq_x.innerHTML = 'No data for loading eq X'
+
+    // Fuerzas (agregar a en funcion)
+    let force_sum_x = 0;
+    let force_sum_y = 0;
+    for (component in all_object_components) {
+        let object = all_object_components[component];
+        if (object.component_type == 'force') {
+            // Fuerza hacia abajo
+            if (object.angle == '90') {
+                force_sum_y = force_sum_y - parseInt(object.magnitud);
+            }
+            // Fuerza hacia arriba
+            else if (object.angle == '270') {
+                force_sum_y = force_sum_y + parseInt(object.magnitud);
+            }
+            // Fuerza hacia la derecha
+            else if (object.angle == '0') {
+                force_sum_x = force_sum_x + parseInt(object.magnitud);
+            }
+            // Fuerza hacia la izquierda
+            else if (object.angle == '180') {
+                force_sum_x = force_sum_x - parseInt(object.magnitud);
+            }
+
+        }
+    }
+    eq_x.innerHTML = 'fuerza x: ' + force_sum_x + 'N';
+    eq_y.innerHTML = 'fuerza y: ' + force_sum_y + 'N';
+    console.log('fuerza x: ' + force_sum_x + 'N, fuerza y: ' + force_sum_y + 'N');
 }
 
 //#endregion
