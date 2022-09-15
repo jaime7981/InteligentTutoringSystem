@@ -33,7 +33,7 @@
 - Los ángulos y las magnitudes de las fuerzas son fundamentales, deben estar presentes. Y no son "textos", son valores específicos asociados al componente.
 - [x] Dimensiones✅
 - Las dimensiones deben estar siempre presentes, se debe poder ver el tamaño de una barra, saber en que punto se pone un apoyo o una fuerza, etc. Todo eso debe estar presente.
-- [ ] Uniones (identificacion nodos)❌
+- [x] Uniones (identificacion nodos)✅
 - Las uniones de elementos deben llevar una identificación (recomiendo una letra), de lo contrario no tendrán como referirse a ellas para las ecuaciones de equilibrio.
 - [x] Tarea Base✅
 - Permitir crear nuevas tareas, definiendo un enunciado (escrito), permitiendo incorporar una
@@ -46,8 +46,7 @@ por su aplicaci ́on, mostr ́andolas al usuario en todo momento mientras crea l
 sentido, el creador si debe definir en que puntos (nodos) se debe calcular el momento.
 - [ ] Indice dificultado❌
 - Generar y mostrar en todo momento.
-- [ ] Guardar Modelo de Datos
-- Nuevo Pendiente
+- [x] Guardar y Cargar Modelo de Datos✅
 
 ## Deployment
 - Launch docker container -> `docker-compose up --build`
