@@ -765,6 +765,9 @@ var loadXeq = function() {
     // Fuerzas
     let force_sum_x = 0;
     let force_sum_y = 0;
+    // Momentum
+    let momentum_sum = 0;
+    let momentum_list = [];
     // Reacciones
     let reaction_x = [];
     let reaction_y = [];
@@ -793,16 +796,29 @@ var loadXeq = function() {
                 force_sum_x = force_sum_x + des_forces[0];
                 force_sum_y = force_sum_y + des_forces[1];
             }
+            momentum_list.push("RmForce" + momentum_list.length + '*T');
         }
         else if (object.component_type == 'support') {
             reaction_x.push("Rx" + reaction_x.length);
             reaction_y.push("Ry" + reaction_y.length);
+            momentum_list.push("RmSup" + momentum_list.length + '*T');
         }
         else if (object.component_type == 'sliding_horizontal') {
             reaction_x.push("Rx" + reaction_x.length);
+            momentum_list.push("RmSlidHor" + momentum_list.length + '*T');
         }
         else if (object.component_type == 'sliding_vertical') {
             reaction_y.push("Ry" + reaction_y.length);
+            momentum_list.push("RmSlidVer" + momentum_list.length + '*T');
+        }
+        else if (object.component_type == 'fixed') {
+            reaction_x.push("Rx" + reaction_x.length);
+            reaction_y.push("Ry" + reaction_y.length);
+            // Implementar calculo de torque segun punto de referencia
+            momentum_list.push("RmFixed" + momentum_list.length + '*T');
+        }
+        else if (object.component_type == 'momentum') {
+            momentum_sum += object.magnitud;
         }
     }
 
@@ -822,8 +838,15 @@ var loadXeq = function() {
     eq_y.innerHTML += force_sum_y + 'N';
     eq_y.innerHTML += ' = 0';
 
+    // Show m
+    eq_m.innerHTML = '';
+    for (m_elem in momentum_list) {
+        eq_m.innerHTML += momentum_list[m_elem] + ' + ';
+    }
+    eq_m.innerHTML += momentum_sum + 'Nm';
+    eq_m.innerHTML += ' = 0';
+    eq_m.innerHTML += '<br><p>Implementar calculo de torque segun punto de referencia</p>'
 
-    console.log('fuerza x: ' + force_sum_x + 'N, fuerza y: ' + force_sum_y + 'N');
 }
 
 var getDificultad = function() {
