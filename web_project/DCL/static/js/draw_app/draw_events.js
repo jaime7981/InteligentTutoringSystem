@@ -7,6 +7,7 @@ var slidingHorizontalButton = document.getElementById("select-sliding-horizontal
 var slidingVerticalButton = document.getElementById("select-sliding-vertical-button");
 var forceButton = document.getElementById("select-force-button");
 var momentumButton = document.getElementById("select-momentum-button");
+var referencePointButton = document.getElementById("select-reference-button");
 var clearButton = document.getElementById("select-clear-button");
 var sideBar = document.getElementById("dcl-app-side-bar-canvas");
 //#endregion
@@ -115,4 +116,10 @@ momentumButton.addEventListener('click', function() {
     deleteAllContent();
     appendTorqueField();
 }, false)
+referencePointButton.addEventListener('click', function() {
+    current_component = 'reference_point';
+    adding_component = true;
+    console.log(current_component);
+    deleteAllContent();
+}, false);
 //#endregion

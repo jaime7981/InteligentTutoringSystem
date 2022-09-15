@@ -217,8 +217,11 @@ function drawingFactory(object){
     else if(object.component_type=='node'){
         drawing = drawNode(object);
     }
-    else if(object.component_type=='circle'){
-        drawing = drawCircle(object);
+    else if(object.component_type=='node'){
+        drawing = drawNode(object);
+    }
+    else if(object.component_type=='reference_point'){
+        drawing = drawReferencePoint(object);
     }
     return drawing;
 }
@@ -283,6 +286,9 @@ function getDrawingFromObjectClass(component){
     }
     else if(component.component_type == 'momentum'){
         return drawMomentum(init_point.x,init_point.y, component.magnitud, id)
+    }
+    else if(component.component_type == 'reference_point'){
+        return drawReferencePoint(init_point.x,init_point.y, component.magnitud, id)
     }
 };
 //#endregion
@@ -632,6 +638,33 @@ function drawNode(node){
     group.add(circle);
     group.add(label);
     group.id = node.id;
+    return group;
+};
+
+function drawReferencePoint(reference_point){
+    var circle = new Konva.Circle({
+        x: reference_point.x,
+        y: reference_point.y,
+        radius: 10,
+        fill: 'black',
+        stroke: 'blue',
+        strokeWidth: 2,
+        draggable: true,
+    });
+    var label = new Konva.Text({
+        text: ("RP"),
+        fontSize: 20,
+        fill: 'red',
+        fontStyle: 'bold',
+        x: reference_point.x,
+        y: reference_point.y,
+        offsetX: 20,
+        offsetY: -10,
+    });
+    var group = new Konva.Group();
+    group.add(circle);
+    group.add(label);
+    group.id = reference_point.id;
     return group;
 };
 //#endregion
