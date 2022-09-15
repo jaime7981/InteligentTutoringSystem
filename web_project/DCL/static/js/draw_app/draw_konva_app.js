@@ -681,6 +681,13 @@ var checkStepCheckboxes = function() {
 //#endregion
 
 //#region eq X,Y and M
+// Retorna [fuerza_x, fuerza_y]
+var decomposeForce = function(angle, magnitude) {
+    let desc_x = Math.cos(parseInt(angle));
+    let desc_y = Math.sin(parseInt(angle));
+    return [magnitude*desc_x, magnitude*desc_y];
+}
+
 var loadXeq = function() {
     eq_x.innerHTML = 'No data for loading eq X'
 
@@ -711,6 +718,9 @@ var loadXeq = function() {
             }
             else {
                 // TODO: Descomponer fuerza
+                let des_forces = decomposeForce(object.angle, object.magnitud);
+                force_sum_x = force_sum_x + des_forces[0];
+                force_sum_y = force_sum_y + des_forces[1];
             }
         }
         else if (object.component_type == 'support') {
