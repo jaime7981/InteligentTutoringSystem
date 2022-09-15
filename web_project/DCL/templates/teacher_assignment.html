@@ -10,12 +10,12 @@
                                      padding: 10px;">
     {% if selected_assignment == 0 %}
         <h2>Assignment Name: <input type='text' id='input-text-selected-assignment-name' value="Insert Name"> </h2>
-        <h2>Assignment Level: <input type='text' id='input-text-selected-assignment-level' value="2"> </h2>
+        <h2 id="input-text-selected-assignment-level">Assignment Dificulty: null</h2>
         <h2>Assignment Description:</h2>
         <textarea  type='text' id='input-text-selected-assignment-description'>Insert Description</textarea>
     {% else %}
         <h2>Assignment Name: <input type='text' id='input-text-selected-assignment-name' value="{{ selected_assignment.name }}"></h2>
-        <h2>Assignment Level: <input type='text' id='input-text-selected-assignment-level' value="{{ selected_assignment.level }}"></h2>
+        <h2 id="input-text-selected-assignment-level">Assignment Dificulty: null</h2>
         <h2>Assignment Description:</h2>
         <textarea  type='text' id='input-text-selected-assignment-description'> {{ selected_assignment.description }} </textarea>
     {% endif %}
