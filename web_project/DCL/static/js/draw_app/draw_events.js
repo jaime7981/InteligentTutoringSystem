@@ -9,9 +9,6 @@ var forceButton = document.getElementById("select-force-button");
 var momentumButton = document.getElementById("select-momentum-button");
 var clearButton = document.getElementById("select-clear-button");
 var sideBar = document.getElementById("dcl-app-side-bar-canvas");
-var eq_x = document.getElementById("eq-x");
-var eq_y = document.getElementById("eq-y");
-var eq_m = document.getElementById("eq-m");
 //#endregion
 
 //#region Side Bar

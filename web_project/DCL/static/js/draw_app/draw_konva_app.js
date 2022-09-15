@@ -1,4 +1,9 @@
 //#region INIT
+var eq_x = document.getElementById("eq-x");
+var eq_y = document.getElementById("eq-y");
+var eq_m = document.getElementById("eq-m");
+var dif_level = document.getElementById("input-text-selected-assignment-level");
+
 var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
@@ -23,8 +28,8 @@ var component_base_value = {
     "bar" : 2,
     "joint" : 5,
     "support" : 3,
-    "horizontal" : 4,
-    "vertical" : 4,
+    "sliding_horizontal" : 4,
+    "sliding_vertical" : 4,
     "fixed" : 2,
     "force" : 3,
     "momentum" : 5,
@@ -675,83 +680,8 @@ var checkStepCheckboxes = function() {
 }
 //#endregion
 
-//#region Run App
-var stage = new Konva.Stage({
-    container: 'konva-container',
-    width: WIDTH,
-    height: HEIGHT,
-    border: '1px solid black',
-    draggable: false,
-});
-
-var drawn_layer = new Konva.Layer();
-var drawing_layer = new Konva.Layer();
-
-stage.add(drawn_layer);
-stage.add(drawing_layer);
-drawGrid(stage);
-loadAssigmentData();
-drawLoadedData();
-
-//Mouse Event Handlers
-stage.on('mousedown', function(){
-    isNowDrawing = true;
-    mouse_hold_position = snapToNode(stage.getRelativePointerPosition().x,
-                                     stage.getRelativePointerPosition().y);
-});
-
-stage.on('mousemove', function(){
-    snapped_position = snapToNode(stage.getRelativePointerPosition().x,
-                                  stage.getRelativePointerPosition().y);
-    drawing_layer.destroyChildren();
-    if(adding_component){
-        if(isNowDrawing){
-            var component = componentFactory(mouse_hold_position,snapped_position,ID,current_component);
-            var drawing_now = drawingFactory(component);
-            drawing_layer.add(drawing_now);
-        }
-        else{
-            if (current_component == 'bar'){
-                var component = new Circle(snapped_position)
-                var drawing_now = drawingFactory(component);
-                drawing_layer.add(drawing_now);
-            }
-            else{
-                var component = new componentFactory(snapped_position,snapped_position,ID,current_component)
-                var drawing_now = drawingFactory(component);
-                drawing_layer.add(drawing_now);
-            }
-        }
-    }
-});
-
-stage.on('mouseup', function(){
-    isNowDrawing = false;
-    mouse_release_position = snapToNode(stage.getRelativePointerPosition().x,
-                                        stage.getRelativePointerPosition().y);
-    if(adding_component){
-        var component = new componentFactory(mouse_hold_position,mouse_release_position,ID,current_component)
-        var drawing_now = drawingFactory(component);
-        all_object_components.push(component);
-        drawn_layer.add(drawing_now);
-        if(current_component == 'bar'){
-            var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
-            var konva_node_start = drawingFactory(start_node)
-            var end_node = componentFactory(mouse_release_position,mouse_release_position,ID+2,'node');
-            var konva_node_end = drawingFactory(end_node)
-            drawn_layer.add(konva_node_start);
-            drawn_layer.add(konva_node_end);
-            ID = ID +2;
-        };
-        ID ++;
-        loadXeq();
-        console.log(all_object_components);
-    }
-});
-//#endregion
-
 //#region eq X,Y and M
-var loadXeq = function(data) {
+var loadXeq = function() {
     eq_x.innerHTML = 'No data for loading eq X'
 
     // Fuerzas
@@ -816,9 +746,92 @@ var loadXeq = function(data) {
 }
 
 var getDificultad = function() {
-
+    dificulty_level = 0;
+    for (component in all_object_components) {
+        let object = all_object_components[component];
+        dificulty_level += component_base_value[object.component_type];
+    }
+    console.log(dificulty_level);
+    dif_level.innerHTML = 'Assignment Dificulty: ' + dificulty_level;
 }
+//#endregion
 
+//#region Run App
+var stage = new Konva.Stage({
+    container: 'konva-container',
+    width: WIDTH,
+    height: HEIGHT,
+    border: '1px solid black',
+    draggable: false,
+});
+
+var drawn_layer = new Konva.Layer();
+var drawing_layer = new Konva.Layer();
+
+stage.add(drawn_layer);
+stage.add(drawing_layer);
+drawGrid(stage);
+loadAssigmentData();
+drawLoadedData();
+loadXeq();
+getDificultad();
+
+//Mouse Event Handlers
+stage.on('mousedown', function(){
+    isNowDrawing = true;
+    mouse_hold_position = snapToNode(stage.getRelativePointerPosition().x,
+                                     stage.getRelativePointerPosition().y);
+});
+
+stage.on('mousemove', function(){
+    snapped_position = snapToNode(stage.getRelativePointerPosition().x,
+                                  stage.getRelativePointerPosition().y);
+    drawing_layer.destroyChildren();
+    if(adding_component){
+        if(isNowDrawing){
+            var component = componentFactory(mouse_hold_position,snapped_position,ID,current_component);
+            var drawing_now = drawingFactory(component);
+            drawing_layer.add(drawing_now);
+        }
+        else{
+            if (current_component == 'bar'){
+                var component = new Circle(snapped_position)
+                var drawing_now = drawingFactory(component);
+                drawing_layer.add(drawing_now);
+            }
+            else{
+                var component = new componentFactory(snapped_position,snapped_position,ID,current_component)
+                var drawing_now = drawingFactory(component);
+                drawing_layer.add(drawing_now);
+            }
+        }
+    }
+});
+
+stage.on('mouseup', function(){
+    isNowDrawing = false;
+    mouse_release_position = snapToNode(stage.getRelativePointerPosition().x,
+                                        stage.getRelativePointerPosition().y);
+    if(adding_component){
+        var component = new componentFactory(mouse_hold_position,mouse_release_position,ID,current_component)
+        var drawing_now = drawingFactory(component);
+        all_object_components.push(component);
+        drawn_layer.add(drawing_now);
+        if(current_component == 'bar'){
+            var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
+            var konva_node_start = drawingFactory(start_node)
+            var end_node = componentFactory(mouse_release_position,mouse_release_position,ID+2,'node');
+            var konva_node_end = drawingFactory(end_node)
+            drawn_layer.add(konva_node_start);
+            drawn_layer.add(konva_node_end);
+            ID = ID +2;
+        };
+        ID ++;
+        loadXeq();
+        getDificultad();
+        console.log(all_object_components);
+    }
+});
 //#endregion
 
 //#region Debug
@@ -837,7 +850,8 @@ var functionMesasge = function(message) {
 debugButton.addEventListener('click', function() {
     debugContainer.innerHTML = "";
     //functionMesasge('debug button presed');
-    loadXeq(null);
+    loadXeq();
+    getDificultad();
 
 }, false);
 //#endregion
