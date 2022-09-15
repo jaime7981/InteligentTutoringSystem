@@ -744,6 +744,7 @@ stage.on('mouseup', function(){
             ID = ID +2;
         };
         ID ++;
+        loadXeq();
         console.log(all_object_components);
     }
 });
@@ -753,9 +754,12 @@ stage.on('mouseup', function(){
 var loadXeq = function(data) {
     eq_x.innerHTML = 'No data for loading eq X'
 
-    // Fuerzas (agregar a en funcion)
+    // Fuerzas
     let force_sum_x = 0;
     let force_sum_y = 0;
+    // Reacciones
+    let reaction_x = [];
+    let reaction_y = [];
     for (component in all_object_components) {
         let object = all_object_components[component];
         if (object.component_type == 'force') {
@@ -775,12 +779,44 @@ var loadXeq = function(data) {
             else if (object.angle == '180') {
                 force_sum_x = force_sum_x - parseInt(object.magnitud);
             }
-
+            else {
+                // TODO: Descomponer fuerza
+            }
+        }
+        else if (object.component_type == 'support') {
+            reaction_x.push("Rx" + reaction_x.length);
+            reaction_y.push("Ry" + reaction_y.length);
+        }
+        else if (object.component_type == 'sliding_horizontal') {
+            reaction_x.push("Rx" + reaction_x.length);
+        }
+        else if (object.component_type == 'sliding_vertical') {
+            reaction_y.push("Ry" + reaction_y.length);
         }
     }
-    eq_x.innerHTML = 'fuerza x: ' + force_sum_x + 'N';
-    eq_y.innerHTML = 'fuerza y: ' + force_sum_y + 'N';
+
+    // Show x
+    eq_x.innerHTML = '';
+    for (x_elem in reaction_x) {
+        eq_x.innerHTML += reaction_x[x_elem] + ' + ';
+    }
+    eq_x.innerHTML += force_sum_x + 'N';
+    eq_x.innerHTML += ' = 0';
+
+    // Show y
+    eq_y.innerHTML = '';
+    for (y_elem in reaction_y) {
+        eq_y.innerHTML += reaction_y[y_elem] + ' + ';
+    }
+    eq_y.innerHTML += force_sum_y + 'N';
+    eq_y.innerHTML += ' = 0';
+
+
     console.log('fuerza x: ' + force_sum_x + 'N, fuerza y: ' + force_sum_y + 'N');
+}
+
+var getDificultad = function() {
+
 }
 
 //#endregion
