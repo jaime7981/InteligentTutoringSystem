@@ -69,13 +69,7 @@
                             <i class='bx bxs-building'></i>
                             <span class="link_name" id="select-bar-button">Select Bar</span>
                         </a>
-                        <i class='bx bx-chevron-down'></i>
                     </div>
-                    <ul class="sub-menu">
-                        <li><a class="link_name" href="#">Select Bar</a></li>
-                        <li><a href="#">Medida1</a></li>
-                        <li><a href="#">Medida2</a></li>
-                    </ul>
                 </li>
                 <li>
                     <a href="#">
@@ -118,6 +112,11 @@
                         </a>
                         <i class='bx bx-chevron-down'></i>
                     </div>
+                    <ul class="sub-menu">
+                        <li><a class="link_name" href="#">Force</a></li>
+                        <li><input type='text' id='force-value', placeholder="Magnitude"></li>
+                        <li><input type='text' id='angle-value', placeholder="Angle"></li>
+                    </ul>
                 </li>
                 <li>
                     <div class="icon-link">
@@ -127,6 +126,10 @@
                         </a>
                         <i class='bx bx-chevron-down'></i>
                     </div>
+                    <ul class="sub-menu">
+                        <li><a class="link_name" href="#">Momentum</a></li>
+                        <li><a href="#">INPUT MAGNITUD</a></li>
+                    </ul>
                 </li>
                 <li>
                     <a href="#">
@@ -152,6 +155,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
     
     .sidebar-body {
+        height: 500px;
         margin: 0;
         padding: 0;
         box-sizing: border-box;
