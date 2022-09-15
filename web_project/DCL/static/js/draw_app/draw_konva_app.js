@@ -1,6 +1,9 @@
-console.log("SCRIPT Test 1");
-
 //#region INIT
+var eq_x = document.getElementById("eq-x");
+var eq_y = document.getElementById("eq-y");
+var eq_m = document.getElementById("eq-m");
+var dif_level = document.getElementById("input-text-selected-assignment-level");
+
 var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
@@ -9,10 +12,8 @@ var SNAP_WEIGHT = 80;
 var ID = 0;
 
 var isNowDrawing = false;
-
 var adding_component = false;
 var current_component = "selector";
-
 var mouse_hold_position = new Point(0,0);
 var mouse_release_position = new Point(0,0);
 var eq_reference_point = null;
@@ -20,15 +21,15 @@ var eq_reference_point = null;
 var horizontal_points = [];
 var vertical_points = [];
 var bar_snap_nodes = [];
-var all_konva_components = [];
 var all_object_components = [];
+var assignment_steps = [];
 
 var component_base_value = {
     "bar" : 2,
     "joint" : 5,
     "support" : 3,
-    "horizontal" : 4,
-    "vertical" : 4,
+    "sliding_horizontal" : 4,
+    "sliding_vertical" : 4,
     "fixed" : 2,
     "force" : 3,
     "momentum" : 5,
@@ -95,7 +96,6 @@ function getProjectedIntersection(bar,point){
 }
 //#endregion
 
-
 //#region grid and snap
 function snapToNode(mouse_x, mouse_y) {
     var set_x = 0;
@@ -119,10 +119,11 @@ function snapToNode(mouse_x, mouse_y) {
 function snapToBar(curr_point){
     var min_distance = SNAP_WEIGHT;
     var return_point = snapToNode(curr_point);
-    for(var bar in all_konva_components){
-        if(bar.component_type == 'bar'){
-            var snap_point = getProjectedIntersection(bar,curr_point);
-            console.log('Values',bar,curr_point,snap_point);
+    for(var bar in all_object_components){
+        if(all_object_components[bar].component_type == 'bar'){
+            var snap_point = getProjectedIntersection(all_object_components[bar],curr_point);
+            var snap_point = getProjectedIntersection(all_object_components[bar],curr_point);
+                console.log('Values',[bar],curr_point,snap_point);
             var distance = getBarSize(snap_point,curr_point);
             if (distance < min_distance && distance < SNAP_WEIGHT){
                 min_distance = distance;
@@ -189,7 +190,6 @@ function drawGrid(Stage){
 };
 //#endregion
 
-
 //#region Get Selected Drawing
 function drawingFactory(object){
     var drawing = null
@@ -222,6 +222,69 @@ function drawingFactory(object){
     }
     return drawing;
 }
+
+function createElementDrawing(init_point, end_point, component){
+    let new_id = all_object_components.length;
+    if(component == "bar"){
+        all_object_components.push(new Bar(init_point, end_point, new_id));
+    }
+    else if(component == 'force'){
+        let force_value = getForceAngleValues()[0];
+        let angle_value = getForceAngleValues()[1];
+        all_object_components.push(new Force(init_point, force_value, angle_value, new_id));
+    }
+    else if(component == 'momentum'){
+        let momentum_value = getForceAngleValues()[2];
+        all_object_components.push(new Momentum(init_point, momentum_value, new_id));
+    }
+    else if(component == 'support'){
+        all_object_components.push(new Support(init_point, "support", new_id));
+    }
+    else if(component == 'sliding_horizontal'){
+        all_object_components.push(new Support(init_point, "horizontal", new_id));
+    }
+    else if(component == 'sliding_vertical'){
+        all_object_components.push(new Support(init_point, "vertical", new_id));
+    }
+    else if(component == 'fixed'){
+        all_object_components.push(new Support(init_point, "fixed", new_id));
+    }
+    else if(component == 'circle'){
+        
+    }
+    return all_object_components[new_id];
+};
+
+function getDrawingFromObjectClass(component){
+    let init_point = new Point(component.init_x, component.init_y);
+    let id = component.id;
+    if(component.component_type == "bar"){
+        let end_point = new Point(component.end_x, component.end_y);
+        return drawBar(init_point,end_point, id);
+    }
+    else if(component.component_type == 'circle'){
+        return drawCircle(init_point.x,init_point.y, id);
+    }
+    else if(component.component_type == 'support'){
+        return drawSupport(init_point.x,init_point.y, id);
+    }
+    else if(component.component_type == 'sliding_horizontal'){
+        return drawSlidingHorizontal(init_point.x,init_point.y, id);
+    }
+    else if(component.component_type == 'sliding_vertical'){
+        return drawSlidingVertical(init_point.x,init_point.y, id);
+    }
+    else if(component.component_type == 'fixed'){
+        //TODO
+        return(null);
+    }
+    else if(component.component_type == 'force'){
+        return drawForce(init_point.x,init_point.y, component.magnitud, id);
+    }
+    else if(component.component_type == 'momentum'){
+        return drawMomentum(init_point.x,init_point.y, component.magnitud, id)
+    }
+};
 //#endregion
 
 //#region Generate Components
@@ -571,7 +634,6 @@ function drawNode(node){
     group.id = node.id;
     return group;
 };
-
 //#endregion
 
 //#region load and draw data
@@ -581,14 +643,21 @@ var loadAssigmentData = function() {
         assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
         assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
         var parsedJson = JSON.parse(assignment_js);
+        console.log(parsedJson);
         for (object in parsedJson['assignment_data']){
             if (parsedJson['assignment_data'][object]['object_data'] != null){
                 var object_data = parsedJson['assignment_data'][object]['object_data'];
                 all_object_components.push(object_data);
             }
-            else {
-                var reference_point = parsedJson['assignment_data'][object]['reference_point'];
+            else if (parsedJson['assignment_data'][object]['reference_point'] != null) {
+                reference_point = parsedJson['assignment_data'][object]['reference_point'];
                 eq_reference_point = new Point(reference_point.x, reference_point.y);
+                console.log(eq_reference_point);
+            }
+            else if (parsedJson['assignment_data'][object]['assignment_steps'] != null) {
+                assignment_steps = parsedJson['assignment_data'][object]['assignment_steps'];
+                checkStepCheckboxes();
+                console.log(assignment_steps);
             }
         }
     }
@@ -596,10 +665,94 @@ var loadAssigmentData = function() {
 
 var drawLoadedData = function() {
     for (object_element in all_object_components) {
-        let component = getDrawingFromObjectClass(all_object_components[object_element]);
-        all_konva_components.push(component);
+        let component = drawingFactory(all_object_components[object_element]);
         drawn_layer.add(component);
     }
+}
+
+var checkStepCheckboxes = function() {
+    if (assignment_steps.length > 0) {
+        stepOneCheckbox.checked = assignment_steps[0];
+        stepTwoCheckbox.checked = assignment_steps[1];
+        stepThreeCheckbox.checked = assignment_steps[2];
+        stepFourCheckbox.checked = assignment_steps[3];
+    }
+}
+//#endregion
+
+//#region eq X,Y and M
+var loadXeq = function() {
+    eq_x.innerHTML = 'No data for loading eq X'
+
+    // Fuerzas
+    let force_sum_x = 0;
+    let force_sum_y = 0;
+    // Reacciones
+    let reaction_x = [];
+    let reaction_y = [];
+    for (component in all_object_components) {
+        let object = all_object_components[component];
+        if (object.component_type == 'force') {
+            // Fuerza hacia abajo
+            if (object.angle == '90') {
+                force_sum_y = force_sum_y - parseInt(object.magnitud);
+            }
+            // Fuerza hacia arriba
+            else if (object.angle == '270') {
+                force_sum_y = force_sum_y + parseInt(object.magnitud);
+            }
+            // Fuerza hacia la derecha
+            else if (object.angle == '0') {
+                force_sum_x = force_sum_x + parseInt(object.magnitud);
+            }
+            // Fuerza hacia la izquierda
+            else if (object.angle == '180') {
+                force_sum_x = force_sum_x - parseInt(object.magnitud);
+            }
+            else {
+                // TODO: Descomponer fuerza
+            }
+        }
+        else if (object.component_type == 'support') {
+            reaction_x.push("Rx" + reaction_x.length);
+            reaction_y.push("Ry" + reaction_y.length);
+        }
+        else if (object.component_type == 'sliding_horizontal') {
+            reaction_x.push("Rx" + reaction_x.length);
+        }
+        else if (object.component_type == 'sliding_vertical') {
+            reaction_y.push("Ry" + reaction_y.length);
+        }
+    }
+
+    // Show x
+    eq_x.innerHTML = '';
+    for (x_elem in reaction_x) {
+        eq_x.innerHTML += reaction_x[x_elem] + ' + ';
+    }
+    eq_x.innerHTML += force_sum_x + 'N';
+    eq_x.innerHTML += ' = 0';
+
+    // Show y
+    eq_y.innerHTML = '';
+    for (y_elem in reaction_y) {
+        eq_y.innerHTML += reaction_y[y_elem] + ' + ';
+    }
+    eq_y.innerHTML += force_sum_y + 'N';
+    eq_y.innerHTML += ' = 0';
+
+
+    console.log('fuerza x: ' + force_sum_x + 'N, fuerza y: ' + force_sum_y + 'N');
+}
+
+var getDificultad = function() {
+    dificulty_level = 0;
+    for (component in all_object_components) {
+        let object = all_object_components[component];
+        dificulty_level += component_base_value[object.component_type];
+    }
+    console.log(dificulty_level);
+    dif_level.innerHTML = 'Assignment Dificulty: ' + dificulty_level;
 }
 //#endregion
 
@@ -620,6 +773,8 @@ stage.add(drawing_layer);
 drawGrid(stage);
 loadAssigmentData();
 drawLoadedData();
+loadXeq();
+getDificultad();
 
 //Mouse Event Handlers
 stage.on('mousedown', function(){
@@ -660,7 +815,7 @@ stage.on('mouseup', function(){
     if(adding_component){
         var component = new componentFactory(mouse_hold_position,mouse_release_position,ID,current_component)
         var drawing_now = drawingFactory(component);
-        all_konva_components.push(component);
+        all_object_components.push(component);
         drawn_layer.add(drawing_now);
         if(current_component == 'bar'){
             var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
@@ -672,7 +827,9 @@ stage.on('mouseup', function(){
             ID = ID +2;
         };
         ID ++;
-        console.log(all_konva_components);
+        loadXeq();
+        getDificultad();
+        console.log(all_object_components);
     }
 });
 //#endregion
@@ -692,50 +849,9 @@ var functionMesasge = function(message) {
 
 debugButton.addEventListener('click', function() {
     debugContainer.innerHTML = "";
-    functionMesasge('debug button presed');
-    functionMesasge('debug button presed');
+    //functionMesasge('debug button presed');
+    loadXeq();
+    getDificultad();
+
 }, false);
 //#endregion
-
-
-
-
-//Buttons Event Handlers
-selectorButton.addEventListener('click',function(){
-   current_component = 'selector'; 
-   adding_component = false;
-},false);
-
-eraserButton.addEventListener('click',function(){
-    current_component = 'eraser'; 
-    adding_component = false;
- },false)
-
-barButton.addEventListener('click', function() {
-    current_component = 'bar';
-    adding_component = true;
-}, false);
-
-supportButton.addEventListener('click', function() {
-    current_component = 'support';
-    adding_component = true;
-}, false);
-slidingHorizontalButton.addEventListener('click', function() {
-    current_component = 'sliding_horizontal';
-    adding_component = true;
-}, false);
-slidingVerticalButton.addEventListener('click', function() {
-    current_component = 'sliding_vertical';
-    adding_component = true;
-}, false);
-forceButton.addEventListener('click', function() {
-    current_component = 'force';
-    adding_component = true;
-}, false);
-momentumButton.addEventListener('click', function() {
-    current_component = 'momentum';
-    adding_component = true;
-}, false)
-clearButton.addEventListener('click', function(){
-    drawn_layer.destroyChildren();
-}, false)

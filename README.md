@@ -23,22 +23,22 @@
 
 ## Entrega 2
 - [x] Creacion de DCL
-- [ ] Guardar tarea (modelo de datos)
+- [x] Guardar tarea (modelo de datos)
 - [x] Disponible online para interactuar
 
 ## Entrega 3
 - [x] Elementos✅
 - El DCL se puede crear incluyendo todos los elementos
-- [ ] Fuerzas y momentos☑️
+- [x] Fuerzas y momentos✅
 - Los ángulos y las magnitudes de las fuerzas son fundamentales, deben estar presentes. Y no son "textos", son valores específicos asociados al componente.
-- [ ] Dimensiones❌
+- [x] Dimensiones✅
 - Las dimensiones deben estar siempre presentes, se debe poder ver el tamaño de una barra, saber en que punto se pone un apoyo o una fuerza, etc. Todo eso debe estar presente.
-- [ ] Uniones (identificacion nodos)❌
+- [x] Uniones (identificacion nodos)✅
 - Las uniones de elementos deben llevar una identificación (recomiendo una letra), de lo contrario no tendrán como referirse a ellas para las ecuaciones de equilibrio.
 - [x] Tarea Base✅
 - Permitir crear nuevas tareas, definiendo un enunciado (escrito), permitiendo incorporar una
 imagen como parte del enunciado
-- [ ] Etapas❌
+- [x] Etapas✅
 - Definir las etapas para la tarea y pedir la información correspondiente.
 - [ ] Generar eq equilibrio❌
 - No se debe pedir las ecuaciones de equilibrio, estas deben ser generadas autom ́aticamente
@@ -46,6 +46,7 @@ por su aplicaci ́on, mostr ́andolas al usuario en todo momento mientras crea l
 sentido, el creador si debe definir en que puntos (nodos) se debe calcular el momento.
 - [ ] Indice dificultado❌
 - Generar y mostrar en todo momento.
+- [x] Guardar y Cargar Modelo de Datos✅
 
 ## Deployment
 - Launch docker container -> `docker-compose up --build`

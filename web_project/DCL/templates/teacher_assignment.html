@@ -2,21 +2,53 @@
 {% load static %}
 {% block content %}
 
-{% if selected_assignment == 0 %}
-    <h1>Assignment Name: <input type='text' id='input-text-selected-assignment-name' value="Insert Name"> </h1>
-    <h2>Assignment Level: <input type='text' id='input-text-selected-assignment-level' value="2"> </h2>
-    <p>Assignment Description: <textarea  type='text' id='input-text-selected-assignment-description'>Insert Description</textarea> </p>
-{% else %}
-    <h1>Assignment Name: <input type='text' id='input-text-selected-assignment-name' value="{{ selected_assignment.name }}"> </h1>
-    <h2>Assignment Level: <input type='text' id='input-text-selected-assignment-level' value="{{ selected_assignment.level }}"> </h2>
-    <p>Assignment Description: <textarea  type='text' id='input-text-selected-assignment-description'> {{ selected_assignment.description }} </textarea> </p>
-{% endif %}
-<div id="upload-picture-content">
-    {% if selected_assignment.photo %}
-        <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
+<div id='assignmen-info' style="margin: 10px;
+                                border: 5px;
+                                border-style: outset;
+                                padding: 10px;">
+    <div id='assignment-text' style="margin: 10px;
+                                     padding: 10px;">
+    {% if selected_assignment == 0 %}
+        <h2>Assignment Name: <input type='text' id='input-text-selected-assignment-name' value="Insert Name"> </h2>
+        <h2 id="input-text-selected-assignment-level">Assignment Dificulty: null</h2>
+        <h2>Assignment Description:</h2>
+        <textarea  type='text' id='input-text-selected-assignment-description'>Insert Description</textarea>
     {% else %}
-        <input type="file" name="photo" accept="image/*" id="input-file-selected-assignment-photo">
+        <h2>Assignment Name: <input type='text' id='input-text-selected-assignment-name' value="{{ selected_assignment.name }}"></h2>
+        <h2 id="input-text-selected-assignment-level">Assignment Dificulty: null</h2>
+        <h2>Assignment Description:</h2>
+        <textarea  type='text' id='input-text-selected-assignment-description'> {{ selected_assignment.description }} </textarea>
     {% endif %}
+    </div>
+    <div id="upload-picture-content" style="margin: 10px;
+                                            padding: 10px;">
+        <h2>Upload Image File (optional):</h2>
+        {% if selected_assignment.photo %}
+            <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
+        {% else %}
+            <input type="file" name="photo" accept="image/*" id="input-file-selected-assignment-photo">
+        {% endif %}
+    </div>
+    <div id='assignment-steps' style="margin: 10px;
+                                      padding: 10px;">
+        <h2>Select User Assignments Steps:</h2>
+        <input type="checkbox" id="step-1" name="step-1">
+        <label for="step-1">Step One:</label><br>
+        <p>Dibujar el cuerpo rigido como representacion de barras, vinculos externos e internos y con lasfuerzas y momentos de carga.</p>
+        <input type="checkbox" id="step-2" name="step-2">
+        <label for="step-2">Step Two:</label><br>
+        <p>Determinar los cuerpos sobre los que se haran los DCL segun los vinculos internos.</p>
+        <input type="checkbox" id="step-3" name="step-3">
+        <label for="step-3">Step Three:</label><br>
+        <p>Diagramar cada DCL reemplazando los vinculos externos por la fuerzas y momentos de reaccion correspondientes (dando nombre a cada una de ellas), e incorporando las fuerzas producto de los vinculos internos usados para la division. Ademas, dividir las fuerzas de carga segun los ejes.</p>
+        <input type="checkbox" id="step-4" name="step-4">
+        <label for="step-4">Step Four:</label>
+        <p>Plantear las ecuaciones de equilibrio de fuerza por cada eje y de momento en base a el o los puntos que se defina.</p>
+    </div>
+    <div id='save-assignment-button-container' style="margin: 10px;
+                                                      padding: 10px;">
+        <button id="save-assignment-button">Save Assignment</button>
+    </div>
 </div>
 
 <div id='dcl-app-content' style='
@@ -28,7 +60,11 @@
     flex-wrap: nowrap;
     align-content: center;
     justify-content: center;
-    align-items: center;'>
+    align-items: center;
+    margin: 10px;
+    border: 5px;
+    border-style: outset;
+    padding: 10px;'>
     <div id='dcl-app-action-buttons' style='
         width: 10%;
         height: 100%;
@@ -36,19 +72,21 @@
         flex-direction: column;
         flex-wrap: nowrap;
         align-content: center;
-        justify-content: center;
-        align-items: stretch;'>
+        justify-content: flex-start;
+        align-items: stretch;
+        margin: 5px;
+        border: 5px;
+        border-style: solid;
+        padding: 5px;'>
         <button id="selector-button">Selector</button>
         <button id="select-eraser-button">Eraser</button>
         <button id="select-bar-button">Select Bar</button>
-        <button id="select-circle-button">Select Circle</button>
         <button id="select-support-button">Support</button>
-        <button id="select-sliding-horizontal-button">Sliding Support</button>
-        <button id="select-sliding-vertical-button">Sliding Support</button>
+        <button id="select-sliding-horizontal-button">Sliding Support Hor</button>
+        <button id="select-sliding-vertical-button">Sliding Support Vert</button>
         <button id="select-force-button">Force</button>
         <button id="select-momentum-button">Momentum</button>
         <button id="select-clear-button">Clear All</button>
-        <button id="save-assignment-button">Save Assignment</button>
     </div>
     <div id='dcl-app-side-bar-canvas' style='
         width: 10%;
@@ -57,24 +95,41 @@
         flex-direction: column;
         flex-wrap: nowrap;
         align-content: center;
-        justify-content: center;
-        align-items: stretch;'>
-        <label>Force</label>
-        <input type='text' id='force-value'>
-        <label>Angle X</label>
-        <input type='text' id='angle-value'>
-        <label>Torque</label>
-        <input type='text' id='torque-value'>
-        <label>Test Value 1</label>
-        <input type='text' id='test-1-value'>
-        <label>Test Value 2</label>
-        <input type='text' id='test-2-value'>
-        <label>Test Value 3</label>
-        <input type='text' id='test-3-value'>
+        justify-content: flex-start;
+        align-items: stretch;
+        margin: 5px;
+        border: 5px;
+        border-style: solid;
+        padding: 5px;'>
+        <h3 id='info-label'>Data</h3>
     </div>
     <div id="konva-container" class="container m-2" style='
         width:80%; 
         height:100%;'>
+    </div>
+</div>
+
+<div id="eq-dcl" style="margin: 10px;
+                            padding: 10px;
+                            border: 5px;
+                            border-style: outset;
+                            padding: 10px;">
+    <h2>Eq X</h2>
+    <p id="eq-x"></p><br>
+    <h2>Eq Y</h2>
+    <p id="eq-y"></p><br>
+    <h2>Eq M</h2>
+    <p id="eq-m"></p>
+</div>
+
+<div id="debug-dcl" style="margin: 10px;
+                           padding: 10px;
+                           border: 5px;
+                           border-style: outset;
+                           padding: 10px;">
+    <button id="load-debug">Debug</button>
+    <div id="debug-container">
+
     </div>
 </div>
 
@@ -85,12 +140,12 @@
         assignment_id = 0;
     }
     var teacher_redirect = "{% url 'teacher' %}";
-    var bar_list = [];
-    var circle_list = [];
 </script>
 
-<script src="{% static 'js/ajax_load_save.js' %}"></script>
 <script src="https://unpkg.com/konva@8/konva.min.js"></script>
-<script src="{% static 'js/dcl_test.js' %}"></script>
+<script src="{% static 'js/draw_app/draw_classes.js' %}"></script>
+<script src="{% static 'js/draw_app/ajax_load_save.js' %}"></script>
+<script src="{% static 'js/draw_app/draw_events.js' %}"></script>
+<script src="{% static 'js/draw_app/draw_konva_app.js' %}"></script>
 
 {% endblock %}
