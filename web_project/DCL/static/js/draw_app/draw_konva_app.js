@@ -749,6 +749,13 @@ stage.on('mouseup', function(){
 });
 //#endregion
 
+//#region eq X,Y and M
+var loadXeq = function(data) {
+    eq_x.innerHTML = 'No data for loading eq X'
+}
+
+//#endregion
+
 //#region Debug
 var debugButton = document.getElementById('load-debug');
 var debugContainer = document.getElementById('debug-container');
@@ -764,7 +771,8 @@ var functionMesasge = function(message) {
 
 debugButton.addEventListener('click', function() {
     debugContainer.innerHTML = "";
-    functionMesasge('debug button presed');
-    functionMesasge('debug button presed');
+    //functionMesasge('debug button presed');
+    loadXeq(null);
+
 }, false);
 //#endregion
