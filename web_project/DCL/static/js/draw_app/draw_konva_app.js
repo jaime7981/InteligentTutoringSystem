@@ -412,7 +412,45 @@ function drawSlidingVertical(support){
 };
 
 function drawFixed(support){
-    //TODO
+    var X = support.x;
+    var Y = support.y;
+    var triangle = new Konva.RegularPolygon({
+        x: X,
+        y: Y,
+        sides: 3,
+        radius: 20,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 2,
+        offsetX: 0,
+        offsetY: -20,
+    });
+
+    var line_1 = new Konva.Line({
+        points: [X-20, Y-5, X, Y+5],
+        stroke: 'black',
+        strokeWidth: 3,
+        offsetX: 0,
+        offsetY: -35,
+        fill: 'black',
+    });
+
+    var line_2 = new Konva.Line({
+        points: [X, Y-5, X+20, Y+5],
+        stroke: 'black',
+        strokeWidth: 3,
+        offsetX: 0,
+        offsetY: -35,
+        fill: 'black',
+    });
+
+    var group = new Konva.Group();
+    group.add(triangle);
+    group.add(line_1);
+    group.add(line_2);
+    group.id = support.id;
+    group.draggable(true);
+    return group;
 };
 
 function drawForce(force){
@@ -646,7 +684,7 @@ function drawReferencePoint(reference_point){
         x: reference_point.x,
         y: reference_point.y,
         radius: 10,
-        fill: 'black',
+        fill: 'red',
         stroke: 'blue',
         strokeWidth: 2,
         draggable: true,
@@ -658,8 +696,8 @@ function drawReferencePoint(reference_point){
         fontStyle: 'bold',
         x: reference_point.x,
         y: reference_point.y,
-        offsetX: 20,
-        offsetY: -10,
+        offsetX: 14,
+        offsetY: 30,
     });
     var group = new Konva.Group();
     group.add(circle);
