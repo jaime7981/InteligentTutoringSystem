@@ -5,8 +5,10 @@ var barButton = document.getElementById("select-bar-button");
 var supportButton = document.getElementById("select-support-button");
 var slidingHorizontalButton = document.getElementById("select-sliding-horizontal-button");
 var slidingVerticalButton = document.getElementById("select-sliding-vertical-button");
+var fixedButton = document.getElementById("select-fixed-button");
 var forceButton = document.getElementById("select-force-button");
 var momentumButton = document.getElementById("select-momentum-button");
+var referencePointButton = document.getElementById("select-reference-button");
 var clearButton = document.getElementById("select-clear-button");
 var sideBar = document.getElementById("dcl-app-side-bar-canvas");
 //#endregion
@@ -114,5 +116,16 @@ momentumButton.addEventListener('click', function() {
     adding_component = true;
     deleteAllContent();
     appendTorqueField();
+}, false)
+referencePointButton.addEventListener('click', function() {
+    current_component = 'reference_point';
+    adding_component = true;
+    deleteAllContent();
+}, false);
+fixedButton.addEventListener('click', function() {
+    current_component = 'fixed';
+    adding_component = true;
+    deleteAllContent();
+    appendFlipButton();
 }, false)
 //#endregion

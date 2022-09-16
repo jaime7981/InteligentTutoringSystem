@@ -8,7 +8,7 @@ var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
 var STEP = 40;
-var SNAP_WEIGHT = 80;
+var SNAP_WEIGHT = 500;
 var ID = 0;
 
 var isNowDrawing = false;
@@ -118,14 +118,13 @@ function snapToNode(mouse_x, mouse_y) {
 
 function snapToBar(curr_point){
     var min_distance = SNAP_WEIGHT;
-    var return_point = snapToNode(curr_point);
+    var return_point = curr_point;
     for(var bar in all_object_components){
         if(all_object_components[bar].component_type == 'bar'){
             var snap_point = getProjectedIntersection(all_object_components[bar],curr_point);
-            var snap_point = getProjectedIntersection(all_object_components[bar],curr_point);
-                console.log('Values',[bar],curr_point,snap_point);
+            //console.log('Values',[bar],curr_point,snap_point);
             var distance = getBarSize(snap_point,curr_point);
-            if (distance < min_distance && distance < SNAP_WEIGHT){
+            if (distance <= min_distance && distance <= SNAP_WEIGHT){
                 min_distance = distance;
                 return_point = snap_point;
             }
@@ -220,71 +219,11 @@ function drawingFactory(object){
     else if(object.component_type=='circle'){
         drawing = drawCircle(object);
     }
+    else if(object.component_type=='reference_point'){
+        drawing = drawReferencePoint(object);
+    }
     return drawing;
 }
-
-function createElementDrawing(init_point, end_point, component){
-    let new_id = all_object_components.length;
-    if(component == "bar"){
-        all_object_components.push(new Bar(init_point, end_point, new_id));
-    }
-    else if(component == 'force'){
-        let force_value = getForceAngleValues()[0];
-        let angle_value = getForceAngleValues()[1];
-        all_object_components.push(new Force(init_point, force_value, angle_value, new_id));
-    }
-    else if(component == 'momentum'){
-        let momentum_value = getForceAngleValues()[2];
-        all_object_components.push(new Momentum(init_point, momentum_value, new_id));
-    }
-    else if(component == 'support'){
-        all_object_components.push(new Support(init_point, "support", new_id));
-    }
-    else if(component == 'sliding_horizontal'){
-        all_object_components.push(new Support(init_point, "horizontal", new_id));
-    }
-    else if(component == 'sliding_vertical'){
-        all_object_components.push(new Support(init_point, "vertical", new_id));
-    }
-    else if(component == 'fixed'){
-        all_object_components.push(new Support(init_point, "fixed", new_id));
-    }
-    else if(component == 'circle'){
-        
-    }
-    return all_object_components[new_id];
-};
-
-function getDrawingFromObjectClass(component){
-    let init_point = new Point(component.init_x, component.init_y);
-    let id = component.id;
-    if(component.component_type == "bar"){
-        let end_point = new Point(component.end_x, component.end_y);
-        return drawBar(init_point,end_point, id);
-    }
-    else if(component.component_type == 'circle'){
-        return drawCircle(init_point.x,init_point.y, id);
-    }
-    else if(component.component_type == 'support'){
-        return drawSupport(init_point.x,init_point.y, id);
-    }
-    else if(component.component_type == 'sliding_horizontal'){
-        return drawSlidingHorizontal(init_point.x,init_point.y, id);
-    }
-    else if(component.component_type == 'sliding_vertical'){
-        return drawSlidingVertical(init_point.x,init_point.y, id);
-    }
-    else if(component.component_type == 'fixed'){
-        //TODO
-        return(null);
-    }
-    else if(component.component_type == 'force'){
-        return drawForce(init_point.x,init_point.y, component.magnitud, id);
-    }
-    else if(component.component_type == 'momentum'){
-        return drawMomentum(init_point.x,init_point.y, component.magnitud, id)
-    }
-};
 //#endregion
 
 //#region Generate Components
@@ -406,7 +345,45 @@ function drawSlidingVertical(support){
 };
 
 function drawFixed(support){
-    //TODO
+    var X = support.x;
+    var Y = support.y;
+    var triangle = new Konva.RegularPolygon({
+        x: X,
+        y: Y,
+        sides: 3,
+        radius: 20,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 2,
+        offsetX: 0,
+        offsetY: -20,
+    });
+
+    var line_1 = new Konva.Line({
+        points: [X-20, Y-5, X, Y+5],
+        stroke: 'black',
+        strokeWidth: 3,
+        offsetX: 0,
+        offsetY: -35,
+        fill: 'black',
+    });
+
+    var line_2 = new Konva.Line({
+        points: [X, Y-5, X+20, Y+5],
+        stroke: 'black',
+        strokeWidth: 3,
+        offsetX: 0,
+        offsetY: -35,
+        fill: 'black',
+    });
+
+    var group = new Konva.Group();
+    group.add(triangle);
+    group.add(line_1);
+    group.add(line_2);
+    group.id = support.id;
+    group.draggable(true);
+    return group;
 };
 
 function drawForce(force){
@@ -634,6 +611,33 @@ function drawNode(node){
     group.id = node.id;
     return group;
 };
+
+function drawReferencePoint(reference_point){
+    var circle = new Konva.Circle({
+        x: reference_point.x,
+        y: reference_point.y,
+        radius: 10,
+        fill: 'red',
+        stroke: 'blue',
+        strokeWidth: 2,
+        draggable: true,
+    });
+    var label = new Konva.Text({
+        text: ("RP"),
+        fontSize: 20,
+        fill: 'red',
+        fontStyle: 'bold',
+        x: reference_point.x,
+        y: reference_point.y,
+        offsetX: 14,
+        offsetY: 30,
+    });
+    var group = new Konva.Group();
+    group.add(circle);
+    group.add(label);
+    group.id = reference_point.id;
+    return group;
+};
 //#endregion
 
 //#region load and draw data
@@ -643,7 +647,6 @@ var loadAssigmentData = function() {
         assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
         assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
         var parsedJson = JSON.parse(assignment_js);
-        console.log(parsedJson);
         for (object in parsedJson['assignment_data']){
             if (parsedJson['assignment_data'][object]['object_data'] != null){
                 var object_data = parsedJson['assignment_data'][object]['object_data'];
@@ -652,12 +655,10 @@ var loadAssigmentData = function() {
             else if (parsedJson['assignment_data'][object]['reference_point'] != null) {
                 reference_point = parsedJson['assignment_data'][object]['reference_point'];
                 eq_reference_point = new Point(reference_point.x, reference_point.y);
-                console.log(eq_reference_point);
             }
             else if (parsedJson['assignment_data'][object]['assignment_steps'] != null) {
                 assignment_steps = parsedJson['assignment_data'][object]['assignment_steps'];
                 checkStepCheckboxes();
-                console.log(assignment_steps);
             }
         }
     }
@@ -681,17 +682,79 @@ var checkStepCheckboxes = function() {
 //#endregion
 
 //#region eq X,Y and M
+// Retorna [fuerza_x, fuerza_y]
+var decomposeForce = function(angle, magnitude) {
+    let desc_x = Math.cos(parseInt(angle));
+    let desc_y = Math.sin(parseInt(angle));
+    return [magnitude*desc_x, magnitude*desc_y];
+}
+
+var selectReferencePoint = function() {
+    let reference_exist = false;
+    let reference_points_found = [];
+    let alt_ref_point = null;
+    if (all_object_components.length > 0) {
+        for (component in all_object_components) {
+            let object = all_object_components[component];
+            if (object.component_type == 'reference_point') {
+                reference_exist = true;
+                reference_points_found.push(object);
+            }
+            else if (object.component_type == 'bar') {
+                if (alt_ref_point == null) {
+                    alt_ref_point = new Point(object.init_x, object.init_y);
+                }
+            }
+        }
+
+        //select last reference point
+        if (reference_exist == true){
+            if (reference_points_found.length > 0){
+                return reference_points_found[reference_points_found.length - 1];
+            }
+        }
+        // Set alt ref point (first bar node)
+        if (alt_ref_point != null) {
+            return alt_ref_point;
+        }
+        return new Point(0,0);
+    }
+    else {
+        return new Point(0,0);
+    }
+}
+
+var calculateTorqueFromReference = function(ref_point, force_object, magnitude) {
+    let length = getBarSize(ref_point, force_object)/STEP;
+    if (magnitude != null) {
+        let force = length * magnitude;
+        return [length, force];
+    }
+    else {
+        return [length, null];
+    }
+}
+
 var loadXeq = function() {
     eq_x.innerHTML = 'No data for loading eq X'
-
+    let RP = selectReferencePoint();
     // Fuerzas
     let force_sum_x = 0;
     let force_sum_y = 0;
+    // Momentum
+    let momentum_sum = 0;
+    let momentum_list = [];
     // Reacciones
     let reaction_x = [];
     let reaction_y = [];
     for (component in all_object_components) {
         let object = all_object_components[component];
+        var torque = [null, null];
+        if (object.x != null) {
+            // Falta descomponer torque, falla en sliding vertical
+            // Falla direccion de torque
+            torque = calculateTorqueFromReference(RP, object, null);
+        }
         if (object.component_type == 'force') {
             // Fuerza hacia abajo
             if (object.angle == '90') {
@@ -710,18 +773,35 @@ var loadXeq = function() {
                 force_sum_x = force_sum_x - parseInt(object.magnitud);
             }
             else {
-                // TODO: Descomponer fuerza
+                let des_forces = decomposeForce(object.angle, object.magnitud);
+                force_sum_x = force_sum_x + des_forces[0];
+                force_sum_y = force_sum_y + des_forces[1];
             }
+            torque = calculateTorqueFromReference(RP, object, object.magnitud);
+            momentum_sum += torque[1];
         }
         else if (object.component_type == 'support') {
             reaction_x.push("Rx" + reaction_x.length);
             reaction_y.push("Ry" + reaction_y.length);
+            momentum_list.push(momentum_list.length + "RSup*" + torque[0] + 'm');
         }
         else if (object.component_type == 'sliding_horizontal') {
-            reaction_x.push("Rx" + reaction_x.length);
+            reaction_y.push("Rx" + reaction_y.length);
+            momentum_list.push(momentum_list.length + "RHor*" + torque[0] + 'm');
         }
         else if (object.component_type == 'sliding_vertical') {
+            reaction_x.push("Ry" + reaction_x.length);
+            momentum_list.push(momentum_list.length + "RHVer*" + torque[0] + 'm');
+        }
+        else if (object.component_type == 'fixed') {
+            reaction_x.push("Rx" + reaction_x.length);
             reaction_y.push("Ry" + reaction_y.length);
+            momentum_list.push(momentum_list.length + "RFix*" + torque[0] + 'm');
+            // Agregar momento de fixed
+            momentum_list.push(momentum_list.length + "RFixM Nm");
+        }
+        else if (object.component_type == 'momentum') {
+            momentum_sum += object.magnitud;
         }
     }
 
@@ -741,8 +821,14 @@ var loadXeq = function() {
     eq_y.innerHTML += force_sum_y + 'N';
     eq_y.innerHTML += ' = 0';
 
+    // Show m
+    eq_m.innerHTML = '';
+    for (m_elem in momentum_list) {
+        eq_m.innerHTML += momentum_list[m_elem] + ' + ';
+    }
+    eq_m.innerHTML += "M" + momentum_sum + 'Nm';
+    eq_m.innerHTML += ' = 0';
 
-    console.log('fuerza x: ' + force_sum_x + 'N, fuerza y: ' + force_sum_y + 'N');
 }
 
 var getDificultad = function() {
@@ -751,7 +837,6 @@ var getDificultad = function() {
         let object = all_object_components[component];
         dificulty_level += component_base_value[object.component_type];
     }
-    console.log(dificulty_level);
     dif_level.innerHTML = 'Assignment Dificulty: ' + dificulty_level;
 }
 //#endregion
@@ -795,12 +880,14 @@ stage.on('mousemove', function(){
         }
         else{
             if (current_component == 'bar'){
-                var component = new Circle(snapped_position)
+                var component = new Circle(snapped_position);
                 var drawing_now = drawingFactory(component);
                 drawing_layer.add(drawing_now);
             }
             else{
-                var component = new componentFactory(snapped_position,snapped_position,ID,current_component)
+                let snap_bar = snapToBar(snapped_position);
+                //console.log(snap_bar);
+                var component = new componentFactory(snap_bar,snap_bar,ID,current_component)
                 var drawing_now = drawingFactory(component);
                 drawing_layer.add(drawing_now);
             }
@@ -813,11 +900,12 @@ stage.on('mouseup', function(){
     mouse_release_position = snapToNode(stage.getRelativePointerPosition().x,
                                         stage.getRelativePointerPosition().y);
     if(adding_component){
-        var component = new componentFactory(mouse_hold_position,mouse_release_position,ID,current_component)
-        var drawing_now = drawingFactory(component);
-        all_object_components.push(component);
-        drawn_layer.add(drawing_now);
         if(current_component == 'bar'){
+            var component = new componentFactory(mouse_hold_position,mouse_release_position,ID,current_component)
+            var drawing_now = drawingFactory(component);
+            all_object_components.push(component);
+            drawn_layer.add(drawing_now);
+
             var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
             var konva_node_start = drawingFactory(start_node)
             var end_node = componentFactory(mouse_release_position,mouse_release_position,ID+2,'node');
@@ -825,11 +913,17 @@ stage.on('mouseup', function(){
             drawn_layer.add(konva_node_start);
             drawn_layer.add(konva_node_end);
             ID = ID +2;
-        };
+        }
+        else {
+            let snap_bar = snapToBar(mouse_release_position);
+            var component = new componentFactory(snap_bar,snap_bar,ID,current_component)
+            var drawing_now = drawingFactory(component);
+            all_object_components.push(component);
+            drawn_layer.add(drawing_now);
+        }
         ID ++;
         loadXeq();
         getDificultad();
-        console.log(all_object_components);
     }
 });
 //#endregion

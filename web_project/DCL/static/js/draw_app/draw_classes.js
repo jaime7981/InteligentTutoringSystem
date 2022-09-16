@@ -109,6 +109,15 @@ class Node{
     }
 }
 
+class ReferencePoint{
+    constructor(init_coordinates, id){
+        this.id = id;
+        this.component_type = 'reference_point';
+        this.x = init_coordinates.x;
+        this.y = init_coordinates.y;
+    }
+}
+
 class Circle{
     constructor(init_coordinates){
         this.id = -1;
@@ -141,6 +150,9 @@ function componentFactory(init_coordinates, end_coordinates, id, component){
     }
     else if(component == 'node'){
         var object = new Node(init_coordinates,id)
+    }
+    else if (component == 'reference_point'){
+        var object = new ReferencePoint(init_coordinates,id)
     }
     return object;
 };
