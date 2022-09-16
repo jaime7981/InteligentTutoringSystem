@@ -8,7 +8,7 @@ var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
 var STEP = 40;
-var SNAP_WEIGHT = 80;
+var SNAP_WEIGHT = 500;
 var ID = 0;
 
 var isNowDrawing = false;
@@ -118,14 +118,13 @@ function snapToNode(mouse_x, mouse_y) {
 
 function snapToBar(curr_point){
     var min_distance = SNAP_WEIGHT;
-    var return_point = snapToNode(curr_point);
+    var return_point = curr_point;
     for(var bar in all_object_components){
         if(all_object_components[bar].component_type == 'bar'){
             var snap_point = getProjectedIntersection(all_object_components[bar],curr_point);
-            var snap_point = getProjectedIntersection(all_object_components[bar],curr_point);
-                console.log('Values',[bar],curr_point,snap_point);
+            //console.log('Values',[bar],curr_point,snap_point);
             var distance = getBarSize(snap_point,curr_point);
-            if (distance < min_distance && distance < SNAP_WEIGHT){
+            if (distance <= min_distance && distance <= SNAP_WEIGHT){
                 min_distance = distance;
                 return_point = snap_point;
             }
@@ -886,7 +885,9 @@ stage.on('mousemove', function(){
                 drawing_layer.add(drawing_now);
             }
             else{
-                var component = new componentFactory(snapped_position,snapped_position,ID,current_component)
+                let snap_bar = snapToBar(snapped_position);
+                //console.log(snap_bar);
+                var component = new componentFactory(snap_bar,snap_bar,ID,current_component)
                 var drawing_now = drawingFactory(component);
                 drawing_layer.add(drawing_now);
             }
@@ -899,11 +900,12 @@ stage.on('mouseup', function(){
     mouse_release_position = snapToNode(stage.getRelativePointerPosition().x,
                                         stage.getRelativePointerPosition().y);
     if(adding_component){
-        var component = new componentFactory(mouse_hold_position,mouse_release_position,ID,current_component)
-        var drawing_now = drawingFactory(component);
-        all_object_components.push(component);
-        drawn_layer.add(drawing_now);
         if(current_component == 'bar'){
+            var component = new componentFactory(mouse_hold_position,mouse_release_position,ID,current_component)
+            var drawing_now = drawingFactory(component);
+            all_object_components.push(component);
+            drawn_layer.add(drawing_now);
+
             var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
             var konva_node_start = drawingFactory(start_node)
             var end_node = componentFactory(mouse_release_position,mouse_release_position,ID+2,'node');
@@ -911,7 +913,14 @@ stage.on('mouseup', function(){
             drawn_layer.add(konva_node_start);
             drawn_layer.add(konva_node_end);
             ID = ID +2;
-        };
+        }
+        else {
+            let snap_bar = snapToBar(mouse_release_position);
+            var component = new componentFactory(snap_bar,snap_bar,ID,current_component)
+            var drawing_now = drawingFactory(component);
+            all_object_components.push(component);
+            drawn_layer.add(drawing_now);
+        }
         ID ++;
         loadXeq();
         getDificultad();
