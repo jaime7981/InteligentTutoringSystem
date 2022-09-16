@@ -120,7 +120,6 @@ momentumButton.addEventListener('click', function() {
 referencePointButton.addEventListener('click', function() {
     current_component = 'reference_point';
     adding_component = true;
-    console.log(current_component);
     deleteAllContent();
 }, false);
 fixedButton.addEventListener('click', function() {

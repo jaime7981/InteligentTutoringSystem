@@ -217,8 +217,8 @@ function drawingFactory(object){
     else if(object.component_type=='node'){
         drawing = drawNode(object);
     }
-    else if(object.component_type=='node'){
-        drawing = drawNode(object);
+    else if(object.component_type=='circle'){
+        drawing = drawCircle(object);
     }
     else if(object.component_type=='reference_point'){
         drawing = drawReferencePoint(object);
@@ -714,7 +714,6 @@ var loadAssigmentData = function() {
         assignment_js = assignment_js.replace(new RegExp("&"+"quot;", "g"), '"');
         assignment_js = assignment_js.replace(new RegExp("None", "g"), 'null');
         var parsedJson = JSON.parse(assignment_js);
-        console.log(parsedJson);
         for (object in parsedJson['assignment_data']){
             if (parsedJson['assignment_data'][object]['object_data'] != null){
                 var object_data = parsedJson['assignment_data'][object]['object_data'];
@@ -723,12 +722,10 @@ var loadAssigmentData = function() {
             else if (parsedJson['assignment_data'][object]['reference_point'] != null) {
                 reference_point = parsedJson['assignment_data'][object]['reference_point'];
                 eq_reference_point = new Point(reference_point.x, reference_point.y);
-                console.log(eq_reference_point);
             }
             else if (parsedJson['assignment_data'][object]['assignment_steps'] != null) {
                 assignment_steps = parsedJson['assignment_data'][object]['assignment_steps'];
                 checkStepCheckboxes();
-                console.log(assignment_steps);
             }
         }
     }
@@ -759,9 +756,55 @@ var decomposeForce = function(angle, magnitude) {
     return [magnitude*desc_x, magnitude*desc_y];
 }
 
+var selectReferencePoint = function() {
+    let reference_exist = false;
+    let reference_points_found = [];
+    let alt_ref_point = null;
+    if (all_object_components.length > 0) {
+        for (component in all_object_components) {
+            let object = all_object_components[component];
+            if (object.component_type == 'reference_point') {
+                reference_exist = true;
+                reference_points_found.push(object);
+            }
+            else if (object.component_type == 'bar') {
+                if (alt_ref_point == null) {
+                    alt_ref_point = new Point(object.init_x, object.init_y);
+                }
+            }
+        }
+
+        //select last reference point
+        if (reference_exist == true){
+            if (reference_points_found.length > 0){
+                return reference_points_found[reference_points_found.length - 1];
+            }
+        }
+        // Set alt ref point (first bar node)
+        if (alt_ref_point != null) {
+            return alt_ref_point;
+        }
+        return new Point(0,0);
+    }
+    else {
+        return new Point(0,0);
+    }
+}
+
+var calculateTorqueFromReference = function(ref_point, force_object, magnitude) {
+    let length = getBarSize(ref_point, force_object)/STEP;
+    if (magnitude != null) {
+        let force = length * magnitude;
+        return [length, force];
+    }
+    else {
+        return [length, null];
+    }
+}
+
 var loadXeq = function() {
     eq_x.innerHTML = 'No data for loading eq X'
-
+    let RP = selectReferencePoint();
     // Fuerzas
     let force_sum_x = 0;
     let force_sum_y = 0;
@@ -773,6 +816,12 @@ var loadXeq = function() {
     let reaction_y = [];
     for (component in all_object_components) {
         let object = all_object_components[component];
+        var torque = [null, null];
+        if (object.x != null) {
+            // Falta descomponer torque, falla en sliding vertical
+            // Falla direccion de torque
+            torque = calculateTorqueFromReference(RP, object, null);
+        }
         if (object.component_type == 'force') {
             // Fuerza hacia abajo
             if (object.angle == '90') {
@@ -791,31 +840,32 @@ var loadXeq = function() {
                 force_sum_x = force_sum_x - parseInt(object.magnitud);
             }
             else {
-                // TODO: Descomponer fuerza
                 let des_forces = decomposeForce(object.angle, object.magnitud);
                 force_sum_x = force_sum_x + des_forces[0];
                 force_sum_y = force_sum_y + des_forces[1];
             }
-            momentum_list.push("RmForce" + momentum_list.length + '*T');
+            torque = calculateTorqueFromReference(RP, object, object.magnitud);
+            momentum_sum += torque[1];
         }
         else if (object.component_type == 'support') {
             reaction_x.push("Rx" + reaction_x.length);
             reaction_y.push("Ry" + reaction_y.length);
-            momentum_list.push("RmSup" + momentum_list.length + '*T');
+            momentum_list.push(momentum_list.length + "RSup*" + torque[0] + 'm');
         }
         else if (object.component_type == 'sliding_horizontal') {
-            reaction_x.push("Rx" + reaction_x.length);
-            momentum_list.push("RmSlidHor" + momentum_list.length + '*T');
+            reaction_y.push("Rx" + reaction_y.length);
+            momentum_list.push(momentum_list.length + "RHor*" + torque[0] + 'm');
         }
         else if (object.component_type == 'sliding_vertical') {
-            reaction_y.push("Ry" + reaction_y.length);
-            momentum_list.push("RmSlidVer" + momentum_list.length + '*T');
+            reaction_x.push("Ry" + reaction_x.length);
+            momentum_list.push(momentum_list.length + "RHVer*" + torque[0] + 'm');
         }
         else if (object.component_type == 'fixed') {
             reaction_x.push("Rx" + reaction_x.length);
             reaction_y.push("Ry" + reaction_y.length);
-            // Implementar calculo de torque segun punto de referencia
-            momentum_list.push("RmFixed" + momentum_list.length + '*T');
+            momentum_list.push(momentum_list.length + "RFix*" + torque[0] + 'm');
+            // Agregar momento de fixed
+            momentum_list.push(momentum_list.length + "RFixM Nm");
         }
         else if (object.component_type == 'momentum') {
             momentum_sum += object.magnitud;
@@ -843,9 +893,8 @@ var loadXeq = function() {
     for (m_elem in momentum_list) {
         eq_m.innerHTML += momentum_list[m_elem] + ' + ';
     }
-    eq_m.innerHTML += momentum_sum + 'Nm';
+    eq_m.innerHTML += "M" + momentum_sum + 'Nm';
     eq_m.innerHTML += ' = 0';
-    eq_m.innerHTML += '<br><p>Implementar calculo de torque segun punto de referencia</p>'
 
 }
 
@@ -855,7 +904,6 @@ var getDificultad = function() {
         let object = all_object_components[component];
         dificulty_level += component_base_value[object.component_type];
     }
-    console.log(dificulty_level);
     dif_level.innerHTML = 'Assignment Dificulty: ' + dificulty_level;
 }
 //#endregion
@@ -899,7 +947,7 @@ stage.on('mousemove', function(){
         }
         else{
             if (current_component == 'bar'){
-                var component = new Circle(snapped_position)
+                var component = new Circle(snapped_position);
                 var drawing_now = drawingFactory(component);
                 drawing_layer.add(drawing_now);
             }
@@ -933,7 +981,6 @@ stage.on('mouseup', function(){
         ID ++;
         loadXeq();
         getDificultad();
-        console.log(all_object_components);
     }
 });
 //#endregion
