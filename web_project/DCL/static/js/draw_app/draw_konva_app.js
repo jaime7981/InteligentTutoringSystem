@@ -257,7 +257,6 @@ function drawBar(bar){
     var measurement = drawMeasurement(bar);
     group.add(measurement);
     group.id = bar.id;
-    group.draggable(true);
     return group;
 };
 
@@ -276,7 +275,6 @@ function drawSupport(support){
     var group = new Konva.Group();
     group.add(triangle);
     group.id = support.id;
-    group.draggable(true);
     return group;
 };
 
@@ -308,7 +306,6 @@ function drawSlidingHorizontal(support){
     group.add(triangle);
     group.add(line);
     group.id = support.id;
-    group.draggable(true);
     return group;
 
 };
@@ -343,7 +340,6 @@ function drawSlidingVertical(support){
     group.add(triangle);
     group.add(line);
     group.id = support.id;
-    group.draggable(true);
     return group;
 };
 
@@ -385,7 +381,6 @@ function drawFixed(support){
     group.add(line_1);
     group.add(line_2);
     group.id = support.id;
-    group.draggable(true);
     return group;
 };
 
@@ -420,7 +415,6 @@ function drawForce(force){
     group.add(arrow);
     group.add(label);
     group.id = force.id;
-    group.draggable(true);
     return group;
 };
 
@@ -489,7 +483,6 @@ function drawDistForce(dist_force){
     group.add(label);
     group.add(label_two);
     group.id = dist_force.id;
-    group.draggable(true);
     return group;
 }
 
@@ -544,7 +537,6 @@ function drawMomentum(momentum){
     group.add(circle);
     group.add(label);
     group.id = momentum.id;
-    group.draggable(true);
     return group;
 };
 
@@ -664,13 +656,12 @@ function drawNode(node){
         fill: 'white',
         stroke: 'red',
         strokeWidth: 2,
-        draggable: true,
     });
     var label = new Konva.Text({
         text: (node.label),
         fontSize: 20,
         fill: 'red',
-        fonrStyle: 'bold',
+        fontStyle: 'bold',
         x: node.x,
         y: node.y,
         //align: 'center',
@@ -692,7 +683,6 @@ function drawReferencePoint(reference_point){
         fill: 'red',
         stroke: 'blue',
         strokeWidth: 2,
-        draggable: true,
     });
     var label = new Konva.Text({
         text: ("RP"),
