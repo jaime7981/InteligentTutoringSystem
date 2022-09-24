@@ -210,6 +210,9 @@ function drawingFactory(object){
     else if(object.component_type=='force'){
         drawing = drawForce(object);
     }
+    else if(object.component_type=='dist_force'){
+        drawing = drawDistForce(object);
+    }
     else if(object.component_type=='momentum'){
         drawing = drawMomentum(object);
     }
@@ -420,6 +423,75 @@ function drawForce(force){
     group.draggable(true);
     return group;
 };
+
+function drawDistForce(dist_force){
+    var color = 'blue'
+    var X = dist_force.x;
+    var Y = dist_force.y;
+    var line =  new Konva.Line({
+        points: [X, Y, X, Y-80],
+        stroke: color,
+        strokeWidth: 10,
+        opacity: 1,
+    });
+    var arrow = new Konva.Line({
+        points: [X-20,Y-20,X, Y, X+20, Y-20],
+        stroke: color,
+        strokeWidth: 10,
+        opacity: 1,
+    });
+
+    var seccond_line = new Konva.Line({
+        points: [X + STEP*dist_force.length, Y, X + STEP*dist_force.length, Y-80],
+        stroke: color,
+        strokeWidth: 10,
+        opacity: 1,
+    });
+
+    var seccond_arrow = new Konva.Line({
+        points: [X-20 + STEP*dist_force.length,Y-20,X + STEP*dist_force.length, Y, X+20 + STEP*dist_force.length, Y-20],
+        stroke: color,
+        strokeWidth: 10,
+        opacity: 1,
+    });
+
+    var top_line = new Konva.Line({
+        points: [X, Y-80, X + STEP*dist_force.length, Y-80],
+        stroke: color,
+        strokeWidth: 10,
+        opacity: 1,
+    });
+
+    var label = new Konva.Text({
+        text: (dist_force.magnitud + " N"),
+        fontSize: 20,
+        x: X,
+        y: Y,
+        offsetX: -20,
+        offsetY: 40,
+    });
+
+    var label_two = new Konva.Text({
+        text: (dist_force.length + " m"),
+        fontSize: 20,
+        x: X,
+        y: Y,
+        offsetX: -20,
+        offsetY: 20,
+    });
+
+    var group = new Konva.Group();
+    group.add(line);
+    group.add(arrow);
+    group.add(seccond_line);
+    group.add(seccond_arrow);
+    group.add(top_line);
+    group.add(label);
+    group.add(label_two);
+    group.id = dist_force.id;
+    group.draggable(true);
+    return group;
+}
 
 function drawMomentum(momentum){
     var X = momentum.x;

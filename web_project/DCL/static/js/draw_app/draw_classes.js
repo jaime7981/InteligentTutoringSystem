@@ -87,6 +87,18 @@ class Force{
     };
 }
 
+class DistForce{
+    constructor(init_coordinates, magnitud, length, id){
+        this.id = id;
+        this.component_type = 'dist_force';
+        this.x = init_coordinates.x;
+        this.y = init_coordinates.y;
+        this.magnitud = magnitud;
+        //this.angle = angle;
+        this.length = length;
+    };
+}
+
 class Momentum{
     constructor(init_coordinates, magnitud, id){
         this.id = id;
@@ -141,6 +153,9 @@ function componentFactory(init_coordinates, end_coordinates, id, component){
     }
     else if(component == 'force'){
         var object = new Force(init_coordinates, parseInt(getForceAngleValues()[0]),parseInt(getForceAngleValues()[1]), id);
+    }
+    else if(component == 'dist_force'){
+        var object = new DistForce(init_coordinates, parseInt(getForceAngleValues()[0]),parseInt(getForceAngleValues()[3]), id);
     }
     else if(component == 'momentum'){
         var object = new Momentum(init_coordinates, parseInt(getForceAngleValues()[2]),id);
