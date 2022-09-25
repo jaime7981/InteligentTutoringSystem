@@ -92,6 +92,8 @@ eraserButton.addEventListener('click',function(){
 },false)
 clearButton.addEventListener('click', function(){
     drawn_layer.destroyChildren();
+    bar_snap_nodes = [];
+    all_object_components = [];
 }, false)
 
 barButton.addEventListener('click', function() {

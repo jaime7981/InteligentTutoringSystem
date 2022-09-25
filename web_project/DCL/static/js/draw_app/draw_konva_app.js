@@ -8,7 +8,7 @@ var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
 var STEP = 40;
-var SNAP_WEIGHT = 500;
+var SNAP_WEIGHT = 80;
 var ID = 0;
 
 var isNowDrawing = false;
