@@ -256,6 +256,7 @@ function drawBar(bar){
     group.add(line);
     var measurement = drawMeasurement(bar);
     group.add(measurement);
+    group.listening(true);
     group.id = bar.id;
     return group;
 };
@@ -388,14 +389,22 @@ function drawForce(force){
     var color = 'purple'
     var X = force.x;
     var Y = force.y;
+    var tailX = 2*STEP*Math.cos(force.angle*Math.PI/180);
+    var tailY = 2*STEP*Math.sin(force.angle*Math.PI/180);
+    var head = new Point(X,Y);
+    var tail = new Point(X+tailX, Y-tailY);
+    var label_middle = getBarMiddle(head, tail);
+
     var line =  new Konva.Line({
-        points: [X, Y, X, Y-80],
+        points: [X, Y, X+tailX, Y-tailY],
         stroke: color,
         strokeWidth: 10,
         opacity: 1,
     });
     var arrow = new Konva.Line({
-        points: [X-20,Y-20,X, Y, X+20, Y-20],
+        points:    [X+20*Math.cos((force.angle+45)*Math.PI/180),Y-20*Math.sin((force.angle+45)*Math.PI/180),
+                    X, Y,
+                    X+20*Math.cos((force.angle-45)*Math.PI/180),Y-20*Math.sin((force.angle-45)*Math.PI/180)],
         stroke: color,
         strokeWidth: 10,
         opacity: 1,
@@ -404,10 +413,9 @@ function drawForce(force){
     var label = new Konva.Text({
         text: (force.magnitud + " N"),
         fontSize: 20,
-        x: X,
-        y: Y,
-        offsetX: -20,
-        offsetY: 40,
+        fontStyle: 'Bold',
+        x: label_middle.x,
+        y: label_middle.y,
     });
 
     var group = new Konva.Group();
