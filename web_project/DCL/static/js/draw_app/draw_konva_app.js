@@ -209,6 +209,7 @@ function drawingFactory(object){
     }
     else if(object.component_type=='force'){
         drawing = drawForce(object);
+        //drawing = drawAngle(object)
     }
     else if(object.component_type=='dist_force'){
         drawing = drawDistForce(object);
@@ -414,14 +415,17 @@ function drawForce(force){
         text: (force.magnitud + " N"),
         fontSize: 20,
         fontStyle: 'Bold',
-        x: label_middle.x,
+        x: label_middle.x+20,
         y: label_middle.y,
     });
+
+    var angle = drawAngle(force);
 
     var group = new Konva.Group();
     group.add(line);
     group.add(arrow);
     group.add(label);
+    group.add(angle);
     group.id = force.id;
     return group;
 };
@@ -656,6 +660,49 @@ function drawMeasurement(bar){
     group.id = 'measurement';
     return group;
 };
+
+
+function drawAngle(force){
+
+    var group = new Konva.Group();
+
+    var arc = new Konva.Arc({
+        x: force.x,
+        y: force.y,
+        innerRadius: 30,
+        outerRadius: 33,
+        angle: force.angle,
+        rotation: 360-force.angle,
+        //fill: 'blue',
+        stroke: 'black',
+        opacity: 1,
+        strokeWidth: 2,
+    });
+    
+    var line = new Konva.Line({
+        points: [force.x, force.y, force.x-30, force.y],
+        strokeWidth: 5,
+        opacity: 1,
+    });
+
+    var label = new Konva.Text({
+        text: (force.angle + "º"),
+        fontSize: 20,
+        fontStyle: 'Bold',
+        x: force.x,
+        y: force.y,
+        offsetX: -30,
+    });
+
+    group.add(arc);
+    group.add(line);
+    group.add(label);
+    group.id('angle');
+
+    console.log('Angle group:', group);
+
+    return group;
+}
 function drawNode(node){
     var circle = new Konva.Circle({
         x: node.x,
@@ -983,6 +1030,20 @@ stage.on('mouseup', function(){
             drawn_layer.add(konva_node_start);
             drawn_layer.add(konva_node_end);
             ID = ID +2;
+        }
+        else if (current_component == 'force'){
+            let snap_bar = snapToBar(mouse_release_position);
+            var component = new componentFactory(snap_bar,snap_bar,ID,current_component)
+            var drawing_now = drawingFactory(component);
+            var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
+            var konva_node_start = drawingFactory(start_node)
+            
+            
+            all_object_components.push(component);
+            drawn_layer.add(drawing_now);
+            all_object_components.push(start_node);
+            drawn_layer.add(konva_node_start);
+            ID += 1;
         }
         else {
             let snap_bar = snapToBar(mouse_release_position);
