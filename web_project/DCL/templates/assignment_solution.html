@@ -35,7 +35,7 @@
                             padding: 10px;">
     <h2>Step One</h2>
     <p>Dibujar el cuerpo rigido como representacion de barras, vinculos externos e internos y con lasfuerzas y momentos de carga.</p>
-    <div id='dcl-app-content' style='
+    <div id='dcl-app-one-content' style='
         width: 100%;
         height: 530px;
         max-width: 1375px;
@@ -62,20 +62,18 @@
             border: 5px;
             border-style: solid;
             padding: 5px;'>
-            <button id="selector-button">Selector</button>
-            <button id="select-eraser-button">Eraser</button>
-            <button id="select-bar-button">Select Bar</button>
-            <button id="select-support-button">Support</button>
-            <button id="select-sliding-horizontal-button">Sliding Support Hor</button>
-            <button id="select-sliding-vertical-button">Sliding Support Vert</button>
-            <button id="select-fixed-button">Fixed</button>
-            <button id="select-reference-button">Reference Point</button>
-            <button id="select-force-button">Force</button>
-            <button id="select-dist-force-button">Dist. Force</button>
-            <button id="select-momentum-button">Momentum</button>
-            <button id="select-clear-button">Clear All</button>
+            <button id="dcl-app-one-contentselect-bar-button">Select Bar</button>
+            <button id="dcl-app-one-contentselect-support-button">Support</button>
+            <button id="dcl-app-one-contentselect-sliding-horizontal-button">Sliding Support Hor</button>
+            <button id="dcl-app-one-contentselect-sliding-vertical-button">Sliding Support Vert</button>
+            <button id="dcl-app-one-contentselect-fixed-button">Fixed</button>
+            <button id="dcl-app-one-contentselect-reference-button">Reference Point</button>
+            <button id="dcl-app-one-contentselect-force-button">Force</button>
+            <button id="dcl-app-one-contentselect-dist-force-button">Dist. Force</button>
+            <button id="dcl-app-one-contentselect-momentum-button">Momentum</button>
+            <button id="dcl-app-one-contentselect-clear-button">Clear All</button>
         </div>
-        <div id='dcl-app-side-bar-canvas' style='
+        <div id='dcl-app-one-contentdcl-app-side-bar-canvas' style='
             width: 10%;
             height: 100%;
             display: flex;
@@ -90,7 +88,7 @@
             padding: 5px;'>
             <h3 id='info-label'>Data</h3>
         </div>
-        <div id="konva-container" class="container m-2" style='
+        <div id="part-one-konva-container" class="container m-2" style='
             width:80%; 
             height:100%;'>
         </div>
@@ -104,66 +102,6 @@
                             padding: 10px;">
     <h2>Step Two</h2>
     <p>Determinar los cuerpos sobre los que se haran los DCL segun los vinculos internos.</p>
-    <div id='dcl-app-content' style='
-        width: 100%;
-        height: 530px;
-        max-width: 1375px;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        align-content: center;
-        justify-content: center;
-        align-items: center;
-        margin: 10px;
-        border: 5px;
-        border-style: outset;
-        padding: 10px;'>
-        <div id='dcl-app-action-buttons' style='
-            width: 10%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            align-content: center;
-            justify-content: flex-start;
-            align-items: stretch;
-            margin: 5px;
-            border: 5px;
-            border-style: solid;
-            padding: 5px;'>
-            <button id="selector-button">Selector</button>
-            <button id="select-eraser-button">Eraser</button>
-            <button id="select-bar-button">Select Bar</button>
-            <button id="select-support-button">Support</button>
-            <button id="select-sliding-horizontal-button">Sliding Support Hor</button>
-            <button id="select-sliding-vertical-button">Sliding Support Vert</button>
-            <button id="select-fixed-button">Fixed</button>
-            <button id="select-reference-button">Reference Point</button>
-            <button id="select-force-button">Force</button>
-            <button id="select-dist-force-button">Dist. Force</button>
-            <button id="select-momentum-button">Momentum</button>
-            <button id="select-clear-button">Clear All</button>
-        </div>
-        <div id='dcl-app-side-bar-canvas' style='
-            width: 10%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            align-content: center;
-            justify-content: flex-start;
-            align-items: stretch;
-            margin: 5px;
-            border: 5px;
-            border-style: solid;
-            padding: 5px;'>
-            <h3 id='info-label'>Data</h3>
-        </div>
-        <div id="konva-container" class="container m-2" style='
-            width:80%; 
-            height:100%;'>
-        </div>
-    </div>
 </div>
 
 <div id="step-three-content" style="margin: 10px;
@@ -263,8 +201,6 @@
 <script src="https://unpkg.com/konva@8/konva.min.js"></script>
 <script src="{% static 'js/student_draw/draw_classes.js' %}"></script>
 <script src="{% static 'js/student_draw/ajax_load_save.js' %}"></script>
-<script src="{% static 'js/student_draw/draw_events.js' %}"></script>
-<script src="{% static 'js/student_draw/draw_konva_app.js' %}"></script>
 <script src="{% static 'js/student_draw/draw_func.js' %}"></script>
 
 

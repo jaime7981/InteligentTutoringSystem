@@ -29,6 +29,31 @@ function componentFactory(init_coordinates, end_coordinates, id, component){
     return object;
 };
 
+var getForceAngleValues = function() {
+    var forceValue = document.getElementById("force-value");
+    var angleValue = document.getElementById("angle-value");
+    var torqueValue = document.getElementById("torque-value");
+    var lengthValue = document.getElementById("length-value");
+    var force_value = null;
+    var angle_value = null;
+    var torque_value = null;
+    var length_value = null;
+
+    if (forceValue != null) {
+        force_value = forceValue.value;
+    }
+    if (angleValue != null) {
+        angle_value = angleValue.value;
+    }
+    if (torqueValue != null) {
+        torque_value = torqueValue.value;
+    }
+    if (lengthValue != null) {
+        length_value = lengthValue.value;
+    }
+    return([force_value, angle_value, torque_value, length_value]);
+}
+
 var loadDrawApp = function(container_id, konva_id) {
     // BUTTONS AND EVENTS
     //#region Buttons
@@ -113,17 +138,9 @@ var loadDrawApp = function(container_id, konva_id) {
     //#endregion
 
     //#region Buttons Event Handlers
-    selectorButton.addEventListener('click',function(){
-        current_component = 'selector'; 
-        adding_component = false;
-    },false);
-    eraserButton.addEventListener('click',function(){
-        current_component = 'eraser'; 
-        adding_component = false;
-    },false)
     clearButton.addEventListener('click', function(){
         drawn_layer.destroyChildren();
-    }, false)
+    }, false);
 
     if (barButton != null){
         barButton.addEventListener('click', function() {
@@ -1207,10 +1224,11 @@ var loadDrawApp = function(container_id, konva_id) {
             }
             ID ++;
             loadXeq();
-            getDificultad();
         }
     });
     //#endregion
 }
 
+loadDrawApp('dcl-app-one-content', 'part-one-konva-container');
 loadDrawApp('dcl-app-three-content', 'part-three-konva-container');
+loadAssignmentSteps(assignment_steps);
