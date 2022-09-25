@@ -1,145 +1,3 @@
-// Classes
-//#region Math Components
-class Point{
-    constructor(x,y){
-        this.x = x;
-        this.y = y;  
-    };
-};
-
-class Line{
-    constructor(init_coordinates, end_coordinates){
-        this.slope = getBarSlope(init_coordinates,end_coordinates);
-        this.b = getBarYCut(init_coordinates, this.slope);
-    };
-};
-//#endregion
-
-//#region Draw Components
-class Bar{
-    constructor(init_coordinates, end_coordinates, id){
-        this.id = id;
-        this.component_type = 'bar';
-        this.init_cord = init_coordinates;
-        this.end_cord = end_coordinates;
-        this.init_x = init_coordinates.x;
-        this.init_y = init_coordinates.y;
-        this.end_x = end_coordinates.x;
-        this.end_y = end_coordinates.y;
-        this.size = getBarSize(this.init_cord, this.end_cord);
-        this.middle = getBarMiddle(this.init_cord, this.end_cord)
-        this.scaled_size = this.size/STEP
-        this.line = new Line(this.init_cord, this.end_cord);
-    };
-    getValues() {
-        console.log("Init x: ",this.init_x);
-        console.log("Init y: ",this.init_y);
-        console.log("End x: ",this.end_x);
-        console.log("End y: ",this.end_y);
-        console.log("Size: ",this.size);
-        console.log("Scaled Size: ",this.scaled_size);
-        console.log("Middle: ",this.middle);
-        console.log("Slope: ",this.line.slope);
-        console.log("Y Cut: ",this.line.b);
-    };
-};
-
-class Support{
-    constructor(init_coordinates, type, id){
-        this.id = id;
-        //TODO: Implement node position in DCL
-        //this.node = null
-        this.component_type = type;
-        this.x = init_coordinates.x;
-        this.y = init_coordinates.y;
-
-        if(this.component_type == 'support'){
-            this.reaction_x = true;
-            this.reaction_y = true;
-            this.reaction_momentum = false;
-        }
-        else if(this.component_type == 'sliding_horizontal'){
-            this.reaction_x = false;
-            this.reaction_y = true;
-            this.reaction_momentum = false;
-        }
-        else if(this.component_type == 'sliding_vertical'){
-            this.reaction_x = true;
-            this.reaction_y = false;
-            this.reaction_momentum = false;
-        }
-        else if(this.component_type == 'fixed'){
-            this.reaction_x = true;
-            this.reaction_y = true;
-            this.reaction_momentum = true;
-        }
-    }
-}
-
-class Force{
-    constructor(init_coordinates, magnitud, angle, id){
-        this.id = id;
-        this.component_type = 'force';
-        this.x = init_coordinates.x;
-        this.y = init_coordinates.y;
-        this.magnitud = magnitud;
-        this.angle = angle;
-    };
-}
-
-class DistForce{
-    constructor(init_coordinates, magnitud, length, id){
-        this.id = id;
-        this.component_type = 'dist_force';
-        this.x = init_coordinates.x;
-        this.y = init_coordinates.y;
-        this.magnitud = magnitud;
-        //this.angle = angle;
-        this.length = length;
-    };
-}
-
-class Momentum{
-    constructor(init_coordinates, magnitud, id){
-        this.id = id;
-        this.component_type = 'momentum';
-        this.x = init_coordinates.x;
-        this.y = init_coordinates.y;
-        this.magnitud = magnitud;
-    };
-}
-var node_labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-class Node{
-    constructor(init_coordinates, id){
-        this.id = id;
-        this.component_type = 'node';
-        this.x = init_coordinates.x;
-        this.y = init_coordinates.y;
-        this.label = node_labels[0];
-
-        node_labels = node_labels.substring(1);
-    }
-}
-
-class ReferencePoint{
-    constructor(init_coordinates, id){
-        this.id = id;
-        this.component_type = 'reference_point';
-        this.x = init_coordinates.x;
-        this.y = init_coordinates.y;
-    }
-}
-
-class Circle{
-    constructor(init_coordinates){
-        this.id = -1;
-        this.component_type = 'circle';
-        this.x = init_coordinates.x;
-        this.y = init_coordinates.y;
-    }
-}
-//#endregion
-
 function componentFactory(init_coordinates, end_coordinates, id, component){
     if(component == "bar"){
         var object = new Bar(init_coordinates, end_coordinates, id)
@@ -171,32 +29,20 @@ function componentFactory(init_coordinates, end_coordinates, id, component){
     return object;
 };
 
-var loadDrawApp = function(container_id) {
-    var saveAssignmentButton = document.getElementById("save-assignment-button");
-    var assignmentName = document.getElementById("input-text-selected-assignment-name");
-    var assignmentDescription = document.getElementById("input-text-selected-assignment-description");
-    var assignmentLevel = document.getElementById("input-text-selected-assignment-level");
-    var assignmentPhoto = document.getElementById("input-file-selected-assignment-photo");
-    var stepOneCheckbox = document.getElementById("step-1");
-    var stepTwoCheckbox = document.getElementById("step-2");
-    var stepThreeCheckbox = document.getElementById("step-3");
-    var stepFourCheckbox = document.getElementById("step-4");
-
+var loadDrawApp = function(container_id, konva_id) {
     // BUTTONS AND EVENTS
     //#region Buttons
-    var selectorButton = document.getElementById("selector-button");
-    var eraserButton = document.getElementById("select-eraser-button");
-    var barButton = document.getElementById("select-bar-button");
-    var supportButton = document.getElementById("select-support-button");
-    var slidingHorizontalButton = document.getElementById("select-sliding-horizontal-button");
-    var slidingVerticalButton = document.getElementById("select-sliding-vertical-button");
-    var fixedButton = document.getElementById("select-fixed-button");
-    var forceButton = document.getElementById("select-force-button");
-    var distForceButton = document.getElementById("select-dist-force-button");
-    var momentumButton = document.getElementById("select-momentum-button");
-    var referencePointButton = document.getElementById("select-reference-button");
-    var clearButton = document.getElementById("select-clear-button");
-    var sideBar = document.getElementById("dcl-app-side-bar-canvas");
+    var barButton = document.getElementById(container_id + "select-bar-button");
+    var supportButton = document.getElementById(container_id + "select-support-button");
+    var slidingHorizontalButton = document.getElementById(container_id + "select-sliding-horizontal-button");
+    var slidingVerticalButton = document.getElementById(container_id + "select-sliding-vertical-button");
+    var fixedButton = document.getElementById(container_id + "select-fixed-button");
+    var forceButton = document.getElementById(container_id + "select-force-button");
+    var distForceButton = document.getElementById(container_id + "select-dist-force-button");
+    var momentumButton = document.getElementById(container_id + "select-momentum-button");
+    var referencePointButton = document.getElementById(container_id + "select-reference-button");
+    var clearButton = document.getElementById(container_id + "select-clear-button");
+    var sideBar = document.getElementById(container_id + "dcl-app-side-bar-canvas");
     //#endregion
 
     //#region Side Bar
@@ -279,29 +125,37 @@ var loadDrawApp = function(container_id) {
         drawn_layer.destroyChildren();
     }, false)
 
-    barButton.addEventListener('click', function() {
-        current_component = 'bar';
-        adding_component = true;
-        deleteAllContent();
-    }, false);
-    supportButton.addEventListener('click', function() {
-        current_component = 'support';
-        adding_component = true;
-        deleteAllContent();
-        appendFlipButton();
-    }, false);
-    slidingHorizontalButton.addEventListener('click', function() {
-        current_component = 'sliding_horizontal';
-        adding_component = true;
-        deleteAllContent();
-        appendFlipButton();
-    }, false);
-    slidingVerticalButton.addEventListener('click', function() {
-        current_component = 'sliding_vertical';
-        adding_component = true;
-        deleteAllContent();
-        appendFlipButton();
-    }, false);
+    if (barButton != null){
+        barButton.addEventListener('click', function() {
+            current_component = 'bar';
+            adding_component = true;
+            deleteAllContent();
+        }, false);
+    }
+    if (supportButton != null){
+        supportButton.addEventListener('click', function() {
+            current_component = 'support';
+            adding_component = true;
+            deleteAllContent();
+            appendFlipButton();
+        }, false);
+    }
+    if (slidingHorizontalButton != null){
+        slidingHorizontalButton.addEventListener('click', function() {
+            current_component = 'sliding_horizontal';
+            adding_component = true;
+            deleteAllContent();
+            appendFlipButton();
+        }, false);
+    }
+    if (slidingVerticalButton != null){
+        slidingVerticalButton.addEventListener('click', function() {
+            current_component = 'sliding_vertical';
+            adding_component = true;
+            deleteAllContent();
+            appendFlipButton();
+        }, false);
+    }
     forceButton.addEventListener('click', function() {
         current_component = 'force';
         adding_component = true;
@@ -327,12 +181,14 @@ var loadDrawApp = function(container_id) {
         adding_component = true;
         deleteAllContent();
     }, false);
-    fixedButton.addEventListener('click', function() {
-        current_component = 'fixed';
-        adding_component = true;
-        deleteAllContent();
-        appendFlipButton();
-    }, false)
+    if (fixedButton != null){
+        fixedButton.addEventListener('click', function() {
+            current_component = 'fixed';
+            adding_component = true;
+            deleteAllContent();
+            appendFlipButton();
+        }, false)
+    }
     //#endregion
 
     //Save Data
@@ -356,38 +212,15 @@ var loadDrawApp = function(container_id) {
             var reference_y = null;
         }
         
-        json_output_list.push('{"reference_point" : {"x":' + reference_x + ',"y":' + reference_y + '}},{"assignment_steps" : ' + JSON.stringify(getAssignmentSteps()) + '}]}')
+        json_output_list.push('{"reference_point" : {"x":' + reference_x + ',"y":' + reference_y + '}}]}')
         json_parsed_object = json_output_list.join('');
         return json_parsed_object;
-    }
-
-    var getAssignmentSteps = function(){
-        return [stepOneCheckbox.checked, stepTwoCheckbox.checked, stepThreeCheckbox.checked, stepFourCheckbox.checked];
-    }
-
-    var loadAssignmentSteps = function(steps_list){
-        if (steps_list[0] == false){
-            document.getElementById("step-one-content").remove();
-        }
-        if (steps_list[1] == false){
-            document.getElementById("step-two-content").remove();
-        }
-        if (steps_list[2] == false){
-            document.getElementById("step-three-content").remove();
-        }
-        if (steps_list[3] == false){
-            document.getElementById("step-four-content").remove();
-        }
     }
 
     var ajaxSaveAssignment = function(json_data) {
         var fd = new FormData();
         fd.append("assignment_data" , json_data);
         fd.append("assignment_id" , assignment_id);
-        fd.append("assignment_name" , assignmentName.value.toUpperCase());
-        fd.append("assignment_description" , assignmentDescription.value);
-        fd.append("assignment_level" , 1);
-        fd.append("assignment_photo", assignmentPhoto.files[0]);
         $.ajaxSetup({
             headers: {
                 "X-CSRFToken" : getCookie('csrftoken')
@@ -395,13 +228,13 @@ var loadDrawApp = function(container_id) {
         });
         $.ajax({
             type: 'POST',
-            url: "/dcl/app",
+            url: "/dcl/save_sol",
             data: fd,
             processData: false,
             contentType: false,
             cache:false,
             success: function (response) {
-                window.location.href = teacher_redirect;
+                console.log('saved solution');
             },
             error: function (response) {
                 console.log(response["responseJSON"]["error"]);
@@ -431,9 +264,6 @@ var loadDrawApp = function(container_id) {
     }, false);
 
     //#region INIT
-    var input_eq_x = document.getElementById("input-text-eq-x");
-    var input_eq_y = document.getElementById("input-text-eq-y");
-    var input_eq_m = document.getElementById("input-text-eq-m");
     var dif_level = document.getElementById("input-text-selected-assignment-level");
 
     var app_container = document.getElementById(container_id);
@@ -448,13 +278,10 @@ var loadDrawApp = function(container_id) {
     var current_component = "selector";
     var mouse_hold_position = new Point(0,0);
     var mouse_release_position = new Point(0,0);
-    var eq_reference_point = null;
 
     var horizontal_points = [];
     var vertical_points = [];
-    var bar_snap_nodes = [];
     var all_object_components = [];
-    var assignment_steps = [];
 
     var component_base_value = {
         "bar" : 2,
@@ -480,37 +307,6 @@ var loadDrawApp = function(container_id) {
         var pyth = (Math.sqrt(Math.pow(size_x,2)+Math.pow(size_y,2)));
         return (pyth).toFixed(2);
     }
-
-    function getBarMiddle(init_coordinates, end_coordinates){
-        var x_init = init_coordinates.x;
-        var y_init = init_coordinates.y;
-        var x_end = end_coordinates.x;
-        var y_end = end_coordinates.y;
-        
-        var middle_x = (x_end+x_init)/2;
-        var middle_y = (y_end+y_init)/2;
-        return new Point(middle_x,middle_y);
-    };
-
-    function getBarSlope(init_coordinates, end_coordinates){
-        var x_init = init_coordinates.x;
-        var y_init = init_coordinates.y;
-        var x_end = end_coordinates.x;
-        var y_end = end_coordinates.y;
-        if( x_init != x_end){
-            var slope = (y_end-y_init)/(x_end-x_init);
-            return slope;
-        }
-        else{
-            return 'vertical';
-        }
-    }
-
-    function getBarYCut(init_coordinates, slope){
-        var x_init = init_coordinates.x;
-        var y_init = init_coordinates.y;
-        return y_init - slope*x_init;
-    };
 
     function getProjectedIntersection(bar,point){
         var projected_slope = null;
@@ -554,7 +350,6 @@ var loadDrawApp = function(container_id) {
         for(var bar in all_object_components){
             if(all_object_components[bar].component_type == 'bar'){
                 var snap_point = getProjectedIntersection(all_object_components[bar],curr_point);
-                //console.log('Values',[bar],curr_point,snap_point);
                 var distance = getBarSize(snap_point,curr_point);
                 if (distance <= min_distance && distance <= SNAP_WEIGHT){
                     min_distance = distance;
@@ -564,12 +359,6 @@ var loadDrawApp = function(container_id) {
         }
         return return_point
     };
-
-    function stagePositionToPoint(){
-        var x = stage.getRelativePointerPosition().x;
-        var y = stage.getRelativePointerPosition().y;
-        return new Point(x,y);
-    }
 
     function drawGrid(Stage){
         var gridLayer = new Konva.Layer({
@@ -1338,7 +1127,7 @@ var loadDrawApp = function(container_id) {
 
     //#region Run App
     var stage = new Konva.Stage({
-        container: 'konva-container',
+        container: konva_id,
         width: WIDTH,
         height: HEIGHT,
         border: '1px solid black',
@@ -1424,5 +1213,4 @@ var loadDrawApp = function(container_id) {
     //#endregion
 }
 
-loadDrawApp('konva-container');
-loadDrawApp('part-three-konva-container');
+loadDrawApp('dcl-app-three-content', 'part-three-konva-container');

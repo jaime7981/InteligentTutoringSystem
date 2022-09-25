@@ -88,6 +88,15 @@ def studentSolution(request, assignment_id):
         context = { "selected_assignment" : assignment}
     return(render(request, 'assignment_solution.html', context=context))
 
+@allowed_users(allowed_roles=['student'])
+def frameSolution(request, assignment_id):
+    if assignment_id == 0:
+        context = { "selected_assignment" : 0}
+    else:
+        assignment = Assignment.objects.get(pk = assignment_id)
+        context = { "selected_assignment" : assignment}
+    return(render(request, 'draw_frame.html', context=context))
+
 @allowed_users(allowed_roles=['teacher'])
 def teacher(request):
     assignments = []

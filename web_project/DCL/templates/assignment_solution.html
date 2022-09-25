@@ -173,7 +173,7 @@
                             padding: 10px;">
     <h2>Step Three</h2>
     <p>Diagramar cada DCL reemplazando los vinculos externos por la fuerzas y momentos de reaccion correspondientes (dando nombre a cada una de ellas), e incorporando las fuerzas producto de los vinculos internos usados para la division. Ademas, dividir las fuerzas de carga segun los ejes.</p>
-    <div id='dcl-app-content' style='
+    <div id='dcl-app-three-content' style='
         width: 100%;
         height: 530px;
         max-width: 1375px;
@@ -200,13 +200,13 @@
             border: 5px;
             border-style: solid;
             padding: 5px;'>
-            <button id="select-reference-button">Reference Point</button>
-            <button id="select-force-button">Force</button>
-            <button id="select-dist-force-button">Dist. Force</button>
-            <button id="select-momentum-button">Momentum</button>
-            <button id="select-clear-button">Clear All</button>
+            <button id="dcl-app-three-contentselect-reference-button">Reference Point</button>
+            <button id="dcl-app-three-contentselect-force-button">Force</button>
+            <button id="dcl-app-three-contentselect-dist-force-button">Dist. Force</button>
+            <button id="dcl-app-three-contentselect-momentum-button">Momentum</button>
+            <button id="dcl-app-three-contentselect-clear-button">Clear All</button>
         </div>
-        <div id='dcl-app-side-bar-canvas' style='
+        <div id='dcl-app-three-contentdcl-app-side-bar-canvas' style='
             width: 10%;
             height: 100%;
             display: flex;
@@ -265,5 +265,7 @@
 <script src="{% static 'js/student_draw/ajax_load_save.js' %}"></script>
 <script src="{% static 'js/student_draw/draw_events.js' %}"></script>
 <script src="{% static 'js/student_draw/draw_konva_app.js' %}"></script>
+<script src="{% static 'js/student_draw/draw_func.js' %}"></script>
+
 
 {% endblock %}
