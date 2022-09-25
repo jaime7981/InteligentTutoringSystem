@@ -286,7 +286,7 @@ var loadDrawApp = function(container_id, konva_id) {
     var app_container = document.getElementById(container_id);
     var WIDTH = app_container.offsetWidth;
     var HEIGHT = app_container.offsetHeight;
-    var STEP = 40;
+    var STEP = 80;
     var SNAP_WEIGHT = 500;
     var ID = 0;
 
@@ -494,8 +494,8 @@ var loadDrawApp = function(container_id, konva_id) {
         group.add(line);
         var measurement = drawMeasurement(bar);
         group.add(measurement);
+        group.listening(true);
         group.id = bar.id;
-        group.draggable(true);
         return group;
     };
 
@@ -514,7 +514,6 @@ var loadDrawApp = function(container_id, konva_id) {
         var group = new Konva.Group();
         group.add(triangle);
         group.id = support.id;
-        group.draggable(true);
         return group;
     };
 
@@ -546,7 +545,6 @@ var loadDrawApp = function(container_id, konva_id) {
         group.add(triangle);
         group.add(line);
         group.id = support.id;
-        group.draggable(true);
         return group;
 
     };
@@ -581,7 +579,6 @@ var loadDrawApp = function(container_id, konva_id) {
         group.add(triangle);
         group.add(line);
         group.id = support.id;
-        group.draggable(true);
         return group;
     };
 
@@ -623,7 +620,6 @@ var loadDrawApp = function(container_id, konva_id) {
         group.add(line_1);
         group.add(line_2);
         group.id = support.id;
-        group.draggable(true);
         return group;
     };
 
@@ -631,14 +627,22 @@ var loadDrawApp = function(container_id, konva_id) {
         var color = 'purple'
         var X = force.x;
         var Y = force.y;
+        var tailX = 2*STEP*Math.cos(force.angle*Math.PI/180);
+        var tailY = 2*STEP*Math.sin(force.angle*Math.PI/180);
+        var head = new Point(X,Y);
+        var tail = new Point(X+tailX, Y-tailY);
+        var label_middle = getBarMiddle(head, tail);
+
         var line =  new Konva.Line({
-            points: [X, Y, X, Y-80],
+            points: [X, Y, X+tailX, Y-tailY],
             stroke: color,
             strokeWidth: 10,
             opacity: 1,
         });
         var arrow = new Konva.Line({
-            points: [X-20,Y-20,X, Y, X+20, Y-20],
+            points:    [X+20*Math.cos((force.angle+45)*Math.PI/180),Y-20*Math.sin((force.angle+45)*Math.PI/180),
+                        X, Y,
+                        X+20*Math.cos((force.angle-45)*Math.PI/180),Y-20*Math.sin((force.angle-45)*Math.PI/180)],
             stroke: color,
             strokeWidth: 10,
             opacity: 1,
@@ -647,20 +651,62 @@ var loadDrawApp = function(container_id, konva_id) {
         var label = new Konva.Text({
             text: (force.magnitud + " N"),
             fontSize: 20,
-            x: X,
-            y: Y,
-            offsetX: -20,
-            offsetY: 40,
+            fontStyle: 'Bold',
+            x: label_middle.x+20,
+            y: label_middle.y,
         });
 
+        var angle = drawAngle(force);
         var group = new Konva.Group();
         group.add(line);
         group.add(arrow);
         group.add(label);
+        group.add(angle);
         group.id = force.id;
-        group.draggable(true);
         return group;
     };
+
+    function drawAngle(force){
+
+        var group = new Konva.Group();
+    
+        var arc = new Konva.Arc({
+            x: force.x,
+            y: force.y,
+            innerRadius: 30,
+            outerRadius: 33,
+            angle: force.angle,
+            rotation: 360-force.angle,
+            //fill: 'blue',
+            stroke: 'black',
+            opacity: 1,
+            strokeWidth: 2,
+        });
+    
+        var line = new Konva.Line({
+            points: [force.x, force.y, force.x-30, force.y],
+            strokeWidth: 5,
+            opacity: 1,
+        });
+    
+        var label = new Konva.Text({
+            text: (force.angle + "º"),
+            fontSize: 20,
+            fontStyle: 'Bold',
+            x: force.x,
+            y: force.y,
+            offsetX: -30,
+        });
+    
+        group.add(arc);
+        group.add(line);
+        group.add(label);
+        group.id('angle');
+    
+        console.log('Angle group:', group);
+    
+        return group;
+    }
 
     function drawDistForce(dist_force){
         var color = 'blue'
@@ -727,7 +773,6 @@ var loadDrawApp = function(container_id, konva_id) {
         group.add(label);
         group.add(label_two);
         group.id = dist_force.id;
-        group.draggable(true);
         return group;
     }
 
@@ -782,7 +827,6 @@ var loadDrawApp = function(container_id, konva_id) {
         group.add(circle);
         group.add(label);
         group.id = momentum.id;
-        group.draggable(true);
         return group;
     };
 
@@ -902,13 +946,12 @@ var loadDrawApp = function(container_id, konva_id) {
             fill: 'white',
             stroke: 'red',
             strokeWidth: 2,
-            draggable: true,
         });
         var label = new Konva.Text({
             text: (node.label),
             fontSize: 20,
             fill: 'red',
-            fonrStyle: 'bold',
+            fontStyle: 'bold',
             x: node.x,
             y: node.y,
             //align: 'center',
@@ -930,7 +973,6 @@ var loadDrawApp = function(container_id, konva_id) {
             fill: 'red',
             stroke: 'blue',
             strokeWidth: 2,
-            draggable: true,
         });
         var label = new Konva.Text({
             text: ("RP"),
@@ -1214,6 +1256,20 @@ var loadDrawApp = function(container_id, konva_id) {
                 drawn_layer.add(konva_node_start);
                 drawn_layer.add(konva_node_end);
                 ID = ID +2;
+            }
+            else if (current_component == 'force'){
+                let snap_bar = snapToBar(mouse_release_position);
+                var component = new componentFactory(snap_bar,snap_bar,ID,current_component)
+                var drawing_now = drawingFactory(component);
+                var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
+                var konva_node_start = drawingFactory(start_node)
+                
+                
+                all_object_components.push(component);
+                drawn_layer.add(drawing_now);
+                all_object_components.push(start_node);
+                drawn_layer.add(konva_node_start);
+                ID += 1;
             }
             else {
                 let snap_bar = snapToBar(mouse_release_position);
