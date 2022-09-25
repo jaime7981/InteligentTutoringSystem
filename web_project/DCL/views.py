@@ -25,23 +25,38 @@ def dcl_app(request):
             else:
                 description = request.POST.get('assignment_description')
             if request.POST.get('assignment_id') == "0":
-                current_teacher = Teacher.objects.get(user = request.user)
-                Assignment.objects.create(name = name,
-                                        description = description,
-                                        level = request.POST.get('assignment_level'),
-                                        teacher = current_teacher,
-                                        dcl_json = request.POST.get('assignment_data'),
-                                        photo = request.FILES.get('assignment_photo', None))
-                messages.success(request, 'Assignment succesfully Created')
+                if request.POST.get('delete_check') == 'false':
+                    current_teacher = Teacher.objects.get(user = request.user)
+                    Assignment.objects.create(name = name,
+                                            description = description,
+                                            level = request.POST.get('assignment_level'),
+                                            teacher = current_teacher,
+                                            dcl_json = request.POST.get('assignment_data'),
+                                            photo = request.FILES.get('assignment_photo', None))
+                    messages.success(request, 'Assignment succesfully Created')
+                else:
+                    messages.error(request, 'Assignment not created because of deletion checkbox')
             else:
                 current_asignment = Assignment.objects.get(pk = request.POST.get('assignment_id'))
-                current_asignment.name = name
-                current_asignment.description = description
-                current_asignment.level = request.POST.get('assignment_level')
-                current_asignment.dcl_json = request.POST.get('assignment_data')
-                current_asignment.photo = request.FILES.get('assignment_photo', None)
-                current_asignment.save()
-                messages.success(request, 'Assignment succesfully Updated')
+                if request.POST.get('delete_check') == 'false':
+                    current_asignment.name = name
+                    current_asignment.description = description
+                    current_asignment.level = request.POST.get('assignment_level')
+                    current_asignment.dcl_json = request.POST.get('assignment_data')
+                    current_asignment.photo = request.FILES.get('assignment_photo', None)
+                    current_asignment.save()
+                    if request.POST.get('duplicate_check') == 'true':
+                        current_teacher = Teacher.objects.get(user = request.user)
+                        Assignment.objects.create(name = name + ' DUPLICATE',
+                                            description = description,
+                                            level = request.POST.get('assignment_level'),
+                                            teacher = current_teacher,
+                                            dcl_json = request.POST.get('assignment_data'),
+                                            photo = request.FILES.get('assignment_photo', None))
+                    messages.success(request, 'Assignment succesfully Updated')
+                else:
+                    current_asignment.delete()
+                    messages.success(request, 'Assignment succesfully Deleted')
         else:
             messages.error(request, 'Superusers cant save assignments, only teachers')
         return redirect('home')

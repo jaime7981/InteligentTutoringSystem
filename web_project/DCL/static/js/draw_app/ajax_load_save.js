@@ -38,7 +38,7 @@ var getAssignmentSteps = function(){
     return [stepOneCheckbox.checked, stepTwoCheckbox.checked, stepThreeCheckbox.checked, stepFourCheckbox.checked];
 }
 
-var ajaxSaveAssignment = function(json_data) {
+var ajaxSaveAssignment = function(json_data, deletion, duplicate) {
     var fd = new FormData();
     fd.append("assignment_data" , json_data);
     fd.append("assignment_id" , assignment_id);
@@ -46,6 +46,8 @@ var ajaxSaveAssignment = function(json_data) {
     fd.append("assignment_description" , assignmentDescription.value);
     fd.append("assignment_level" , 1);
     fd.append("assignment_photo", assignmentPhoto.files[0]);
+    fd.append("delete_check", deletion);
+    fd.append("duplicate_check", duplicate);
     $.ajaxSetup({
         headers: {
             "X-CSRFToken" : getCookie('csrftoken')
@@ -85,5 +87,7 @@ var getCookie = function(name) {
 
 // Event Listeners
 saveAssignmentButton.addEventListener('click', function() {
-    ajaxSaveAssignment(prepareJsonData());
+    var delete_button = document.getElementById("delete-assignment");
+    var dulpicate_button = document.getElementById("duplicate-assignment");
+    ajaxSaveAssignment(prepareJsonData(), delete_button.checked, dulpicate_button.checked);
 }, false);
