@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import render, redirect
 from usercontrol.decorator import allowed_users
 from .models import Assignment
@@ -77,6 +78,15 @@ def studentAssignment(request, teacher_id):
     assignments = Assignment.objects.filter(teacher = Teacher.objects.get(user = User.objects.get(username = teacher_id)))
     context = { "teacher_assignments" : assignments}
     return(render(request, 'student_assignments.html', context=context))
+
+@allowed_users(allowed_roles=['student'])
+def studentSolution(request, assignment_id):
+    if assignment_id == 0:
+        context = { "selected_assignment" : 0}
+    else:
+        assignment = Assignment.objects.get(pk = assignment_id)
+        context = { "selected_assignment" : assignment}
+    return(render(request, 'assignment_solution.html', context=context))
 
 @allowed_users(allowed_roles=['teacher'])
 def teacher(request):
