@@ -47,13 +47,17 @@
     </div>
     <div id='save-assignment-button-container' style="margin: 10px;
                                                       padding: 10px;">
-        <button id="save-assignment-button">Save Assignment</button>
+        <button id="save-assignment-button">Save Assignment</button><br>
+        <input type="checkbox" id="delete-assignment" name="delete-assignment">
+        <label for="delete-assignment">Delete Assignment</label><br>
+        <input type="checkbox" id="duplicate-assignment" name="duplicate-assignment">
+        <label for="duplicate-assignment">Duplicate Assignment</label><br>
     </div>
 </div>
 
 <div id='dcl-app-content' style='
     width: 100%;
-    height: 500px;
+    height: 530px;
     max-width: 1375px;
     display: flex;
     flex-direction: row;
@@ -84,7 +88,10 @@
         <button id="select-support-button">Support</button>
         <button id="select-sliding-horizontal-button">Sliding Support Hor</button>
         <button id="select-sliding-vertical-button">Sliding Support Vert</button>
+        <button id="select-fixed-button">Fixed</button>
+        <button id="select-reference-button">Reference Point</button>
         <button id="select-force-button">Force</button>
+        <button id="select-dist-force-button">Dist. Force</button>
         <button id="select-momentum-button">Momentum</button>
         <button id="select-clear-button">Clear All</button>
     </div>

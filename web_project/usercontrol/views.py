@@ -51,8 +51,16 @@ def registration(request):
 
             if user_form.cleaned_data.get('user_role') == 'student':
                 Student.objects.create(user=user, 
-                               first_name='def_first', 
-                               last_name='def_last')
+                                first_name='def_first', 
+                                last_name='def_last',
+                                bar_progress = 0,
+                                support_progress = 0,
+                                joint_progress = 0,
+                                sliding_progress = 0,
+                                fixed_progress = 0,
+                                force_progress = 0,
+                                momentum_progress = 0, 
+                                dist_force_progress =0)
             else:
                 Teacher.objects.create(user=user, 
                                first_name='def_first', 

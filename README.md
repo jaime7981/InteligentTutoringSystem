@@ -40,13 +40,41 @@
 imagen como parte del enunciado
 - [x] Etapas✅
 - Definir las etapas para la tarea y pedir la información correspondiente.
-- [ ] Generar eq equilibrio❌
+- [x] Generar eq equilibrio✅
 - No se debe pedir las ecuaciones de equilibrio, estas deben ser generadas autom ́aticamente
 por su aplicaci ́on, mostr ́andolas al usuario en todo momento mientras crea la tarea, En este
 sentido, el creador si debe definir en que puntos (nodos) se debe calcular el momento.
-- [ ] Indice dificultado❌
+- [x] Indice dificultado✅
 - Generar y mostrar en todo momento.
 - [x] Guardar y Cargar Modelo de Datos✅
+
+## Entrega 4 (FINAL)
+- [x] funcionalidad de creación de tareas. (0.4)
+- [ ] funcionalidad de visualización de estado de usuarios del ITS. (0.4)
+- Por bajar carga de integrantes entiendo que no se debiese hacer.
+- [ ] funcionalidad del ITS - outer loop. (0.6)
+- En funcion del progreso del estudiante va determinando cual es la siguiente.
+tarea que debe resolver para avanzar en su aprendizaje.
+- [ ] funcionalidad del ITS - inner loop. (1.4)
+- Va apoyando al estudiante en el desarrollo de una tarea, entregandole retroalimentacion 
+sobre su respuesta y hints que le permitan aprender y continuar con la solucion.
+- [ ] calidad de la construcción de los hints. (0.6)
+- Por bajar carga de integrantes entiendo que no se debiese hacer.
+- [ ] usabilidad del diseño de los DCL por parte del estudiante. (0.8)
+- [ ] BONUS: fuerzas distribuidas linealmente. (0.3)
+
+# INFO ITS
+- Modulo de dominio → representa el conocimiento que se quiere ense ̃nar, el dominio del problema.
+Es asi como se incluyen los principales conceptos y sus relaciones. Se debe representar
+en una forma que permita aplicarlo a las tareas que el estudiante debe resolver.
+- Modulo del modelo del estudiante → representa cuanto sabe el estudiante respecto del objetivo de aprendizaje, 
+por ende esta muy vinculado al dominio. Es en funcion del avance del
+estudiante sobre el dominio que se definen las siguientes tareas que debera realizar.
+- Modulo de Tutoria → define tanto el outer loop, como el inner loop. En otras palabras, busca
+definir un algoritmo que permita al estudiante alcanzar el conocimiento total sobre el dominio.
+- Modulo de Interfaz de Usuario → define como interactuara el ITS con el estudiante, traspasando
+la informacion desde y hacia el modelo de tutoria.
+
 
 ## Deployment
 - Launch docker container -> `docker-compose up --build`

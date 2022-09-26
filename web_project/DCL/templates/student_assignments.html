@@ -28,14 +28,10 @@
             </div>
             {% for assignment in teacher_assignments %}
             <div class="row my-2">
-               <a href='teacher/{{ assignment.id }}/'> {{ assignment.name }}</a>
+               <a href="{% url 'student_solution' assignment.id %}"> {{ assignment.name }}</a>
             </div>
             {% endfor %}
         </div>
     </div>
-</div>
-
-<div>
-
 </div>
 {% endblock %}

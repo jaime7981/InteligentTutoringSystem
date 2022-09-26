@@ -1,14 +1,15 @@
+
 //#region INIT
-var eq_x = document.getElementById("eq-x");
-var eq_y = document.getElementById("eq-y");
-var eq_m = document.getElementById("eq-m");
+var input_eq_x = document.getElementById("input-text-eq-x");
+var input_eq_y = document.getElementById("input-text-eq-y");
+var input_eq_m = document.getElementById("input-text-eq-m");
 var dif_level = document.getElementById("input-text-selected-assignment-level");
 
 var app_container = document.getElementById('konva-container');
 var WIDTH = app_container.offsetWidth;
 var HEIGHT = app_container.offsetHeight;
 var STEP = 40;
-var SNAP_WEIGHT = 80;
+var SNAP_WEIGHT = 500;
 var ID = 0;
 
 var isNowDrawing = false;
@@ -209,7 +210,6 @@ function drawingFactory(object){
     }
     else if(object.component_type=='force'){
         drawing = drawForce(object);
-        //drawing = drawAngle(object)
     }
     else if(object.component_type=='dist_force'){
         drawing = drawDistForce(object);
@@ -257,8 +257,8 @@ function drawBar(bar){
     group.add(line);
     var measurement = drawMeasurement(bar);
     group.add(measurement);
-    group.listening(true);
     group.id = bar.id;
+    group.draggable(true);
     return group;
 };
 
@@ -277,6 +277,7 @@ function drawSupport(support){
     var group = new Konva.Group();
     group.add(triangle);
     group.id = support.id;
+    group.draggable(true);
     return group;
 };
 
@@ -308,6 +309,7 @@ function drawSlidingHorizontal(support){
     group.add(triangle);
     group.add(line);
     group.id = support.id;
+    group.draggable(true);
     return group;
 
 };
@@ -342,6 +344,7 @@ function drawSlidingVertical(support){
     group.add(triangle);
     group.add(line);
     group.id = support.id;
+    group.draggable(true);
     return group;
 };
 
@@ -383,6 +386,7 @@ function drawFixed(support){
     group.add(line_1);
     group.add(line_2);
     group.id = support.id;
+    group.draggable(true);
     return group;
 };
 
@@ -390,22 +394,14 @@ function drawForce(force){
     var color = 'purple'
     var X = force.x;
     var Y = force.y;
-    var tailX = 2*STEP*Math.cos(force.angle*Math.PI/180);
-    var tailY = 2*STEP*Math.sin(force.angle*Math.PI/180);
-    var head = new Point(X,Y);
-    var tail = new Point(X+tailX, Y-tailY);
-    var label_middle = getBarMiddle(head, tail);
-
     var line =  new Konva.Line({
-        points: [X, Y, X+tailX, Y-tailY],
+        points: [X, Y, X, Y-80],
         stroke: color,
         strokeWidth: 10,
         opacity: 1,
     });
     var arrow = new Konva.Line({
-        points:    [X+20*Math.cos((force.angle+45)*Math.PI/180),Y-20*Math.sin((force.angle+45)*Math.PI/180),
-                    X, Y,
-                    X+20*Math.cos((force.angle-45)*Math.PI/180),Y-20*Math.sin((force.angle-45)*Math.PI/180)],
+        points: [X-20,Y-20,X, Y, X+20, Y-20],
         stroke: color,
         strokeWidth: 10,
         opacity: 1,
@@ -414,19 +410,18 @@ function drawForce(force){
     var label = new Konva.Text({
         text: (force.magnitud + " N"),
         fontSize: 20,
-        fontStyle: 'Bold',
-        x: label_middle.x+20,
-        y: label_middle.y,
+        x: X,
+        y: Y,
+        offsetX: -20,
+        offsetY: 40,
     });
-
-    var angle = drawAngle(force);
 
     var group = new Konva.Group();
     group.add(line);
     group.add(arrow);
     group.add(label);
-    group.add(angle);
     group.id = force.id;
+    group.draggable(true);
     return group;
 };
 
@@ -495,6 +490,7 @@ function drawDistForce(dist_force){
     group.add(label);
     group.add(label_two);
     group.id = dist_force.id;
+    group.draggable(true);
     return group;
 }
 
@@ -549,6 +545,7 @@ function drawMomentum(momentum){
     group.add(circle);
     group.add(label);
     group.id = momentum.id;
+    group.draggable(true);
     return group;
 };
 
@@ -660,49 +657,6 @@ function drawMeasurement(bar){
     group.id = 'measurement';
     return group;
 };
-
-
-function drawAngle(force){
-
-    var group = new Konva.Group();
-
-    var arc = new Konva.Arc({
-        x: force.x,
-        y: force.y,
-        innerRadius: 30,
-        outerRadius: 33,
-        angle: force.angle,
-        rotation: 360-force.angle,
-        //fill: 'blue',
-        stroke: 'black',
-        opacity: 1,
-        strokeWidth: 2,
-    });
-    
-    var line = new Konva.Line({
-        points: [force.x, force.y, force.x-30, force.y],
-        strokeWidth: 5,
-        opacity: 1,
-    });
-
-    var label = new Konva.Text({
-        text: (force.angle + "º"),
-        fontSize: 20,
-        fontStyle: 'Bold',
-        x: force.x,
-        y: force.y,
-        offsetX: -30,
-    });
-
-    group.add(arc);
-    group.add(line);
-    group.add(label);
-    group.id('angle');
-
-    console.log('Angle group:', group);
-
-    return group;
-}
 function drawNode(node){
     var circle = new Konva.Circle({
         x: node.x,
@@ -711,12 +665,13 @@ function drawNode(node){
         fill: 'white',
         stroke: 'red',
         strokeWidth: 2,
+        draggable: true,
     });
     var label = new Konva.Text({
         text: (node.label),
         fontSize: 20,
         fill: 'red',
-        fontStyle: 'bold',
+        fonrStyle: 'bold',
         x: node.x,
         y: node.y,
         //align: 'center',
@@ -738,6 +693,7 @@ function drawReferencePoint(reference_point){
         fill: 'red',
         stroke: 'blue',
         strokeWidth: 2,
+        draggable: true,
     });
     var label = new Konva.Text({
         text: ("RP"),
@@ -775,7 +731,6 @@ var loadAssigmentData = function() {
             }
             else if (parsedJson['assignment_data'][object]['assignment_steps'] != null) {
                 assignment_steps = parsedJson['assignment_data'][object]['assignment_steps'];
-                checkStepCheckboxes();
             }
         }
     }
@@ -788,14 +743,6 @@ var drawLoadedData = function() {
     }
 }
 
-var checkStepCheckboxes = function() {
-    if (assignment_steps.length > 0) {
-        stepOneCheckbox.checked = assignment_steps[0];
-        stepTwoCheckbox.checked = assignment_steps[1];
-        stepThreeCheckbox.checked = assignment_steps[2];
-        stepFourCheckbox.checked = assignment_steps[3];
-    }
-}
 //#endregion
 
 //#region eq X,Y and M
@@ -853,7 +800,6 @@ var calculateTorqueFromReference = function(ref_point, force_object, magnitude) 
 }
 
 var loadXeq = function() {
-    eq_x.innerHTML = 'No data for loading eq X'
     let RP = selectReferencePoint();
     // Fuerzas
     let force_sum_x = 0;
@@ -923,29 +869,30 @@ var loadXeq = function() {
     }
 
     // Show x
-    eq_x.innerHTML = '';
+    eq_x = '';
     for (x_elem in reaction_x) {
-        eq_x.innerHTML += reaction_x[x_elem] + ' + ';
+        eq_x += reaction_x[x_elem] + ' + ';
     }
-    eq_x.innerHTML += force_sum_x + 'N';
-    eq_x.innerHTML += ' = 0';
+    eq_x += force_sum_x + 'N';
+    eq_x += ' = 0';
 
     // Show y
-    eq_y.innerHTML = '';
+    eq_y = '';
     for (y_elem in reaction_y) {
-        eq_y.innerHTML += reaction_y[y_elem] + ' + ';
+        eq_y += reaction_y[y_elem] + ' + ';
     }
-    eq_y.innerHTML += force_sum_y + 'N';
-    eq_y.innerHTML += ' = 0';
+    eq_y += force_sum_y + 'N';
+    eq_y += ' = 0';
 
     // Show m
-    eq_m.innerHTML = '';
+    eq_m = '';
     for (m_elem in momentum_list) {
-        eq_m.innerHTML += momentum_list[m_elem] + ' + ';
+        eq_m += momentum_list[m_elem] + ' + ';
     }
-    eq_m.innerHTML += "M" + momentum_sum + 'Nm';
-    eq_m.innerHTML += ' = 0';
+    eq_m += "M" + momentum_sum + 'Nm';
+    eq_m += ' = 0';
 
+    return [eq_y, eq_y, eq_m];
 }
 
 var getDificultad = function() {
@@ -974,6 +921,8 @@ stage.add(drawn_layer);
 stage.add(drawing_layer);
 drawGrid(stage);
 loadAssigmentData();
+console.log(assignment_steps);
+loadAssignmentSteps(assignment_steps);
 drawLoadedData();
 loadXeq();
 getDificultad();
@@ -1031,20 +980,6 @@ stage.on('mouseup', function(){
             drawn_layer.add(konva_node_end);
             ID = ID +2;
         }
-        else if (current_component == 'force'){
-            let snap_bar = snapToBar(mouse_release_position);
-            var component = new componentFactory(snap_bar,snap_bar,ID,current_component)
-            var drawing_now = drawingFactory(component);
-            var start_node = componentFactory(mouse_hold_position,mouse_release_position,ID+1,'node');
-            var konva_node_start = drawingFactory(start_node)
-            
-            
-            all_object_components.push(component);
-            drawn_layer.add(drawing_now);
-            all_object_components.push(start_node);
-            drawn_layer.add(konva_node_start);
-            ID += 1;
-        }
         else {
             let snap_bar = snapToBar(mouse_release_position);
             var component = new componentFactory(snap_bar,snap_bar,ID,current_component)
@@ -1057,26 +992,4 @@ stage.on('mouseup', function(){
         getDificultad();
     }
 });
-//#endregion
-
-//#region Debug
-var debugButton = document.getElementById('load-debug');
-var debugContainer = document.getElementById('debug-container');
-
-var functionMesasge = function(message) {
-    if (message != null) {
-        console.log(message);
-        let div = document.createElement("div");
-        div.innerHTML = "<p>" + message +"</p><br>";
-        debugContainer.appendChild(div);
-    }
-};
-
-debugButton.addEventListener('click', function() {
-    debugContainer.innerHTML = "";
-    //functionMesasge('debug button presed');
-    loadXeq();
-    getDificultad();
-
-}, false);
 //#endregion

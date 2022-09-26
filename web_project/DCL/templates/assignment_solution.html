@@ -2,40 +2,211 @@
 {% load static %}
 {% block content %}
 
-<h1>Assignment Info</h1>
-
-<div id="teacher-assignments">
-    <p>DCL Data: {{ selected_assignment }} </p>
-    {% if selected_assignment.photo %}
-        <div id="upload-picture-content" >
+<div id='assignmen-info' style="margin: 10px;
+                                border: 5px;
+                                border-style: outset;
+                                padding: 10px;">
+    <div id='assignment-text' style="margin: 10px;
+                                     padding: 10px;">
+        <h2>Assignment Name: {{ selected_assignment.name }}</h2>
+        <h2 id="input-text-selected-assignment-level">Assignment Dificulty: null</h2>
+        <h2>Assignment Description:</h2>
+        {{ selected_assignment.description }}
+    </div>
+    <div id="upload-picture-content" style="margin: 10px;
+                                            padding: 10px;">
+        {% if selected_assignment.photo %}
             <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
+        {% else %}
+            No Picture
+        {% endif %}
+    </div>
+</div>
+
+<div id='show-next-step-container' style="margin: 10px;
+                            padding: 10px;
+                            border: 5px;
+                            border-style: outset;
+                            padding: 10px;">
+    <button id="show-next-step-button">Next Step</button>
+    <button id="save-assignment-button">Send Solution</button>
+</div>
+</div>
+
+<div id="step-one-content" style="margin: 10px;
+                            padding: 10px;
+                            border: 5px;
+                            border-style: outset;
+                            padding: 10px;
+                            visibility: hidden;">
+    <h2>Step One</h2>
+    <p>Dibujar el cuerpo rigido como representacion de barras, vinculos externos e internos y con lasfuerzas y momentos de carga.</p>
+    <div id='dcl-app-one-content' style='
+        width: 100%;
+        height: 530px;
+        max-width: 1375px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        margin: 10px;
+        border: 5px;
+        border-style: outset;
+        padding: 10px;'>
+        <div id='dcl-app-action-buttons' style='
+            width: 10%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-content: center;
+            justify-content: flex-start;
+            align-items: stretch;
+            margin: 5px;
+            border: 5px;
+            border-style: solid;
+            padding: 5px;'>
+            <button id="dcl-app-one-contentselect-bar-button">Select Bar</button>
+            <button id="dcl-app-one-contentselect-support-button">Support</button>
+            <button id="dcl-app-one-contentselect-sliding-horizontal-button">Sliding Support Hor</button>
+            <button id="dcl-app-one-contentselect-sliding-vertical-button">Sliding Support Vert</button>
+            <button id="dcl-app-one-contentselect-fixed-button">Fixed</button>
+            <button id="dcl-app-one-contentselect-reference-button">Reference Point</button>
+            <button id="dcl-app-one-contentselect-force-button">Force</button>
+            <button id="dcl-app-one-contentselect-dist-force-button">Dist. Force</button>
+            <button id="dcl-app-one-contentselect-momentum-button">Momentum</button>
+            <button id="dcl-app-one-contentselect-clear-button">Clear All</button>
         </div>
-    {% endif %}
+        <div id='dcl-app-one-contentdcl-app-side-bar-canvas' style='
+            width: 10%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-content: center;
+            justify-content: flex-start;
+            align-items: stretch;
+            margin: 5px;
+            border: 5px;
+            border-style: solid;
+            padding: 5px;'>
+            <h3 id='info-label'>Data</h3>
+        </div>
+        <div id="part-one-konva-container" class="container m-2" style='
+            width:80%; 
+            height:100%;'>
+        </div>
+    </div>
 </div>
 
-<div id='dcl-app-content'>
-    <div>
-        <button id="select-bar-button">Select Bar</button>
-        <button id="select-circle-button">Select Circle</button>
-        <button id="select-support-button">Support</button>
-        <button id="select-sliding-support-button">Sliding Support</button>
-        <button id="select-force-button">Force</button>
-        <button id="save-assignment-button">Save Assignment</button>
-    </div>
-    <div id='dcl-app'>
-        <canvas id="canvas"></canvas>
+<div id="step-two-content" style="margin: 10px;
+                            padding: 10px;
+                            border: 5px;
+                            border-style: outset;
+                            padding: 10px;
+                            visibility: hidden;">
+    <h2>Step Two</h2>
+    <p>Determinar los cuerpos sobre los que se haran los DCL segun los vinculos internos.</p>
+    <p>No implementado por baja carga (grupo 6).</p>
+</div>
+
+<div id="step-three-content" style="margin: 10px;
+                            padding: 10px;
+                            border: 5px;
+                            border-style: outset;
+                            padding: 10px;
+                            visibility: hidden;">
+    <h2>Step Three</h2>
+    <p>Diagramar cada DCL reemplazando los vinculos externos por la fuerzas y momentos de reaccion correspondientes (dando nombre a cada una de ellas), e incorporando las fuerzas producto de los vinculos internos usados para la division. Ademas, dividir las fuerzas de carga segun los ejes.</p>
+    <div id='dcl-app-three-content' style='
+        width: 100%;
+        height: 530px;
+        max-width: 1375px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-content: center;
+        justify-content: center;
+        align-items: center;
+        margin: 10px;
+        border: 5px;
+        border-style: outset;
+        padding: 10px;'>
+        <div id='dcl-app-action-buttons' style='
+            width: 10%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-content: center;
+            justify-content: flex-start;
+            align-items: stretch;
+            margin: 5px;
+            border: 5px;
+            border-style: solid;
+            padding: 5px;'>
+            <button id="dcl-app-three-contentselect-reference-button">Reference Point</button>
+            <button id="dcl-app-three-contentselect-force-button">Force</button>
+            <button id="dcl-app-three-contentselect-dist-force-button">Dist. Force</button>
+            <button id="dcl-app-three-contentselect-momentum-button">Momentum</button>
+            <button id="dcl-app-three-contentselect-clear-button">Clear All</button>
+        </div>
+        <div id='dcl-app-three-contentdcl-app-side-bar-canvas' style='
+            width: 10%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-content: center;
+            justify-content: flex-start;
+            align-items: stretch;
+            margin: 5px;
+            border: 5px;
+            border-style: solid;
+            padding: 5px;'>
+            <h3 id='info-label'>Data</h3>
+        </div>
+        <div id="part-three-konva-container" class="container m-2" style='
+            width:80%; 
+            height:100%;'>
+        </div>
     </div>
 </div>
 
-<h1>Student DCL</h1>
-
-<iframe id="encoder_iframe" height=75% width="50%" src="{% url 'app' %}"></iframe>
+<div id="step-four-content" style="margin: 10px;
+                            padding: 10px;
+                            border: 5px;
+                            border-style: outset;
+                            padding: 10px;
+                            visibility: hidden;">
+    <h2>Step Four</h2>
+    <p>Plantear las ecuaciones de equilibrio de fuerza por cada eje y de momento en base a el o los puntos que se defina.</p>
+    <div id="eq-dcl" style="margin: 10px;
+                                padding: 10px;
+                                border: 5px;
+                                border-style: outset;
+                                padding: 10px;">
+        <h2>Eq X: <input type='text' id='input-text-eq-x'> = 0</h2><br>
+        <h2>Eq Y: <input type='text' id='input-text-eq-y'> = 0</h2><br>
+        <h2>Eq M: <input type='text' id='input-text-eq-m'> = 0</h2><br>
+    </div>
+</div>
 
 <script type="text/javascript">
-    var assignment_js = "{{selected_assignment}}";
+    var assignment_js = "{{selected_assignment.dcl_json}}";
+    var assignment_id = "{{selected_assignment.id}}";
+    if (assignment_id == "") {
+        assignment_id = 0;
+    }
     var teacher_redirect = "{% url 'teacher' %}";
 </script>
-<script src="{% static 'js/drag_mouse.js' %}"></script>
+
+<script src="https://unpkg.com/konva@8/konva.min.js"></script>
+<script src="{% static 'js/student_draw/draw_classes.js' %}"></script>
+<script src="{% static 'js/student_draw/ajax_load_save.js' %}"></script>
+<script src="{% static 'js/student_draw/draw_func.js' %}"></script>
 
 
 {% endblock %}
