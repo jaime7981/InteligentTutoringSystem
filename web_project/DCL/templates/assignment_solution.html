@@ -21,18 +21,24 @@
             No Picture
         {% endif %}
     </div>
-    <div id='assignment-steps' style="margin: 10px;
-                                      padding: 10px;">
-        <h2>Select User Assignments Steps:</h2>
-        Load Steps To Do
-    </div>
+</div>
+
+<div id='show-next-step-container' style="margin: 10px;
+                            padding: 10px;
+                            border: 5px;
+                            border-style: outset;
+                            padding: 10px;">
+    <button id="show-next-step-button">Next Step</button>
+    <button id="save-assignment-button">Send Solution</button>
+</div>
 </div>
 
 <div id="step-one-content" style="margin: 10px;
                             padding: 10px;
                             border: 5px;
                             border-style: outset;
-                            padding: 10px;">
+                            padding: 10px;
+                            visibility: hidden;">
     <h2>Step One</h2>
     <p>Dibujar el cuerpo rigido como representacion de barras, vinculos externos e internos y con lasfuerzas y momentos de carga.</p>
     <div id='dcl-app-one-content' style='
@@ -99,16 +105,19 @@
                             padding: 10px;
                             border: 5px;
                             border-style: outset;
-                            padding: 10px;">
+                            padding: 10px;
+                            visibility: hidden;">
     <h2>Step Two</h2>
     <p>Determinar los cuerpos sobre los que se haran los DCL segun los vinculos internos.</p>
+    <p>No implementado por baja carga (grupo 6).</p>
 </div>
 
 <div id="step-three-content" style="margin: 10px;
                             padding: 10px;
                             border: 5px;
                             border-style: outset;
-                            padding: 10px;">
+                            padding: 10px;
+                            visibility: hidden;">
     <h2>Step Three</h2>
     <p>Diagramar cada DCL reemplazando los vinculos externos por la fuerzas y momentos de reaccion correspondientes (dando nombre a cada una de ellas), e incorporando las fuerzas producto de los vinculos internos usados para la division. Ademas, dividir las fuerzas de carga segun los ejes.</p>
     <div id='dcl-app-three-content' style='
@@ -170,23 +179,19 @@
                             padding: 10px;
                             border: 5px;
                             border-style: outset;
-                            padding: 10px;">
+                            padding: 10px;
+                            visibility: hidden;">
     <h2>Step Four</h2>
     <p>Plantear las ecuaciones de equilibrio de fuerza por cada eje y de momento en base a el o los puntos que se defina.</p>
     <div id="eq-dcl" style="margin: 10px;
-                            padding: 10px;
-                            border: 5px;
-                            border-style: outset;
-                            padding: 10px;">
-    <h2>Eq X: <input type='text' id='input-text-eq-x'> = 0</h2><br>
-    <h2>Eq Y: <input type='text' id='input-text-eq-y'> = 0</h2><br>
-    <h2>Eq M: <input type='text' id='input-text-eq-m'> = 0</h2><br>
-</div>
-</div>
-
-<div id='save-assignment-button-container' style="margin: 10px;
-                                                  padding: 10px;">
-    <button id="save-assignment-button">Send Solution</button>
+                                padding: 10px;
+                                border: 5px;
+                                border-style: outset;
+                                padding: 10px;">
+        <h2>Eq X: <input type='text' id='input-text-eq-x'> = 0</h2><br>
+        <h2>Eq Y: <input type='text' id='input-text-eq-y'> = 0</h2><br>
+        <h2>Eq M: <input type='text' id='input-text-eq-m'> = 0</h2><br>
+    </div>
 </div>
 
 <script type="text/javascript">

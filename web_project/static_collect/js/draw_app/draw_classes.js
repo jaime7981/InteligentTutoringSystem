@@ -6,26 +6,6 @@ class Point{
     };
 };
 
-function getBarSlope(init_coordinates, end_coordinates){
-    var x_init = init_coordinates.x;
-    var y_init = init_coordinates.y;
-    var x_end = end_coordinates.x;
-    var y_end = end_coordinates.y;
-    if( x_init != x_end){
-        var slope = (y_end-y_init)/(x_end-x_init);
-        return slope;
-    }
-    else{
-        return 'vertical';
-    }
-}
-
-function getBarYCut(init_coordinates, slope){
-    var x_init = init_coordinates.x;
-    var y_init = init_coordinates.y;
-    return y_init - slope*x_init;
-};
-
 class Line{
     constructor(init_coordinates, end_coordinates){
         this.slope = getBarSlope(init_coordinates,end_coordinates);
@@ -34,17 +14,6 @@ class Line{
 };
 
 //#endregion
-var STEP = 40;
-function getBarMiddle(init_coordinates, end_coordinates){
-    var x_init = init_coordinates.x;
-    var y_init = init_coordinates.y;
-    var x_end = end_coordinates.x;
-    var y_end = end_coordinates.y;
-    
-    var middle_x = (x_end+x_init)/2;
-    var middle_y = (y_end+y_init)/2;
-    return new Point(middle_x,middle_y);
-};
 
 //#region Draw Components
 class Bar{
@@ -72,26 +41,6 @@ class Bar{
         console.log("Middle: ",this.middle);
         console.log("Slope: ",this.line.slope);
         console.log("Y Cut: ",this.line.b);
-    };
-    getBarSize(init_coordinates, end_coordinates){
-        var x_init = init_coordinates.x;
-        var y_init = init_coordinates.y;
-        var x_end = end_coordinates.x;
-        var y_end = end_coordinates.y;
-        var size_x = Math.abs(x_init-x_end);
-        var size_y = Math.abs(y_init-y_end);
-        var pyth = (Math.sqrt(Math.pow(size_x,2)+Math.pow(size_y,2)));
-        return (pyth).toFixed(2);
-    };
-    getBarMiddle(init_coordinates, end_coordinates){
-        var x_init = init_coordinates.x;
-        var y_init = init_coordinates.y;
-        var x_end = end_coordinates.x;
-        var y_end = end_coordinates.y;
-        
-        var middle_x = (x_end+x_init)/2;
-        var middle_y = (y_end+y_init)/2;
-        return new Point(middle_x,middle_y);
     };
 };
 
