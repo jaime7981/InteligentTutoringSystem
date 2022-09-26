@@ -243,7 +243,7 @@ var loadDrawApp = function(container_id, konva_id) {
             var reference_y = null;
         }
         
-        json_output_list.push('{"reference_point" : {"x":' + reference_x + ',"y":' + reference_y + '}}]}')
+        json_output_list.push('{"reference_point" : {"x":' + reference_x + ',"y":' + reference_y + '}},{"assignment_steps" : ' + JSON.stringify(getAssignmentSteps()) + '}]}')
         json_parsed_object = json_output_list.join('');
         return json_parsed_object;
     }

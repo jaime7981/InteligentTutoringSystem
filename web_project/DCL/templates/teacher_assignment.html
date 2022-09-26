@@ -25,6 +25,7 @@
         <h2>Upload Image File (optional):</h2>
         {% if selected_assignment.photo %}
             <img src="{{ selected_assignment.photo.url }}" alt="Assignment Picture" style="width: 400px; height: 400px;">
+            <input type="file" name="photo" accept="image/*" id="input-file-selected-assignment-photo">
         {% else %}
             <input type="file" name="photo" accept="image/*" id="input-file-selected-assignment-photo">
         {% endif %}
