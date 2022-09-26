@@ -37,7 +37,50 @@
     </div>
 </div>
 
-<div>
 
+<div class="container d-flex justify-content-center my-3">
+    <div class="row border border-danger rounded p-2" id="assignment-container">
+        <div class="d-flex justify-content-between">
+            <div class="col">
+                <h2>Students</h2>
+            </div>
+            <div class="col">
+                
+            </div>
+        </div>
+        <div id="teacher-assignments" class="row">
+            <div class="row d-flex justify-content-between">
+                <div class="col">
+                   <p class="font-weight-bold">Student ID</p>
+                </div>
+                <div class="col font-weight-bold">
+                    Student Level
+                </div>
+                <div class="col font-weight-bold">
+                    Student Page Link
+                </div>
+            </div>
+            {% for classroom in teacher_classroom %}
+                <div class="row my-3">
+                    <div class="col">
+                        {{ classroom.student }}
+                    </div>
+                    <div class="col">
+                        Progres Here
+                    </div>
+                    <div class="col">
+                        <a href='student/profile/{{ classroom.student }}/'> Student Page</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id='teacher-students'>
+    <h2>Students</h2>
+    {% for classroom in teacher_classroom %}
+        {{ classroom.student }}
+    {% endfor %}    
 </div>
 {% endblock %}

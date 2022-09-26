@@ -88,6 +88,31 @@ def student(request):
                 "all_teachers" : all_teachers }
     return(render(request, 'student.html', context=context))
 
+@allowed_users(allowed_roles=['student', 'teacher'])
+def studentPage(request, student_username):
+    student_user = User.objects.get(username = student_username)
+    current_student = Student.objects.get(user = student_user)
+    all_teachers = Teacher.objects.all()
+    if request.method == "POST" and is_ajax(request):
+        if not request.user.is_superuser:
+            selected_teacher = request.POST.get('selected_teacher')
+            current_teacher = Teacher.objects.get(user = User.objects.get(username = selected_teacher))
+
+            if not Classroom.objects.filter(student = current_student).filter(teacher = current_teacher).exists():
+                Classroom.objects.create(name = current_teacher.user.username + '_classroom',
+                                        student = current_student,
+                                        teacher = current_teacher,
+                                        date_joined = date.today())
+                messages.success(request, 'Joined to teacher classroom')
+            else:
+                messages.error(request, 'Already in this classroom')
+            return(render(request, 'student.html', context={}))
+
+    student_classroom = Classroom.objects.filter(student = current_student)
+    context = { "clasrooms" : student_classroom,
+                "all_teachers" : all_teachers }
+    return(render(request, 'student.html', context=context))
+
 @allowed_users(allowed_roles=['student'])
 def studentAssignment(request, teacher_id):
     assignments = Assignment.objects.filter(teacher = Teacher.objects.get(user = User.objects.get(username = teacher_id)))
@@ -123,7 +148,10 @@ def teacher(request):
         messages.error(request, 'Superusers cant save assignments, only teachers')
         return (redirect('home'))
 
-    context = { "teacher_assignments" : assignments}
+    teacher_classroom = Classroom.objects.filter(teacher = current_teacher)
+    
+    context = { "teacher_assignments" : assignments,
+                "teacher_classroom" : teacher_classroom}
     return(render(request, 'teacher.html', context=context))
 
 @allowed_users(allowed_roles=['teacher'])
