@@ -32,6 +32,10 @@ var component_base_value = {
     "sliding_vertical" : 4,
     "fixed" : 2,
     "force" : 3,
+    "dist_force" : 8,
+    "node" : 1,
+    "reference_point" : 1,
+    "circle" : 1,
     "momentum" : 5,
 };
 //#endregion
