@@ -83,10 +83,27 @@ def student(request):
                 messages.error(request, 'Already in this classroom')
             return(render(request, 'student.html', context={}))
 
+    teacher_next_assignment = []
     student_classroom = Classroom.objects.filter(student = current_student)
+
+    for classroom in student_classroom:
+        teacher = classroom.teacher
+        teacher_assignments = Assignment.objects.filter(teacher = teacher)
+
+        lowest_level = 100000
+        lowest_assignment = None
+        for assignment in teacher_assignments:
+            level = assignment.level
+            if level < lowest_level:
+                lowest_level = level
+                lowest_assignment = assignment
+        teacher_next_assignment.append([classroom, teacher, lowest_assignment])
+
+
     context = { "clasrooms" : student_classroom,
                 "all_teachers" : all_teachers,
-                "student" :  current_student}
+                "student" :  current_student,
+                "teacher_next_assignment" : teacher_next_assignment}
     return(render(request, 'student.html', context=context))
 
 @allowed_users(allowed_roles=['student', 'teacher'])

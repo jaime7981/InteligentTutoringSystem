@@ -54,6 +54,19 @@ var getForceAngleValues = function() {
     return([force_value, angle_value, torque_value, length_value]);
 }
 
+function getBarSize(init_coordinates, end_coordinates){
+    var x_init = init_coordinates.x;
+    var y_init = init_coordinates.y;
+    var x_end = end_coordinates.x;
+    var y_end = end_coordinates.y;
+    var size_x = Math.abs(x_init-x_end);
+    var size_y = Math.abs(y_init-y_end);
+    var pyth = (Math.sqrt(Math.pow(size_x,2)+Math.pow(size_y,2)));
+    return (pyth).toFixed(2);
+}
+
+
+
 var loadDrawApp = function(container_id, konva_id) {
     // BUTTONS AND EVENTS
     //#region Buttons
@@ -140,6 +153,7 @@ var loadDrawApp = function(container_id, konva_id) {
     //#region Buttons Event Handlers
     clearButton.addEventListener('click', function(){
         drawn_layer.destroyChildren();
+        all_object_components = [];
     }, false);
 
     if (barButton != null){
@@ -314,17 +328,6 @@ var loadDrawApp = function(container_id, konva_id) {
 
     //#region spatial
     //Spacial Equations
-    function getBarSize(init_coordinates, end_coordinates){
-        var x_init = init_coordinates.x;
-        var y_init = init_coordinates.y;
-        var x_end = end_coordinates.x;
-        var y_end = end_coordinates.y;
-        var size_x = Math.abs(x_init-x_end);
-        var size_y = Math.abs(y_init-y_end);
-        var pyth = (Math.sqrt(Math.pow(size_x,2)+Math.pow(size_y,2)));
-        return (pyth).toFixed(2);
-    }
-
     function getProjectedIntersection(bar,point){
         var projected_slope = null;
         if(bar.line.slope == 'vertical'){
@@ -526,8 +529,9 @@ var loadDrawApp = function(container_id, konva_id) {
         group.add(line);
         var measurement = drawMeasurement(bar);
         group.add(measurement);
-        group.listening(true);
+        //group.listening(true);
         group.id = bar.id;
+        group.draggable(true);
         return group;
     };
 

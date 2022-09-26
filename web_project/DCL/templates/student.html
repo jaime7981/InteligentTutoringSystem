@@ -175,16 +175,16 @@
                     </div>
                 </div>
                 
-                {% for clasroom in clasrooms %}
+                {% for selected_assignment in teacher_next_assignment %}
                     <div class="row my-2">
                         <div class="col">
-                            {{ clasroom }}
+                            {{selected_assignment.0}}
                         </div>
                         <div class="col">
-                            {{ clasroom.teacher }}
+                            {{selected_assignment.1}}
                         </div>
                         <div class="col">
-                            <a href="{% url 'student_assignment' clasroom.teacher %}">Teacher Classroom</a>
+                            <a href="{% url 'student_solution' selected_assignment.2.id %}">Your Next Assignmnet</a>
                         </div>
                     </div>
                 {% endfor %}
