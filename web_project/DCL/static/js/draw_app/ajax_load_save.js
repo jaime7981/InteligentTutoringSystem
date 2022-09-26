@@ -45,7 +45,7 @@ var ajaxSaveAssignment = function(json_data, deletion, duplicate) {
     fd.append("assignment_name" , assignmentName.value.toUpperCase());
     fd.append("assignment_description" , assignmentDescription.value);
     fd.append("assignment_level" , 1);
-    if (assignmentPhoto.files[0] != null) {
+    if (assignmentPhoto != null) {
         fd.append("assignment_photo", assignmentPhoto.files[0]);
     }
     else {
