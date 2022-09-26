@@ -85,7 +85,8 @@ def student(request):
 
     student_classroom = Classroom.objects.filter(student = current_student)
     context = { "clasrooms" : student_classroom,
-                "all_teachers" : all_teachers }
+                "all_teachers" : all_teachers,
+                "student" :  current_student}
     return(render(request, 'student.html', context=context))
 
 @allowed_users(allowed_roles=['student', 'teacher'])
@@ -110,7 +111,8 @@ def studentPage(request, student_username):
 
     student_classroom = Classroom.objects.filter(student = current_student)
     context = { "clasrooms" : student_classroom,
-                "all_teachers" : all_teachers }
+                "all_teachers" : all_teachers,
+                "student" :  current_student}
     return(render(request, 'student.html', context=context))
 
 @allowed_users(allowed_roles=['student'])

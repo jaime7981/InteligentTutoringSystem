@@ -9,11 +9,11 @@ class Student(models.Model):
     last_name = models.CharField(max_length=200, null=True, blank=True)
     bar_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(20)], null=True)
     support_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(30)], null=True)
-    joint_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(50)], null=True)
+    force_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(40)], null=True)
     sliding_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(30)], null=True)
     fixed_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(30)], null=True)
-    force_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(40)], null=True)
     momentum_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(40)], null=True)
+    joint_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(50)], null=True)
     dist_force_progress = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(50)], null=True)
 
 
