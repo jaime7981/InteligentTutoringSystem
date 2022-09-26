@@ -286,8 +286,8 @@ var loadDrawApp = function(container_id, konva_id) {
     var app_container = document.getElementById(container_id);
     var WIDTH = app_container.offsetWidth;
     var HEIGHT = app_container.offsetHeight;
-    var STEP = 80;
-    var SNAP_WEIGHT = 500;
+    var STEP = 40;
+    var SNAP_WEIGHT = 80;
     var ID = 0;
 
     var isNowDrawing = false;
@@ -339,6 +339,38 @@ var loadDrawApp = function(container_id, konva_id) {
         var y_point = bar.line.slope*x_point + bar.line.b;
         return new Point(x_point,y_point);
     }
+
+    function getBarMiddle(init_coordinates, end_coordinates){
+        var x_init = init_coordinates.x;
+        var y_init = init_coordinates.y;
+        var x_end = end_coordinates.x;
+        var y_end = end_coordinates.y;
+        
+        var middle_x = (x_end+x_init)/2;
+        var middle_y = (y_end+y_init)/2;
+        return new Point(middle_x,middle_y);
+    };
+
+    function getBarSlope(init_coordinates, end_coordinates){
+        var x_init = init_coordinates.x;
+        var y_init = init_coordinates.y;
+        var x_end = end_coordinates.x;
+        var y_end = end_coordinates.y;
+        if( x_init != x_end){
+            var slope = (y_end-y_init)/(x_end-x_init);
+            return slope;
+        }
+        else{
+            return 'vertical';
+        }
+    }
+
+    function getBarYCut(init_coordinates, slope){
+        var x_init = init_coordinates.x;
+        var y_init = init_coordinates.y;
+        return y_init - slope*x_init;
+    };
+
     //#endregion
 
     //#region grid and snap
@@ -667,9 +699,7 @@ var loadDrawApp = function(container_id, konva_id) {
     };
 
     function drawAngle(force){
-
         var group = new Konva.Group();
-    
         var arc = new Konva.Arc({
             x: force.x,
             y: force.y,
@@ -702,9 +732,6 @@ var loadDrawApp = function(container_id, konva_id) {
         group.add(line);
         group.add(label);
         group.id('angle');
-    
-        console.log('Angle group:', group);
-    
         return group;
     }
 
@@ -1288,3 +1315,8 @@ var loadDrawApp = function(container_id, konva_id) {
 loadDrawApp('dcl-app-one-content', 'part-one-konva-container');
 loadDrawApp('dcl-app-three-content', 'part-three-konva-container');
 loadAssignmentSteps(assignment_steps);
+loadNextStep(assignment_steps);
+var nextStepButton = document.getElementById("show-next-step-button");
+nextStepButton.addEventListener('click', function() {
+    loadNextStep(assignment_steps);
+}, false);

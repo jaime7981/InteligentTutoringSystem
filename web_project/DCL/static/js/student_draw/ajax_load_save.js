@@ -53,6 +53,24 @@ var loadAssignmentSteps = function(steps_list){
     }
 }
 
+var steps_done = [false, false, false, false];
+var steps_dom = [document.getElementById("step-one-content"), 
+                 document.getElementById("step-two-content"), 
+                 document.getElementById("step-three-content"), 
+                 document.getElementById("step-four-content")];
+var loadNextStep = function(steps_list) {
+    for (step in steps_done){
+        step_value = steps_done[step];
+        if (steps_list[step] == true) {
+            if (step_value == false) {
+                steps_done[step] = true;
+                steps_dom[step].style.visibility = "visible";
+                break;
+            }
+        }
+    }
+}
+
 var ajaxSaveAssignment = function(json_data) {
     var fd = new FormData();
     fd.append("assignment_data" , json_data);
