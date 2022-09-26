@@ -32,12 +32,10 @@
                 </div>
                 <div class="row my-2">
                     <div class="col">
-                        {{user.first_name}}
-                        John
+                        {{student.first_name}}
                     </div>
                     <div class="col">
-                        {{user.last_name}}
-                        Doe
+                        {{student.last_name}}
                     </div>
                     <div class="col p-2">
                         <div class="progress">
@@ -63,13 +61,98 @@
                         Progress
                     </div>
                 </div>
-                <div class="row">
+                <div class="row my-2">
                     <div class="col">
                         Bar
                     </div>
                     <div class="col">
                         <div class="progress">
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                            <div id="bar_progress" class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                    {{student.bar_progress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row my-2">
+                    <div class="col">
+                        Support
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div id="support_progress" class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        Force
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div id="force_progress" class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        Sliding Support
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div id="sliding_progress" class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        Fixed Support
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div id="fixed_progress" class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        Momentum
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div id="momentum_progress" class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        Joint
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div id="joint_progress" class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        Distributed Force
+                    </div>
+                    <div class="col">
+                        <div class="progress">
+                            <div id="dist_force_progress" class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                                 100%
                             </div>
                         </div>
@@ -115,4 +198,49 @@
 </script>
 <script src="{% static 'js/student_buttons.js' %}"></script>
 
+<script>
+    var bar_progress_percentage = (({{student.bar_progress}}/20)*100).toFixed(2);
+    var support_progress_percentage = (({{student.support_progress}}/30)*100).toFixed(2);
+    var force_progress_percentage = (({{student.force_progress}}/40)*100).toFixed(2);
+    var sliding_progress_percentage = (({{student.sliding_progress}}/30)*100).toFixed(2);
+    var fixed_progress_percentage = (({{student.fixed_progress}}/30)*100).toFixed(2);
+    var momentum_progress_percentage = (({{student.momentum_progress}}/40)*100).toFixed(2);
+    var joint_progress_percentage = (({{student.joint_progress}}/50)*100).toFixed(2);
+    var dist_force_progress_percentage = (({{student.dist_force_progress}}/50)*100).toFixed(2);
+
+    var bar_progress = document.getElementById("bar_progress");
+    bar_progress.style.width = bar_progress_percentage+'%';
+    bar_progress.innerHTML = bar_progress_percentage+'%';
+
+    var support_progress = document.getElementById("support_progress");
+    support_progress.style.width = support_progress_percentage+'%';
+    support_progress.innerHTML = support_progress_percentage+'%';
+
+    var force_progress = document.getElementById("force_progress");
+    force_progress.style.width = force_progress_percentage+'%';
+    force_progress.innerHTML = force_progress_percentage+'%';
+
+    var sliding_progress = document.getElementById("sliding_progress");
+    sliding_progress.style.width = sliding_progress_percentage+'%';
+    sliding_progress.innerHTML = sliding_progress_percentage+'%';
+
+    var fixed_progress = document.getElementById("fixed_progress");
+    fixed_progress.style.width = fixed_progress_percentage+'%';
+    fixed_progress.innerHTML = fixed_progress_percentage+'%';
+
+    var momentum_progress = document.getElementById("momentum_progress");
+    momentum_progress.style.width = momentum_progress_percentage+'%';
+    momentum_progress.innerHTML = momentum_progress_percentage+'%';
+
+    var joint_progress = document.getElementById("joint_progress");
+    joint_progress.style.width = joint_progress_percentage+'%';
+    joint_progress.innerHTML = joint_progress_percentage+'%';
+
+    var dist_force_progress = document.getElementById("dist_force_progress");
+    dist_force_progress.style.width = dist_force_progress_percentage+'%';
+    dist_force_progress.innerHTML = dist_force_progress_percentage+'%';
+</script>
+
+
 {% endblock %}
+
