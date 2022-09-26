@@ -27,12 +27,20 @@ def dcl_app(request):
             if request.POST.get('assignment_id') == "0":
                 if request.POST.get('delete_check') == 'false':
                     current_teacher = Teacher.objects.get(user = request.user)
-                    Assignment.objects.create(name = name,
-                                            description = description,
-                                            level = request.POST.get('assignment_level'),
-                                            teacher = current_teacher,
-                                            dcl_json = request.POST.get('assignment_data'),
-                                            photo = request.FILES.get('assignment_photo', None))
+                    if request.POST.get('assignment_photo') != 'null':
+                        Assignment.objects.create(name = name,
+                                                description = description,
+                                                level = request.POST.get('assignment_level'),
+                                                teacher = current_teacher,
+                                                dcl_json = request.POST.get('assignment_data'),
+                                                photo = request.FILES.get('assignment_photo', None))
+                    else:
+                        Assignment.objects.create(name = name,
+                                                description = description,
+                                                level = request.POST.get('assignment_level'),
+                                                teacher = current_teacher,
+                                                dcl_json = request.POST.get('assignment_data'),
+                                                photo = None)
                     messages.success(request, 'Assignment succesfully Created')
                 else:
                     messages.error(request, 'Assignment not created because of deletion checkbox')
@@ -43,7 +51,10 @@ def dcl_app(request):
                     current_asignment.description = description
                     current_asignment.level = request.POST.get('assignment_level')
                     current_asignment.dcl_json = request.POST.get('assignment_data')
-                    current_asignment.photo = request.FILES.get('assignment_photo', None)
+                    if request.POST.get('assignment_photo') != 'null':
+                        current_asignment.photo = request.FILES.get('assignment_photo', None)
+                    else:
+                        current_asignment.photo = None
                     current_asignment.save()
                     if request.POST.get('duplicate_check') == 'true':
                         current_teacher = Teacher.objects.get(user = request.user)
