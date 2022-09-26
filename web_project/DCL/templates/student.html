@@ -184,7 +184,7 @@
                             {{ clasroom.teacher }}
                         </div>
                         <div class="col">
-                            <a href='student/{{ clasroom.teacher }}/'>Go to Teacher Classroom</a>
+                            <a href="{% url 'student_assignment' clasroom.teacher %}">Teacher Classroom</a>
                         </div>
                     </div>
                 {% endfor %}
